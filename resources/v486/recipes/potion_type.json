@@ -1,0 +1,2387 @@
+[
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 12
+    },
+    "output": {
+      "id": 373,
+      "damage": 13
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 14
+    },
+    "output": {
+      "id": 373,
+      "damage": 15
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 17
+    },
+    "output": {
+      "id": 373,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 19
+    },
+    "output": {
+      "id": 373,
+      "damage": 20
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 25
+    },
+    "output": {
+      "id": 373,
+      "damage": 26
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 28
+    },
+    "output": {
+      "id": 373,
+      "damage": 29
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 31
+    },
+    "output": {
+      "id": 373,
+      "damage": 32
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 34
+    },
+    "output": {
+      "id": 373,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 37
+    },
+    "output": {
+      "id": 373,
+      "damage": 38
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 40
+    },
+    "output": {
+      "id": 373,
+      "damage": 41
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 5
+    },
+    "output": {
+      "id": 373,
+      "damage": 6
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 7
+    },
+    "output": {
+      "id": 373,
+      "damage": 8
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373,
+      "damage": 9
+    },
+    "output": {
+      "id": 373,
+      "damage": 10
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 12
+    },
+    "output": {
+      "id": 438,
+      "damage": 13
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 14
+    },
+    "output": {
+      "id": 438,
+      "damage": 15
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 17
+    },
+    "output": {
+      "id": 438,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 19
+    },
+    "output": {
+      "id": 438,
+      "damage": 20
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 25
+    },
+    "output": {
+      "id": 438,
+      "damage": 26
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 28
+    },
+    "output": {
+      "id": 438,
+      "damage": 29
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 31
+    },
+    "output": {
+      "id": 438,
+      "damage": 32
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 34
+    },
+    "output": {
+      "id": 438,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 37
+    },
+    "output": {
+      "id": 438,
+      "damage": 38
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 40
+    },
+    "output": {
+      "id": 438,
+      "damage": 41
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 5
+    },
+    "output": {
+      "id": 438,
+      "damage": 6
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 7
+    },
+    "output": {
+      "id": 438,
+      "damage": 8
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438,
+      "damage": 9
+    },
+    "output": {
+      "id": 438,
+      "damage": 10
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 12
+    },
+    "output": {
+      "id": 441,
+      "damage": 13
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 14
+    },
+    "output": {
+      "id": 441,
+      "damage": 15
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 17
+    },
+    "output": {
+      "id": 441,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 19
+    },
+    "output": {
+      "id": 441,
+      "damage": 20
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 25
+    },
+    "output": {
+      "id": 441,
+      "damage": 26
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 28
+    },
+    "output": {
+      "id": 441,
+      "damage": 29
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 31
+    },
+    "output": {
+      "id": 441,
+      "damage": 32
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 34
+    },
+    "output": {
+      "id": 441,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 37
+    },
+    "output": {
+      "id": 441,
+      "damage": 38
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 40
+    },
+    "output": {
+      "id": 441,
+      "damage": 41
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 5
+    },
+    "output": {
+      "id": 441,
+      "damage": 6
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 7
+    },
+    "output": {
+      "id": 441,
+      "damage": 8
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441,
+      "damage": 9
+    },
+    "output": {
+      "id": 441,
+      "damage": 10
+    }
+  },
+  {
+    "ingredient": {
+      "id": 331
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 14
+    },
+    "output": {
+      "id": 373,
+      "damage": 16
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 17
+    },
+    "output": {
+      "id": 373,
+      "damage": 42
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 21
+    },
+    "output": {
+      "id": 373,
+      "damage": 22
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 23
+    },
+    "output": {
+      "id": 373,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 25
+    },
+    "output": {
+      "id": 373,
+      "damage": 27
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 28
+    },
+    "output": {
+      "id": 373,
+      "damage": 30
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 31
+    },
+    "output": {
+      "id": 373,
+      "damage": 33
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 37
+    },
+    "output": {
+      "id": 373,
+      "damage": 39
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373,
+      "damage": 9
+    },
+    "output": {
+      "id": 373,
+      "damage": 11
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 3
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 14
+    },
+    "output": {
+      "id": 438,
+      "damage": 16
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 17
+    },
+    "output": {
+      "id": 438,
+      "damage": 42
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 21
+    },
+    "output": {
+      "id": 438,
+      "damage": 22
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 23
+    },
+    "output": {
+      "id": 438,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 25
+    },
+    "output": {
+      "id": 438,
+      "damage": 27
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 28
+    },
+    "output": {
+      "id": 438,
+      "damage": 30
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 31
+    },
+    "output": {
+      "id": 438,
+      "damage": 33
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 37
+    },
+    "output": {
+      "id": 438,
+      "damage": 39
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438,
+      "damage": 9
+    },
+    "output": {
+      "id": 438,
+      "damage": 11
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 3
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 14
+    },
+    "output": {
+      "id": 441,
+      "damage": 16
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 17
+    },
+    "output": {
+      "id": 441,
+      "damage": 42
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 21
+    },
+    "output": {
+      "id": 441,
+      "damage": 22
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 23
+    },
+    "output": {
+      "id": 441,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 25
+    },
+    "output": {
+      "id": 441,
+      "damage": 27
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 28
+    },
+    "output": {
+      "id": 441,
+      "damage": 30
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 31
+    },
+    "output": {
+      "id": 441,
+      "damage": 33
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 37
+    },
+    "output": {
+      "id": 441,
+      "damage": 39
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441,
+      "damage": 9
+    },
+    "output": {
+      "id": 441,
+      "damage": 11
+    }
+  },
+  {
+    "ingredient": {
+      "id": 348
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 3
+    }
+  },
+  {
+    "ingredient": {
+      "id": 353
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 14
+    }
+  },
+  {
+    "ingredient": {
+      "id": 353
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 353
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 14
+    }
+  },
+  {
+    "ingredient": {
+      "id": 353
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 353
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 14
+    }
+  },
+  {
+    "ingredient": {
+      "id": 353
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 370
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 28
+    }
+  },
+  {
+    "ingredient": {
+      "id": 370
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 370
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 28
+    }
+  },
+  {
+    "ingredient": {
+      "id": 370
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 370
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 28
+    }
+  },
+  {
+    "ingredient": {
+      "id": 370
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 372
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 4
+    }
+  },
+  {
+    "ingredient": {
+      "id": 372
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 4
+    }
+  },
+  {
+    "ingredient": {
+      "id": 372
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 4
+    }
+  },
+  {
+    "ingredient": {
+      "id": 375
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 25
+    }
+  },
+  {
+    "ingredient": {
+      "id": 375
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 375
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 25
+    }
+  },
+  {
+    "ingredient": {
+      "id": 375
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 375
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 25
+    }
+  },
+  {
+    "ingredient": {
+      "id": 375
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 10
+    },
+    "output": {
+      "id": 373,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 14
+    },
+    "output": {
+      "id": 373,
+      "damage": 17
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 15
+    },
+    "output": {
+      "id": 373,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 1
+    },
+    "output": {
+      "id": 373,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 21
+    },
+    "output": {
+      "id": 373,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 22
+    },
+    "output": {
+      "id": 373,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 25
+    },
+    "output": {
+      "id": 373,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 26
+    },
+    "output": {
+      "id": 373,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 27
+    },
+    "output": {
+      "id": 373,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 2
+    },
+    "output": {
+      "id": 373,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 31
+    },
+    "output": {
+      "id": 373,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 32
+    },
+    "output": {
+      "id": 373,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 33
+    },
+    "output": {
+      "id": 373,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 3
+    },
+    "output": {
+      "id": 373,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 5
+    },
+    "output": {
+      "id": 373,
+      "damage": 7
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 6
+    },
+    "output": {
+      "id": 373,
+      "damage": 8
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373,
+      "damage": 9
+    },
+    "output": {
+      "id": 373,
+      "damage": 17
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 10
+    },
+    "output": {
+      "id": 438,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 14
+    },
+    "output": {
+      "id": 438,
+      "damage": 17
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 15
+    },
+    "output": {
+      "id": 438,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 1
+    },
+    "output": {
+      "id": 438,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 21
+    },
+    "output": {
+      "id": 438,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 22
+    },
+    "output": {
+      "id": 438,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 25
+    },
+    "output": {
+      "id": 438,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 26
+    },
+    "output": {
+      "id": 438,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 27
+    },
+    "output": {
+      "id": 438,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 2
+    },
+    "output": {
+      "id": 438,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 31
+    },
+    "output": {
+      "id": 438,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 32
+    },
+    "output": {
+      "id": 438,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 33
+    },
+    "output": {
+      "id": 438,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 3
+    },
+    "output": {
+      "id": 438,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 5
+    },
+    "output": {
+      "id": 438,
+      "damage": 7
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 6
+    },
+    "output": {
+      "id": 438,
+      "damage": 8
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438,
+      "damage": 9
+    },
+    "output": {
+      "id": 438,
+      "damage": 17
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 10
+    },
+    "output": {
+      "id": 441,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 14
+    },
+    "output": {
+      "id": 441,
+      "damage": 17
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 15
+    },
+    "output": {
+      "id": 441,
+      "damage": 18
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 1
+    },
+    "output": {
+      "id": 441,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 21
+    },
+    "output": {
+      "id": 441,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 22
+    },
+    "output": {
+      "id": 441,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 25
+    },
+    "output": {
+      "id": 441,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 26
+    },
+    "output": {
+      "id": 441,
+      "damage": 23
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 27
+    },
+    "output": {
+      "id": 441,
+      "damage": 24
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 2
+    },
+    "output": {
+      "id": 441,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 31
+    },
+    "output": {
+      "id": 441,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 32
+    },
+    "output": {
+      "id": 441,
+      "damage": 35
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 33
+    },
+    "output": {
+      "id": 441,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 3
+    },
+    "output": {
+      "id": 441,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 5
+    },
+    "output": {
+      "id": 441,
+      "damage": 7
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 6
+    },
+    "output": {
+      "id": 441,
+      "damage": 8
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441,
+      "damage": 9
+    },
+    "output": {
+      "id": 441,
+      "damage": 17
+    }
+  },
+  {
+    "ingredient": {
+      "id": 376
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 34
+    }
+  },
+  {
+    "ingredient": {
+      "id": 377
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 31
+    }
+  },
+  {
+    "ingredient": {
+      "id": 377
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 377
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 31
+    }
+  },
+  {
+    "ingredient": {
+      "id": 377
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 377
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 31
+    }
+  },
+  {
+    "ingredient": {
+      "id": 377
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 378
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 12
+    }
+  },
+  {
+    "ingredient": {
+      "id": 378
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 378
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 12
+    }
+  },
+  {
+    "ingredient": {
+      "id": 378
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 378
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 12
+    }
+  },
+  {
+    "ingredient": {
+      "id": 378
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 382
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 21
+    }
+  },
+  {
+    "ingredient": {
+      "id": 382
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 382
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 21
+    }
+  },
+  {
+    "ingredient": {
+      "id": 382
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 382
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 21
+    }
+  },
+  {
+    "ingredient": {
+      "id": 382
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 396
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 5
+    }
+  },
+  {
+    "ingredient": {
+      "id": 396
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 5
+    }
+  },
+  {
+    "ingredient": {
+      "id": 396
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 5
+    }
+  },
+  {
+    "ingredient": {
+      "id": 414
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 9
+    }
+  },
+  {
+    "ingredient": {
+      "id": 414
+    },
+    "input": {
+      "id": 373
+    },
+    "output": {
+      "id": 373,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 414
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 9
+    }
+  },
+  {
+    "ingredient": {
+      "id": 414
+    },
+    "input": {
+      "id": 438
+    },
+    "output": {
+      "id": 438,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 414
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 9
+    }
+  },
+  {
+    "ingredient": {
+      "id": 414
+    },
+    "input": {
+      "id": 441
+    },
+    "output": {
+      "id": 441,
+      "damage": 1
+    }
+  },
+  {
+    "ingredient": {
+      "id": 462
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 19
+    }
+  },
+  {
+    "ingredient": {
+      "id": 462
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 19
+    }
+  },
+  {
+    "ingredient": {
+      "id": 462
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 19
+    }
+  },
+  {
+    "ingredient": {
+      "id": 469
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 37
+    }
+  },
+  {
+    "ingredient": {
+      "id": 469
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 37
+    }
+  },
+  {
+    "ingredient": {
+      "id": 469
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 37
+    }
+  },
+  {
+    "ingredient": {
+      "id": 470
+    },
+    "input": {
+      "id": 373,
+      "damage": 4
+    },
+    "output": {
+      "id": 373,
+      "damage": 40
+    }
+  },
+  {
+    "ingredient": {
+      "id": 470
+    },
+    "input": {
+      "id": 438,
+      "damage": 4
+    },
+    "output": {
+      "id": 438,
+      "damage": 40
+    }
+  },
+  {
+    "ingredient": {
+      "id": 470
+    },
+    "input": {
+      "id": 441,
+      "damage": 4
+    },
+    "output": {
+      "id": 441,
+      "damage": 40
+    }
+  }
+]

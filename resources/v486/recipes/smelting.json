@@ -1,0 +1,1603 @@
+[
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": -271,
+      "damage": -1
+    },
+    "output": {
+      "id": 752
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": -288,
+      "damage": -1
+    },
+    "output": {
+      "id": 266
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 129,
+      "damage": -1
+    },
+    "output": {
+      "id": 388
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 14,
+      "damage": -1
+    },
+    "output": {
+      "id": 266
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 15,
+      "damage": -1
+    },
+    "output": {
+      "id": 265
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 153,
+      "damage": -1
+    },
+    "output": {
+      "id": 406
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 16,
+      "damage": -1
+    },
+    "output": {
+      "id": 263
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 21,
+      "damage": -1
+    },
+    "output": {
+      "id": 351,
+      "damage": 4
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 256,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 257,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 258,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 267,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 283,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 284,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 285,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 286,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 292,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 294,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 302
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 303
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 304
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 305
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 306
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 307
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 308
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 309
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 314
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 315
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 316
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 317
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 417,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 418,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 56,
+      "damage": -1
+    },
+    "output": {
+      "id": 264
+    }
+  },
+  {
+    "block": "blast_furnace",
+    "input": {
+      "id": 73,
+      "damage": -1
+    },
+    "output": {
+      "id": 331
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 319,
+      "damage": -1
+    },
+    "output": {
+      "id": 320
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 335,
+      "damage": -1
+    },
+    "output": {
+      "id": 464
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 349,
+      "damage": -1
+    },
+    "output": {
+      "id": 350
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 363,
+      "damage": -1
+    },
+    "output": {
+      "id": 364
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 365,
+      "damage": -1
+    },
+    "output": {
+      "id": 366
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 392,
+      "damage": -1
+    },
+    "output": {
+      "id": 393
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 411,
+      "damage": -1
+    },
+    "output": {
+      "id": 412
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 423,
+      "damage": -1
+    },
+    "output": {
+      "id": 424
+    }
+  },
+  {
+    "block": "campfire",
+    "input": {
+      "id": 460,
+      "damage": -1
+    },
+    "output": {
+      "id": 463
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -10,
+      "damage": -1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -156,
+      "damage": -1
+    },
+    "output": {
+      "id": 351,
+      "damage": 10
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 10
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 11
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 12
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 13
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 2
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 3
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 4
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 5
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 8
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212,
+      "damage": 9
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -212
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -271,
+      "damage": -1
+    },
+    "output": {
+      "id": 752
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -274,
+      "damage": -1
+    },
+    "output": {
+      "id": -280
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -288,
+      "damage": -1
+    },
+    "output": {
+      "id": 266
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -5,
+      "damage": -1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -6,
+      "damage": -1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -7,
+      "damage": -1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -8,
+      "damage": -1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": -9,
+      "damage": -1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 112,
+      "damage": -1
+    },
+    "output": {
+      "id": -303
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 12,
+      "damage": -1
+    },
+    "output": {
+      "id": 20
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 129,
+      "damage": -1
+    },
+    "output": {
+      "id": 388
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 14,
+      "damage": -1
+    },
+    "output": {
+      "id": 266
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 15,
+      "damage": -1
+    },
+    "output": {
+      "id": 265
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 153,
+      "damage": -1
+    },
+    "output": {
+      "id": 406
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 155
+    },
+    "output": {
+      "id": 155,
+      "damage": 3
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 10
+    },
+    "output": {
+      "id": 219
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 11
+    },
+    "output": {
+      "id": 231
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 12
+    },
+    "output": {
+      "id": 232
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 13
+    },
+    "output": {
+      "id": 233
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 14
+    },
+    "output": {
+      "id": 234
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 15
+    },
+    "output": {
+      "id": 235
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 1
+    },
+    "output": {
+      "id": 221
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 2
+    },
+    "output": {
+      "id": 222
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 3
+    },
+    "output": {
+      "id": 223
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 4
+    },
+    "output": {
+      "id": 224
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 5
+    },
+    "output": {
+      "id": 225
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 6
+    },
+    "output": {
+      "id": 226
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 7
+    },
+    "output": {
+      "id": 227
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 8
+    },
+    "output": {
+      "id": 228
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159,
+      "damage": 9
+    },
+    "output": {
+      "id": 229
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 159
+    },
+    "output": {
+      "id": 220
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 16,
+      "damage": -1
+    },
+    "output": {
+      "id": 263
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 162,
+      "damage": 1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 162
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 17,
+      "damage": 1
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 17,
+      "damage": 2
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 17,
+      "damage": 3
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 179,
+      "damage": -1
+    },
+    "output": {
+      "id": 179,
+      "damage": 3
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 17
+    },
+    "output": {
+      "id": 263,
+      "damage": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 19,
+      "damage": 1
+    },
+    "output": {
+      "id": 19
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 1
+    },
+    "output": {
+      "id": -183
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 21,
+      "damage": -1
+    },
+    "output": {
+      "id": 351,
+      "damage": 4
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 24,
+      "damage": -1
+    },
+    "output": {
+      "id": 24,
+      "damage": 3
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 256,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 257,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 258,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 267,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 283,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 284,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 285,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 286,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 292,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 294,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 302
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 303
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 304
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 305
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 306
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 307
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 308
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 309
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 314
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 315
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 316
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 317
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 319,
+      "damage": -1
+    },
+    "output": {
+      "id": 320
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 335,
+      "damage": -1
+    },
+    "output": {
+      "id": 464
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 337,
+      "damage": -1
+    },
+    "output": {
+      "id": 336
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 349,
+      "damage": -1
+    },
+    "output": {
+      "id": 350
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 363,
+      "damage": -1
+    },
+    "output": {
+      "id": 364
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 365,
+      "damage": -1
+    },
+    "output": {
+      "id": 366
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 392,
+      "damage": -1
+    },
+    "output": {
+      "id": 393
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 4,
+      "damage": -1
+    },
+    "output": {
+      "id": 1
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 411,
+      "damage": -1
+    },
+    "output": {
+      "id": 412
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 417,
+      "damage": -1
+    },
+    "output": {
+      "id": 452
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 418,
+      "damage": -1
+    },
+    "output": {
+      "id": 371
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 423,
+      "damage": -1
+    },
+    "output": {
+      "id": 424
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 432,
+      "damage": -1
+    },
+    "output": {
+      "id": 433
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 460,
+      "damage": -1
+    },
+    "output": {
+      "id": 463
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 56,
+      "damage": -1
+    },
+    "output": {
+      "id": 264
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 73,
+      "damage": -1
+    },
+    "output": {
+      "id": 331
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 81,
+      "damage": -1
+    },
+    "output": {
+      "id": 351,
+      "damage": 2
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 82,
+      "damage": -1
+    },
+    "output": {
+      "id": 172
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 87,
+      "damage": -1
+    },
+    "output": {
+      "id": 405
+    }
+  },
+  {
+    "block": "furnace",
+    "input": {
+      "id": 98
+    },
+    "output": {
+      "id": 98,
+      "damage": 2
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 319,
+      "damage": -1
+    },
+    "output": {
+      "id": 320
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 335,
+      "damage": -1
+    },
+    "output": {
+      "id": 464
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 349,
+      "damage": -1
+    },
+    "output": {
+      "id": 350
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 363,
+      "damage": -1
+    },
+    "output": {
+      "id": 364
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 365,
+      "damage": -1
+    },
+    "output": {
+      "id": 366
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 392,
+      "damage": -1
+    },
+    "output": {
+      "id": 393
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 411,
+      "damage": -1
+    },
+    "output": {
+      "id": 412
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 423,
+      "damage": -1
+    },
+    "output": {
+      "id": 424
+    }
+  },
+  {
+    "block": "smoker",
+    "input": {
+      "id": 460,
+      "damage": -1
+    },
+    "output": {
+      "id": 463
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 319,
+      "damage": -1
+    },
+    "output": {
+      "id": 320
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 335,
+      "damage": -1
+    },
+    "output": {
+      "id": 464
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 349,
+      "damage": -1
+    },
+    "output": {
+      "id": 350
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 363,
+      "damage": -1
+    },
+    "output": {
+      "id": 364
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 365,
+      "damage": -1
+    },
+    "output": {
+      "id": 366
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 392,
+      "damage": -1
+    },
+    "output": {
+      "id": 393
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 411,
+      "damage": -1
+    },
+    "output": {
+      "id": 412
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 423,
+      "damage": -1
+    },
+    "output": {
+      "id": 424
+    }
+  },
+  {
+    "block": "soul_campfire",
+    "input": {
+      "id": 460,
+      "damage": -1
+    },
+    "output": {
+      "id": 463
+    }
+  }
+]

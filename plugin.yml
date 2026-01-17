@@ -1,0 +1,15 @@
+---
+name: MultiVersion
+version: "1.0.0"
+authors:
+- cisco
+api: 5.0.0
+mcpe-protocol:
+- 898
+- 860
+- 859
+- 844
+- 486
+- 416
+main: cisco\Loader
+...

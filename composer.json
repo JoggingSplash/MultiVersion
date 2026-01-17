@@ -1,0 +1,20 @@
+{
+    "name": "cisco/multiversion-encoding",
+    "description": "PocketMine-MP MultiVersion using ext-encoding",
+    "type": "project",
+    "autoload": {},
+    "require": {
+        "ext-encoding": "~1.0.0"
+    },
+    "require-dev": {
+        "pocketmine/pocketmine-mp": "5.35.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "make-phar":  [
+            "@composer install --no-dev --classmap-authoritative --ignore-platform-reqs",
+            "@php -dphar.readonly=0 ./scripts/make-phar.php"
+        ]
+    }
+}
