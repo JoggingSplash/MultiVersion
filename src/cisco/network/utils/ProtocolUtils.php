@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace cisco\network\utils;
 
-use pocketmine\network\mcpe\protocol\DataPacket;
+use pocketmine\network\mcpe\protocol\Packet;
 use pocketmine\network\mcpe\protocol\PacketPool;
 use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Filesystem;
 use pocketmine\utils\Utils;
-use ReflectionClass;
 use function class_exists;
 use function dirname;
 use function is_dir;
@@ -56,12 +55,18 @@ final class ProtocolUtils
 		$namespace = "cisco\\network\\proto\\v$protocol\\packets\\";
 
 		foreach (self::scanAndGetPackets($namespace, $packetDir) as $packet) {
+			if(!$packet instanceof Packet) {
+				\GlobalLogger::get()->debug("Ignoring non-packet " . ReflectionUtils::invokeStatic(Utils::class, "stringifyValueForTrace", $packet, 2048));
+				continue;
+			}
+
 			$pool->registerPacket($packet);
 		}
 	}
 
 	/**
-	 * Scans into the dir and fetchs the packets creating the instance
+	 * @return \Generator<object>
+	 *  Scans into the dir and fetchs the packets creating the instance
 	 */
 	static private function scanAndGetPackets(string $namespace, string $packetDir) : \Generator {
 		foreach (Utils::assumeNotFalse(scandir($packetDir)) as $file) {
@@ -75,13 +80,7 @@ final class ProtocolUtils
 				continue;
 			}
 
-			// This should not throw
-			$ref = new ReflectionClass($className);
-			$objectOrString = $ref->newInstanceWithoutConstructor();
-
-			if($objectOrString instanceof DataPacket){
-				yield $objectOrString;
-			}
+			yield new $className();
 		}
 	}
 
