@@ -33,11 +33,9 @@ final class RawPacketHelper
 
 	}
 
-    /**
-     * Translates the interact packet to latest.
-     * @param LegacyInteractPacket $packet
-     * @return InteractPacket
-     */
+	/**
+	 * Translates the interact packet to latest.
+	 */
 	public static function translateInteractPacketToLatest(LegacyInteractPacket $packet) : InteractPacket {
 		$result = new InteractPacket();
 		$result->action = $packet->action;

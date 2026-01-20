@@ -40,8 +40,6 @@ use function count;
 use function min;
 use function str_repeat;
 
-
-
 final class PreFormattedChunkSerializer implements MVChunkSerializer {
 
 	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?string $tiles = null) : string

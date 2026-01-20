@@ -46,7 +46,8 @@ final class ProtocolUtils
 	}
 
 	/**
-	 * Easy way to register packets into the protocol
+	 * Easy way to register packets into the PacketPool object>
+	 * @throws \ReflectionException
 	 */
 	static public function registerPackets(PacketPool $pool, int $protocol) : void{
 		$phar = \Phar::running();

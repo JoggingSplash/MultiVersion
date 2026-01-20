@@ -67,7 +67,7 @@ class v419AdventureSettingsPacket extends DataPacket implements ServerboundPacke
 	public const DEFAULT = 0x200 | self::BITFLAG_SECOND_SET;
 
 	public int $flags = 0;
-	public int $commandPermission = CommandPermissions::NORMAL->value;
+	public int $commandPermission = 0; // CommandPermissions::NORMAL->value
 	public int $flags2 = -1;
 	public int $playerPermission = PlayerPermissions::MEMBER;
 	public int $customFlags = 0; //...
