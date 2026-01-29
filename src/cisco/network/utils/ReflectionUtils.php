@@ -101,7 +101,7 @@ final class ReflectionUtils
 	}
 
 	/**
-	 * Prune properties & methods cache
+	 * Prune properties and methods cache
 	 */
 	static public function pruneCache() : void {
 		self::$propertyCache = [];

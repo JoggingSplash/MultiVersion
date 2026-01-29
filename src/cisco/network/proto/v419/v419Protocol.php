@@ -49,6 +49,7 @@ use cisco\network\proto\v419\packets\v419CorrectPlayerMovePredictionPacket;
 use cisco\network\proto\v419\packets\v419DisconnectPacket;
 use cisco\network\proto\v419\packets\v419EducationSettingsPacket;
 use cisco\network\proto\v419\packets\v419EmotePacket;
+use cisco\network\proto\v419\packets\v419GameRulesChangedPacket;
 use cisco\network\proto\v419\packets\v419HurtArmorPacket;
 use cisco\network\proto\v419\packets\v419InteractPacket;
 use cisco\network\proto\v419\packets\v419InventoryContentPacket;
@@ -115,6 +116,7 @@ use pocketmine\network\mcpe\protocol\CreativeContentPacket;
 use pocketmine\network\mcpe\protocol\DisconnectPacket;
 use pocketmine\network\mcpe\protocol\EducationSettingsPacket;
 use pocketmine\network\mcpe\protocol\EmotePacket;
+use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
 use pocketmine\network\mcpe\protocol\HurtArmorPacket;
 use pocketmine\network\mcpe\protocol\InventoryContentPacket;
 use pocketmine\network\mcpe\protocol\InventorySlotPacket;
@@ -331,6 +333,7 @@ final class v419Protocol extends TProtocol
 			$packet instanceof AnimatePacket => v419AnimatePacket::fromLatest($packet),
 			$packet instanceof MobEquipmentPacket => v419MobEquipmentPacket::fromLatest($packet),
 			$packet instanceof AddItemActorPacket => v419AddItemActorPacket::fromLatest($packet),
+			$packet instanceof GameRulesChangedPacket => v419GameRulesChangedPacket::fromLatest($packet),
 			default => $packet // Unhandled between versions either it has no changes
 		};
 	}

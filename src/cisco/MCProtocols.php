@@ -38,7 +38,7 @@ use function mb_strtoupper;
 
 final class MCProtocols {
 
-	/** @var TProtocol[] */
+	/** @var TProtocol[]|null $members */
 	private static ?array $members = null;
 	private static array $protocols = [];
 

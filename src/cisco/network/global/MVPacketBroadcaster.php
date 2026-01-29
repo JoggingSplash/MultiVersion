@@ -112,11 +112,12 @@ class MVPacketBroadcaster implements PacketBroadcaster
 				foreach ($compressorTargets as $target) {
 					$target->queueCompressed($promise);
 				}
-			} else {
-				foreach ($compressorTargets as $target) {
-					foreach ($packetBuffers as $packetBuffer) {
-						$target->addToSendBuffer($packetBuffer);
-					}
+				continue;
+			}
+
+			foreach ($compressorTargets as $target) {
+				foreach ($packetBuffers as $packetBuffer) {
+					$target->addToSendBuffer($packetBuffer);
 				}
 			}
 		}

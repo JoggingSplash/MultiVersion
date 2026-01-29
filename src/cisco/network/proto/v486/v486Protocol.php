@@ -42,6 +42,7 @@ use cisco\network\proto\v486\packets\v486ClientboundMapItemDataPacket;
 use cisco\network\proto\v486\packets\v486ContainerClosePacket;
 use cisco\network\proto\v486\packets\v486DisconnectPacket;
 use cisco\network\proto\v486\packets\v486EmotePacket;
+use cisco\network\proto\v486\packets\v486GameRulesChangedPacket;
 use cisco\network\proto\v486\packets\v486InteractPacket;
 use cisco\network\proto\v486\packets\v486InventoryContentPacket;
 use cisco\network\proto\v486\packets\v486InventorySlotPacket;
@@ -100,6 +101,7 @@ use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 use pocketmine\network\mcpe\protocol\CreativeContentPacket;
 use pocketmine\network\mcpe\protocol\DisconnectPacket;
 use pocketmine\network\mcpe\protocol\EmotePacket;
+use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
 use pocketmine\network\mcpe\protocol\InventoryContentPacket;
 use pocketmine\network\mcpe\protocol\InventorySlotPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
@@ -304,6 +306,7 @@ class v486Protocol extends TProtocol
 			$packet instanceof TransferPacket => v486TransferPacket::fromLatest($packet),
 			$packet instanceof LevelSoundEventPacket => v486LevelSoundEventPacket::fromLatest($packet),
 			$packet instanceof InventoryTransactionPacket => v486InventoryTransactionPacket::fromLatest($packet),
+			$packet instanceof GameRulesChangedPacket => v486GameRulesChangedPacket::fromLatest($packet),
 			default => $packet
 		};
 	}

@@ -172,34 +172,6 @@ class v486InGamePacketHandler extends InGamePacketHandler
 		return true;
 	}
 
-	public function sendPosition(Vector3 $pos, float $yaw = null, float $pitch = null, int $mode = MovePlayerPacket::MODE_NORMAL, array $targets = null) : void
-	{
-		$player = $this->player;
-		$yaw = $yaw ?? $player->getLocation()->yaw;
-		$pitch = $pitch ?? $player->getLocation()->pitch;
-
-		$pk = new MovePlayerPacket();
-		$pk->actorRuntimeId = $player->getId();
-		$pk->position = $player->getOffsetPosition($pos);
-		$pk->pitch = $pitch;
-		$pk->headYaw = $yaw;
-		$pk->yaw = $yaw;
-		$pk->mode = $mode;
-		$pk->onGround = $player->onGround;
-
-		if ($targets !== null) {
-			if (in_array($player, $targets, true)) {
-				$this->_forceMoveSync = $pos->asVector3();
-				ReflectionUtils::setProperty(Player::class, $this, "ySize", 0);
-			}
-			$player->getNetworkSession()->getBroadcaster()->broadcastPackets($targets, [$pk]);
-		} else {
-			$this->_forceMoveSync = $pos->asVector3();
-			ReflectionUtils::setProperty(Player::class, $this, "ySize", 0);
-			$player->getNetworkSession()->sendDataPacket($pk);
-		}
-	}
-
 	public function handleMovePlayer(MovePlayerPacket $packet) : bool
 	{
 		$rawPos = $packet->position;
