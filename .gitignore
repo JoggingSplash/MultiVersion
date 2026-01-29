@@ -1,2 +1,4 @@
 .php-cs-fixer.cache
 .php-cs-fixer.php
+vendor
+.idea
