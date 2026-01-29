@@ -239,7 +239,7 @@ final class v419Protocol extends TProtocol
 				if ($player === null) {
 					continue;
 				}
-				$npk = v419AdventureSettingsPacket::create(0, $packet->getData()->getCommandPermission()->value, -1, $packet->getData()->getPlayerPermission(), 0, $packet->getData()->getTargetActorUniqueId());
+				$npk = v419AdventureSettingsPacket::create(0, $packet->getData()->getCommandPermission(), -1, $packet->getData()->getPlayerPermission(), 0, $packet->getData()->getTargetActorUniqueId());
 				if (isset($packet->getData()->getAbilityLayers()[0])) {
 					$abilities = $packet->getData()->getAbilityLayers()[0]->getBoolAbilities();
 					$npk->setFlag(v419AdventureSettingsPacket::WORLD_IMMUTABLE, $player->isSpectator());
