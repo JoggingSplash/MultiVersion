@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v844\mapping;
+namespace cisco\network\proto\v844\packets\types\biome;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;

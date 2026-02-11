@@ -73,7 +73,7 @@ class MVItemTranslator
 	 */
 	public function toNetworkId(Item $item) : array
 	{
-		//TODO: we should probably come up with a cache for this
+		//TODO: we should probably come up with a parts for this
 
 		$itemData = $this->itemSerializer->serializeType($item);
 

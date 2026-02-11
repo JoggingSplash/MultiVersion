@@ -117,7 +117,7 @@ class v419AddPlayerPacket extends AddPlayerPacket
 
 		$packet = v419AdventureSettingsPacket::create(
 			0,
-			$data->getCommandPermission()->value,
+			$data->getCommandPermission(),
 			0,
 			$data->getPlayerPermission(),
 			0,

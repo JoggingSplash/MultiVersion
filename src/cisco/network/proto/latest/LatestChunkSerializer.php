@@ -96,7 +96,7 @@ class LatestChunkSerializer implements MVChunkSerializer
 			if ($persistentBlockStates) {
 				$nbtSerializer = new NetworkNbtSerializer();
 				foreach ($palette as $p) {
-					//TODO: introduce a binary cache for this
+					//TODO: introduce a binary parts for this
 					$state = $blockStateDictionary->generateDataFromStateId($blockTranslator->internalIdToNetworkId($p));
 					if ($state === null) {
 						$state = $blockTranslator->getFallbackStateData();

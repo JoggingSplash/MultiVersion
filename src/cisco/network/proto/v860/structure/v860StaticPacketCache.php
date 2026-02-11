@@ -20,18 +20,16 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v844\structure;
+namespace cisco\network\proto\v860\structure;
 
 use cisco\Loader;
-use cisco\network\proto\v844\packets\types\biome\v844BiomeDefinitionEntry;
-use cisco\network\proto\v844\packets\v844BiomeDefinitionListPacket;
+use cisco\network\proto\v860\packets\types\biome\v860BiomeDefinitionEntry;
+use cisco\network\proto\v860\packets\v860BiomeDefinitionListPacket;
 use cisco\network\utils\PacketCachedTrait;
 use JsonMapper;
 use JsonMapper_Exception;
 use pocketmine\color\Color;
 use pocketmine\data\SavedDataLoadingException;
-use pocketmine\network\mcpe\cache\CraftingDataCache;
-use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 use pocketmine\utils\Filesystem;
 use pocketmine\utils\Utils;
 use pocketmine\world\biome\model\BiomeDefinitionEntryData;
@@ -42,27 +40,15 @@ use function get_debug_type;
 use function is_array;
 use function json_decode;
 
-class v844StaticPacketCache
-{
+class v860StaticPacketCache {
 	use PacketCachedTrait;
 
-	private v844BiomeDefinitionListPacket $biomeDefinitionListPacket;
-	private CraftingDataPacket $craftingDataPacket;
+	protected v860BiomeDefinitionListPacket $biomeDefinitionListPacket;
 
-	public function getBiomeDefinitionListPacket() : v844BiomeDefinitionListPacket
-	{
-		return $this->biomeDefinitionListPacket;
-	}
-
-	public function getCraftingDataPacket() : CraftingDataPacket
-	{
-		return $this->craftingDataPacket;
-	}
-
-	protected function load() : void
-	{
-		$this->biomeDefinitionListPacket = v844BiomeDefinitionListPacket::fromDefinitions(self::loadBiomeDefinitionModel(Path::join(Loader::getPluginResourcePath(), "v844", "biome_definitions.json")));
-		$this->craftingDataPacket = CraftingDataCache::getInstance()->getCache($this->protocol->getCraftingManager());
+	protected function load() : void {
+		$this->biomeDefinitionListPacket = v860BiomeDefinitionListPacket::fromDefinitions(self::loadBiomeDefinitionModel(
+			Path::join(Loader::getPluginResourcePath(), "v860", "biome_definitions.json")
+		));
 	}
 
 	private static function loadBiomeDefinitionModel(string $filePath) : array
@@ -90,7 +76,7 @@ class v844StaticPacketCache
 				$biomeDefinition = $jsonMapper->map($entry, new BiomeDefinitionEntryData());
 
 				$mapWaterColour = $biomeDefinition->mapWaterColour;
-				$entries[] = new v844BiomeDefinitionEntry(
+				$entries[] = new v860BiomeDefinitionEntry(
 					(string) $biomeName,
 					$biomeDefinition->id,
 					$biomeDefinition->temperature,
@@ -114,4 +100,10 @@ class v844StaticPacketCache
 
 		return $entries;
 	}
+
+	public function getBiomeDefinitionListPacket() : v860BiomeDefinitionListPacket
+	{
+		return $this->biomeDefinitionListPacket;
+	}
+
 }

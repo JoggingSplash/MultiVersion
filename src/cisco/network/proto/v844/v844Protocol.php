@@ -68,8 +68,7 @@ class v844Protocol extends LatestProtocol
 		return 844;
 	}
 
-	public function __toString() : string
-	{
+	public function __toString() : string {
 		return "v1.21.114";
 	}
 

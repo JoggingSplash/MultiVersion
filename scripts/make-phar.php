@@ -37,7 +37,7 @@ function main(): Generator {
         '.idea', '.gitignore', 'composer.json', 'composer.lock',
         'make-phar.php', '.git', 'composer.phar',
         'TODO.md', 'README.md', $pharName, 'convert_recipes.py', 'parse_hardcoded_nbt.py',
-        '.php-cs-fixer.php', 'php-cs-fixer.cache'
+        '.php-cs-fixer.php', 'php-cs-fixer.parts'
     ];
 
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basePath)) as $path => $file) {

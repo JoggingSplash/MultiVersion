@@ -30,8 +30,10 @@ use cisco\network\proto\v860\packets\v860ResourcePackStackPacket;
 use cisco\network\proto\v860\packets\v860StartGamePacket;
 use cisco\network\proto\v860\packets\v860TextPacket;
 use cisco\network\proto\v860\structure\v860PacketPool;
+use cisco\network\proto\v860\structure\v860StaticPacketCache;
 use cisco\network\utils\RawPacketHelper;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
+use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\MobEffectPacket;
 use pocketmine\network\mcpe\protocol\ResourcePackStackPacket;
@@ -42,10 +44,13 @@ use pocketmine\network\mcpe\protocol\TextPacket;
 class v860Protocol extends LatestProtocol
 {
 
+	protected v860StaticPacketCache $staticPacketCache;
+
 	public function __construct(){
 		parent::__construct();
 		unset($this->packetPool);
 		$this->packetPool = new v860PacketPool();
+		$this->staticPacketCache = new v860StaticPacketCache($this);
 	}
 
 	public function getProtocolId() : int
@@ -70,6 +75,7 @@ class v860Protocol extends LatestProtocol
 			$packet instanceof ResourcePackStackPacket => v860ResourcePackStackPacket::fromLatest($packet),
 			$packet instanceof StartGamePacket => v860StartGamePacket::fromLatest($packet),
 			$packet instanceof AnimatePacket => v860AnimatePacket::fromLatest($packet),
+			$packet instanceof BiomeDefinitionListPacket => $this->staticPacketCache->getBiomeDefinitionListPacket(),
 			default => parent::outcoming($packet)
 		};
 	}

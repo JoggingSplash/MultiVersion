@@ -20,13 +20,11 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v844\mapping;
+namespace cisco\network\proto\v860\packets\types\biome;
 
 use pocketmine\color\Color;
 
-final class v844BiomeDefinitionEntry
-{
-
+final class v860BiomeDefinitionEntry {
 	/**
 	 * @param string[]|null $tags
 	 * @phpstan-param list<string>|null $tags
@@ -42,7 +40,7 @@ final class v844BiomeDefinitionEntry
 		private Color                            $mapWaterColor,
 		private bool                             $rain,
 		private ?array                           $tags,
-		private ?v844BiomeDefinitionChunkGenData $chunkGenData = null
+		private ?v860BiomeDefinitionChunkGenData $chunkGenData = null
 	)
 	{
 
@@ -102,9 +100,8 @@ final class v844BiomeDefinitionEntry
 		return $this->tags;
 	}
 
-	public function getChunkGenData() : ?BiomeDefinitionChunkGenData
+	public function getChunkGenData() : ?v860BiomeDefinitionChunkGenData
 	{
 		return $this->chunkGenData;
 	}
-
 }

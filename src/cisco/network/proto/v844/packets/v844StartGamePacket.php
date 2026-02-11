@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v844\packets;
 
+use cisco\network\proto\v844\packets\types\v844LevelSettings;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
@@ -30,7 +31,6 @@ use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
-use pocketmine\network\mcpe\protocol\types\LevelSettings;
 use pocketmine\network\mcpe\protocol\types\NetworkPermissions;
 use pocketmine\network\mcpe\protocol\types\PlayerMovementSettings;
 use function count;
@@ -38,7 +38,8 @@ use function count;
 class v844StartGamePacket extends StartGamePacket
 {
 
-	private bool $enableTickDeathSystems;
+	private bool $enableTickDeathSystems = false;
+	private v844LevelSettings $_levelSettings;
 
 	static public function fromLatest(StartGamePacket $packet) : self {
 		$npk = new self();
@@ -48,7 +49,7 @@ class v844StartGamePacket extends StartGamePacket
 		$npk->playerPosition = $packet->playerPosition;
 		$npk->pitch = $packet->pitch;
 		$npk->yaw = $packet->yaw;
-		$npk->levelSettings = $packet->levelSettings;
+		$npk->_levelSettings = v844LevelSettings::fromLatest($packet->levelSettings);
 		$npk->levelId = $packet->levelId;
 		$npk->worldName = $packet->worldName;
 		$npk->premiumWorldTemplateId = $packet->premiumWorldTemplateId;
@@ -80,7 +81,7 @@ class v844StartGamePacket extends StartGamePacket
 		$this->pitch = LE::readFloat($in);
 		$this->yaw = LE::readFloat($in);
 
-		$this->levelSettings = LevelSettings::read($in);
+		$this->_levelSettings = v844LevelSettings::read($in);
 
 		$this->levelId = CommonTypes::getString($in);
 		$this->worldName = CommonTypes::getString($in);
@@ -121,7 +122,7 @@ class v844StartGamePacket extends StartGamePacket
 		LE::writeFloat($out, $this->pitch);
 		LE::writeFloat($out, $this->yaw);
 
-		$this->levelSettings->write($out);
+		$this->_levelSettings->write($out);
 
 		CommonTypes::putString($out, $this->levelId);
 		CommonTypes::putString($out, $this->worldName);

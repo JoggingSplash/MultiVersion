@@ -85,7 +85,7 @@ class MVBlockStateDictionary
 
 		$uniqueNames = [];
 
-		//this hack allows the internal cache index to use interned strings which are already available in the
+		//this hack allows the internal parts index to use interned strings which are already available in the
 		//core code anyway, saving around 40 KB of memory
 		foreach ((new ReflectionClass(BlockTypeNames::class))->getConstants() as $value) {
 			if (is_string($value)) {

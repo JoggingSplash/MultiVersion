@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v844\packets;
+namespace cisco\network\proto\v860\packets;
 
-use cisco\network\proto\v844\packets\types\biome\v844BiomeDefinitionData;
-use cisco\network\proto\v844\packets\types\biome\v844BiomeDefinitionEntry;
+use cisco\network\proto\v860\packets\types\biome\v860BiomeDefinitionData;
+use cisco\network\proto\v860\packets\types\biome\v860BiomeDefinitionEntry;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -33,15 +33,15 @@ use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketHandlerInterface;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\biome\BiomeDefinitionEntry;
 use function array_map;
 use function count;
 
-class v844BiomeDefinitionListPacket extends DataPacket implements ClientboundPacket
-{
+class v860BiomeDefinitionListPacket extends DataPacket implements ClientboundPacket {
 
 	public const NETWORK_ID = ProtocolInfo::BIOME_DEFINITION_LIST_PACKET;
 
-	/** @var v844BiomeDefinitionData[] */
+	/** @var v860BiomeDefinitionData[] */
 	private array $definitionData = [];
 	/**
 	 * @var string[]
@@ -49,16 +49,18 @@ class v844BiomeDefinitionListPacket extends DataPacket implements ClientboundPac
 	 */
 	private array $strings = [];
 
-	public static function fromDefinitions(array $definitions) : self
-	{
+	/**
+	 * @phpstan-param list<BiomeDefinitionEntry> $definitions
+	 */
+	public static function fromDefinitions(array $definitions) : self{
 		/**
-		 * @var int[] $stringIndexLookup
+		 * @var int[]                      $stringIndexLookup
 		 * @phpstan-var array<string, int> $stringIndexLookup
 		 */
 		$stringIndexLookup = [];
 		$strings = [];
-		$addString = function (string $string) use (&$stringIndexLookup, &$strings) : int {
-			if (isset($stringIndexLookup[$string])) {
+		$addString = function(string $string) use (&$stringIndexLookup, &$strings) : int{
+			if(isset($stringIndexLookup[$string])){
 				return $stringIndexLookup[$string];
 			}
 
@@ -67,7 +69,7 @@ class v844BiomeDefinitionListPacket extends DataPacket implements ClientboundPac
 			return $stringIndexLookup[$string];
 		};
 
-		$definitionData = array_map(fn(v844BiomeDefinitionEntry $entry) => new v844BiomeDefinitionData(
+		$definitionData = array_map(fn(v860BiomeDefinitionEntry $entry) => new v860BiomeDefinitionData(
 			$addString($entry->getBiomeName()),
 			$entry->getId(),
 			$entry->getTemperature(),
@@ -84,66 +86,43 @@ class v844BiomeDefinitionListPacket extends DataPacket implements ClientboundPac
 		return self::create($definitionData, $strings);
 	}
 
-	public static function create(array $definitionData, array $strings) : self
-	{
+	public static function create(array $definitionData, array $strings) : self{
 		$result = new self();
 		$result->definitionData = $definitionData;
 		$result->strings = $strings;
 		return $result;
 	}
 
-	public function buildDefinitionsFromData() : array
-	{
-		return array_map(fn(v844BiomeDefinitionData $data) => new v844BiomeDefinitionEntry(
-			$this->locateString($data->getNameIndex()),
-			$data->getId(),
-			$data->getTemperature(),
-			$data->getDownfall(),
-			$data->getFoliageSnow(),
-			$data->getDepth(),
-			$data->getScale(),
-			$data->getMapWaterColor(),
-			$data->hasRain(),
-			($tagIndexes = $data->getTagIndexes()) === null ? null : array_map($this->locateString(...), $tagIndexes),
-			$data->getChunkGenData(),
-		), $this->definitionData);
-	}
-
 	/**
 	 * @throws PacketDecodeException
 	 */
-	private function locateString(int $index) : string
-	{
+	private function locateString(int $index) : string{
 		return $this->strings[$index] ?? throw new PacketDecodeException("Unknown string index $index");
 	}
 
-	public function handle(PacketHandlerInterface $handler) : bool
-	{
-		return true;
-	}
-
-	protected function decodePayload(ByteBufferReader $in) : void
-	{
-		for ($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i) {
-			$this->definitionData[] = v844BiomeDefinitionData::read($in);
+	protected function decodePayload(ByteBufferReader $in) : void{
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$this->definitionData[] = v860BiomeDefinitionData::read($in);
 		}
 
-		for ($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i) {
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->strings[] = CommonTypes::getString($in);
 		}
 	}
 
-	protected function encodePayload(ByteBufferWriter $out) : void
-	{
+	protected function encodePayload(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, count($this->definitionData));
-		foreach ($this->definitionData as $data) {
+		foreach($this->definitionData as $data){
 			$data->write($out);
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->strings));
-		foreach ($this->strings as $string) {
+		foreach($this->strings as $string){
 			CommonTypes::putString($out, $string);
 		}
 	}
 
+	public function handle(PacketHandlerInterface $handler) : bool{
+		return true;
+	}
 }

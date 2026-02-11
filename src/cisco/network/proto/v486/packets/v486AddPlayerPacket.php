@@ -78,7 +78,7 @@ class v486AddPlayerPacket extends AddPlayerPacket
 
 		$pk = v486AdventureSettingsPacket::create(
 			0,
-			$data->getCommandPermission()->value,
+			$data->getCommandPermission(),
 			0,
 			$data->getPlayerPermission(),
 			0,

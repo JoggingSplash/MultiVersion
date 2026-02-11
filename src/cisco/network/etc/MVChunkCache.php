@@ -56,7 +56,7 @@ class MVChunkCache implements ChunkListener
 	}
 
 	/**
-	 * Fetches the ChunkCache instance for the given world. This lazily creates cache systems as needed.
+	 * Fetches the ChunkCache instance for the given world. This lazily creates parts systems as needed.
 	 */
 	public static function getInstance(World $world, Compressor $compressor, TProtocol $protocol) : self
 	{
@@ -64,7 +64,7 @@ class MVChunkCache implements ChunkListener
 		$compressorId = spl_object_id($compressor);
 		$protocolId = spl_object_id($protocol);
 		if (!isset(self::$instances[$protocolId])) {
-			GlobalLogger::get()->debug("Created new chunk packet cache (world#$worldId, compressor#$compressorId, protocol#$protocolId)");
+			GlobalLogger::get()->debug("Created new chunk packet parts (world#$worldId, compressor#$compressorId, protocol#$protocolId)");
 			self::$instances[$protocolId] = [];
 		}
 		if (!isset(self::$instances[$protocolId][$worldId])) {
@@ -162,7 +162,7 @@ class MVChunkCache implements ChunkListener
 				//some requesters are waiting for this chunk, so their request needs to be fulfilled
 				$this->restartPendingRequest($chunkX, $chunkZ);
 			} else {
-				//dump the cache, it'll be regenerated the next time it's requested
+				//dump the parts, it'll be regenerated the next time it's requested
 				$this->destroy($chunkX, $chunkZ);
 			}
 		}
