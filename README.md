@@ -12,4 +12,4 @@ If you find issues or have improvements, feel free to open a pull request or sub
 
 ## Running Versions
 These are some of the versions tested and working at the time we wrote this
-> Latest (1.21.130), 1.21.124, 1.21.120, 1.18.12 & 1.16.100
+> Latest (1.26.0), 1.21.124, 1.21.120, 1.18.12 & 1.16.100
