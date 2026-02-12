@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v860\packets;
 
+use cisco\network\proto\v860\packets\types\v860LevelSettings;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
@@ -30,7 +31,6 @@ use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
-use pocketmine\network\mcpe\protocol\types\LevelSettings;
 use pocketmine\network\mcpe\protocol\types\NetworkPermissions;
 use pocketmine\network\mcpe\protocol\types\PlayerMovementSettings;
 use function count;
@@ -39,6 +39,7 @@ class v860StartGamePacket extends StartGamePacket
 {
 
 	private bool $enableTickDeathSystems;
+	private v860LevelSettings $_levelSettings;
 
 	static public function fromLatest(StartGamePacket $packet) : self
 	{
@@ -49,7 +50,7 @@ class v860StartGamePacket extends StartGamePacket
 		$npk->playerPosition = $packet->playerPosition;
 		$npk->pitch = $packet->pitch;
 		$npk->yaw = $packet->yaw;
-		$npk->levelSettings = $packet->levelSettings;
+		$npk->_levelSettings = v860LevelSettings::fromLatest($packet->levelSettings);
 		$npk->levelId = $packet->levelId;
 		$npk->worldName = $packet->worldName;
 		$npk->premiumWorldTemplateId = $packet->premiumWorldTemplateId;
@@ -82,7 +83,7 @@ class v860StartGamePacket extends StartGamePacket
 		$this->pitch = LE::readFloat($in);
 		$this->yaw = LE::readFloat($in);
 
-		$this->levelSettings = LevelSettings::read($in);
+		$this->_levelSettings = v860LevelSettings::read($in);
 
 		$this->levelId = CommonTypes::getString($in);
 		$this->worldName = CommonTypes::getString($in);
@@ -123,7 +124,7 @@ class v860StartGamePacket extends StartGamePacket
 		LE::writeFloat($out, $this->pitch);
 		LE::writeFloat($out, $this->yaw);
 
-		$this->levelSettings->write($out);
+		$this->_levelSettings->write($out);
 
 		CommonTypes::putString($out, $this->levelId);
 		CommonTypes::putString($out, $this->worldName);
