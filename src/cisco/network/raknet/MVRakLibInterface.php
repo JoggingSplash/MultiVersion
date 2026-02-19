@@ -37,6 +37,7 @@ use pocketmine\network\mcpe\StandardEntityEventBroadcaster;
 use pocketmine\network\mcpe\StandardPacketBroadcaster;
 use pocketmine\Server;
 use pocketmine\timings\Timings;
+use pocketmine\YmlServerProperties;
 use raklib\server\ipc\RakLibToUserThreadMessageReceiver;
 use raklib\server\ipc\UserToRakLibThreadMessageSender;
 use raklib\utils\InternetAddress;
@@ -80,7 +81,7 @@ class MVRakLibInterface extends RakLibInterface
 			$threadToMainBuffer,
 			new InternetAddress($ip, $port, $ipV6 ? 6 : 4),
 			ReflectionUtils::getProperty(RakLibInterface::class, $this, "rakServerId"),
-			$server->getConfigGroup()->getProperty("network.max-mtu-size", 1492),
+			$server->getConfigGroup()->getProperty(YmlServerProperties::NETWORK_MAX_MTU_SIZE, 1492),
 			MCProtocols::getRaknetProtocolAcceptor(),
 			$sleeperEntry
 		));
@@ -95,8 +96,7 @@ class MVRakLibInterface extends RakLibInterface
 	/**
 	 * @throws ReflectionException
 	 */
-	public function onClientConnect(int $sessionId, string $address, int $port, int $clientID) : void
-	{
+	public function onClientConnect(int $sessionId, string $address, int $port, int $clientID) : void {
 		$server = Server::getInstance();
 		$session = new NetworkSession(
 			$server,

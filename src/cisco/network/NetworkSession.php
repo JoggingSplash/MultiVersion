@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network;
 
+use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\etc\MVBatch;
 use cisco\network\etc\MVChunkCache;
 use cisco\network\global\MVLoginPacketHandler;
@@ -46,6 +47,7 @@ use pocketmine\network\mcpe\encryption\DecryptionException;
 use pocketmine\network\mcpe\encryption\EncryptionContext;
 use pocketmine\network\mcpe\EntityEventBroadcaster;
 use pocketmine\network\mcpe\handler\PacketHandler;
+use pocketmine\network\mcpe\handler\PacketHandlerAction;
 use pocketmine\network\mcpe\NetworkSession as BaseNetworkSession;
 use pocketmine\network\mcpe\PacketBroadcaster;
 use pocketmine\network\mcpe\PacketSender;
@@ -95,6 +97,10 @@ class NetworkSession extends BaseNetworkSession {
 	public function __construct(Server $server, NetworkSessionManager $manager, PacketPool $packetPool, PacketSender $sender, PacketBroadcaster $broadcaster, EntityEventBroadcaster $entityEventBroadcaster, Compressor $compressor, TypeConverter $typeConverter, string $ip, int $port)
 	{
 		parent::__construct($server, $manager, $packetPool, $sender, $broadcaster, $entityEventBroadcaster, $compressor, $typeConverter, $ip, $port);
+		// i dont like at all this way but at least works
+		$actions = ReflectionUtils::getProperty(BaseNetworkSession::class, $this, "handlerActions");
+		$actions[GlobalLoginPacket::class] = PacketHandlerAction::HANDLED;
+		ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "handlerActions", $actions);
 		$this->setHandler(new MVLoginPacketHandler(
 			$server,
 			$this,
@@ -640,9 +646,12 @@ class NetworkSession extends BaseNetworkSession {
 		}
 	}
 
-	public function getProtocol() : TProtocol
-	{
+	public function getProtocol() : TProtocol {
 		return $this->protocol;
+	}
+
+	public function safeProtocol() : ?TProtocol {
+		return !isset($this->protocol) ? null : $this->protocol;
 	}
 
 	/**
