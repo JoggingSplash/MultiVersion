@@ -97,10 +97,6 @@ class NetworkSession extends BaseNetworkSession {
 	public function __construct(Server $server, NetworkSessionManager $manager, PacketPool $packetPool, PacketSender $sender, PacketBroadcaster $broadcaster, EntityEventBroadcaster $entityEventBroadcaster, Compressor $compressor, TypeConverter $typeConverter, string $ip, int $port)
 	{
 		parent::__construct($server, $manager, $packetPool, $sender, $broadcaster, $entityEventBroadcaster, $compressor, $typeConverter, $ip, $port);
-		// i dont like at all this way but at least works
-		$actions = ReflectionUtils::getProperty(BaseNetworkSession::class, $this, "handlerActions");
-		$actions[GlobalLoginPacket::class] = PacketHandlerAction::HANDLED;
-		ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "handlerActions", $actions);
 		$this->setHandler(new MVLoginPacketHandler(
 			$server,
 			$this,
@@ -117,20 +113,24 @@ class NetworkSession extends BaseNetworkSession {
 		));
 	}
 
-	/**
-	 * @throws ReflectionException
-	 */
 	public function setHandler(?PacketHandler $handler) : void
 	{
-		if (ReflectionUtils::getProperty(BaseNetworkSession::class, $this, "connected")) { //TODO: this is fine since we can't handle anything from a disconnected session, but it might produce surprises in some cases
-			$newHandler = $handler;
-			if (isset($this->protocol)) {
-				$newHandler = $this->protocol->fetchPacketHandler($handler, $this) ?? $handler;
-			}
-
-			ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "handler", $newHandler);
-			$newHandler?->setUp();
+		$newHandler = $handler;
+		if (isset($this->protocol)) {
+			$newHandler = $this->protocol->fetchPacketHandler($handler, $this) ?? $handler;
 		}
+		parent::setHandler($newHandler);
+		try {
+			$actions = ReflectionUtils::getProperty(BaseNetworkSession::class, $this, "handlerActions");
+			if($actions !== null) {
+				$actions[GlobalLoginPacket::class] = PacketHandlerAction::HANDLED;
+			}
+			ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "handlerActions", $actions);
+		}catch (ReflectionException $exception){
+			// user is not using pmmp version with handler actions, pass
+
+		}
+
 	}
 
 	/**
@@ -260,74 +260,68 @@ class NetworkSession extends BaseNetworkSession {
 		}
 	}
 
-	public function handleDataPacket(Packet $packet, string $buffer) : void
-	{
-		if (!isset($this->protocol)) {
-			parent::handleDataPacket($packet, $buffer);
-			return;
-		}
-
-		if (!$packet instanceof ServerboundPacket) {
-			throw new PacketDecodeException("Unexpected non-serverbound packet");
+	public function handleDataPacket(Packet $packet, string $buffer) : void{
+		if(!($packet instanceof ServerboundPacket)){
+			throw new PacketHandlingException("Unexpected non-serverbound packet");
 		}
 
 		$timings = Timings::getReceiveDataPacketTimings($packet);
 		$timings->startTiming();
 
-		try {
+		try{
+
+			if(DataPacketDecodeEvent::hasHandlers()){
+				$ev = new DataPacketDecodeEvent($this, $packet->pid(), $buffer);
+				$ev->call();
+				if($ev->isCancelled()){
+					return;
+				}
+			}
+
 			$decodeTimings = Timings::getDecodeDataPacketTimings($packet);
 			$decodeTimings->startTiming();
-			try {
-				if (DataPacketDecodeEvent::hasHandlers()) {
-					$ev = new DataPacketDecodeEvent($this, $packet->pid(), $buffer);
-					$ev->call();
-					if ($ev->isCancelled()) {
-						return;
-					}
-				}
-
+			try{
 				$stream = new ByteBufferReader($buffer);
-				try {
+				try{
 					$packet->decode($stream);
-				} catch (PacketDecodeException $e) {
+				}catch(PacketDecodeException $e){
 					throw PacketHandlingException::wrap($e);
 				}
-
-				if ($stream->getUnreadLength() > 0) {
+				if($stream->getUnreadLength() > 0){
 					$remains = substr($stream->getData(), $stream->getOffset());
-					$this->getLogger()->debug("Still " . $stream->getUnreadLength() . " bytes unread in " . $packet->getName() . ": " . bin2hex($remains));
+					$this->getLogger()->debug("Still " . strlen($remains) . " bytes unread in " . $packet->getName() . ": " . bin2hex($remains));
 				}
-			} finally {
+			}finally{
 				$decodeTimings->stopTiming();
 			}
 
-			$proto = $this->protocol;
-			$pk = $proto->incoming(clone $packet);
-
-			if ($pk === null) {
-				$proto->getLogger()->debug("Ignoring {$packet->getName()} from {$this->getIp()}:{$this->getPort()}");
-				return;
+			if(isset($this->protocol)){
+				$packet = $this->protocol->incoming(clone $packet);
+				if($packet === null){
+					$this->protocol->getLogger()->debug("Ignoring packet");
+					return;
+				}
 			}
 
-			if (DataPacketReceiveEvent::hasHandlers()) {
-				$ev = new DataPacketReceiveEvent($this, $pk);
+			if(DataPacketReceiveEvent::hasHandlers()){
+				$ev = new DataPacketReceiveEvent($this, $packet);
 				$ev->call();
-				if ($ev->isCancelled()) {
+				if($ev->isCancelled()){
 					return;
 				}
 			}
 			$handlerTimings = Timings::getHandleDataPacketTimings($packet);
 			$handlerTimings->startTiming();
-			try {
-				if ($this->getHandler() === null || !$pk->handle($this->getHandler())) {
-					$proto->getLogger()->debug("Unhandled " . $pk->getName() . ": " . base64_encode($stream->getData()));
+			try{
+				if($this->getHandler() === null || !$packet->handle($this->getHandler())){
+					$this->getLogger()->debug("Handler Rejected: {$packet->getName()}: " . base64_encode($buffer));
 				}
-			} catch (FilterNoisyPacketException $exception) {
-				// NOOP
-			} finally {
+			}catch(FilterNoisyPacketException $exception){
+
+			}finally{
 				$handlerTimings->stopTiming();
 			}
-		} finally {
+		}finally{
 			$timings->stopTiming();
 		}
 	}
@@ -459,12 +453,7 @@ class NetworkSession extends BaseNetworkSession {
 	/**
 	 * @throws ReflectionException
 	 */
-	public function sendDataPacket(ClientboundPacket $packet, bool $immediate = false) : bool
-	{
-		if (!isset($this->protocol)) {
-			return parent::sendDataPacket($packet, $immediate);
-		}
-
+	public function sendDataPacket(ClientboundPacket $packet, bool $immediate = false) : bool {
 		if (!ReflectionUtils::getProperty(BaseNetworkSession::class, $this, "connected")) {
 			return false;
 		}
@@ -489,20 +478,26 @@ class NetworkSession extends BaseNetworkSession {
 
 			$writer = new ByteBufferWriter();
 
-			$proto = $this->protocol;
+			$proto = null;
+			if(isset($this->protocol)){
+				$proto = $this->protocol;
+			}
 
 			foreach ($packets as $packet) {
 				// Memory reuse
 				$writer->clear();
 
-				$pk = $proto->outcoming(clone $packet);
+				if($proto !== null){
+					$packet = $proto->outcoming(clone $packet);
+				}
 
-				if ($pk === null) {
-					$proto->getLogger()->debug("Ignoring {$packet->getName()} from {$this->getIp()}:{$this->getPort()}");
+				if ($packet === null) {
+					$this->getLogger()->debug("Ignoring packet sent to {$this->getIp()}:{$this->getPort()}");
 					continue;
 				}
 
-				$this->addToSendBuffer(self::encodePacketTimed($writer, $pk));
+				$this->getLogger()->debug("Sending packet: {$packet->getName()}");
+				$this->addToSendBuffer(self::encodePacketTimed($writer, $packet));
 			}
 
 			if ($immediate) {

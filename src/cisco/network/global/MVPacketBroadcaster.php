@@ -89,6 +89,7 @@ class MVPacketBroadcaster implements PacketBroadcaster
 			$pk = $protocol->outcoming(clone $packet);
 
 			if ($pk === null) {
+				$protocol->getLogger()->debug("Ignoring packet {$packet->getName()} to be broadcasted");
 				continue;
 			}
 
@@ -106,18 +107,16 @@ class MVPacketBroadcaster implements PacketBroadcaster
 				//do not prepare shared batch unless we're sure it will be compressed
 				$stream = new ByteBufferWriter();
 				PacketBatch::encodeRaw($stream, $packetBuffers);
-				$batchBuffer = $stream->getData();
 
-				$promise = MVBatch::prepareBatch($batchBuffer, $protocol, $compressor, timings: Timings::$playerNetworkSendCompressBroadcast);
+				$promise = MVBatch::prepareBatch($stream->getData(), $protocol, $compressor, timings: Timings::$playerNetworkSendCompressBroadcast);
 				foreach ($compressorTargets as $target) {
 					$target->queueCompressed($promise);
 				}
-				continue;
-			}
-
-			foreach ($compressorTargets as $target) {
-				foreach ($packetBuffers as $packetBuffer) {
-					$target->addToSendBuffer($packetBuffer);
+			} else {
+				foreach ($compressorTargets as $target) {
+					foreach ($packetBuffers as $packetBuffer) {
+						$target->addToSendBuffer($packetBuffer);
+					}
 				}
 			}
 		}

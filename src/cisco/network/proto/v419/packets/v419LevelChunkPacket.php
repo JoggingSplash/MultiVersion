@@ -33,6 +33,7 @@ use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\ChunkPosition;
 use pocketmine\utils\Limits;
+use function count;
 use const PHP_INT_MAX;
 
 class v419LevelChunkPacket extends LevelChunkPacket
@@ -88,17 +89,14 @@ class v419LevelChunkPacket extends LevelChunkPacket
 	protected function encodePayload(ByteBufferWriter $out) : void
 	{
 		$this->getChunkPosition()->write($out);
-		if (!$this->isClientSubChunkRequestEnabled()) {
-			VarInt::writeUnsignedInt($out, $this->getSubChunkCount());
-		} else {
-			if ($this->getSubChunkCount() === PHP_INT_MAX) {
-				VarInt::writeUnsignedInt($out, self::CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT);
-			} else {
-				VarInt::writeUnsignedInt($out, self::CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT);
-				LE::writeUnsignedShort($out, $this->getSubChunkCount());
+		VarInt::writeUnsignedInt($out, $this->getSubChunkCount()); // https://github.com/pmmp/BedrockProtocol/blob/bedrock-1.16.100/src/LevelChunkPacket.php
+		CommonTypes::putBool($out, $this->getUsedBlobHashes() !== null);
+		if($this->getUsedBlobHashes() !== null) {
+			VarInt::writeUnsignedInt($out, count($this->getUsedBlobHashes()));
+			foreach ($this->getUsedBlobHashes() as $blobHash) {
+				LE::writeUnsignedLong($out, $blobHash);
 			}
 		}
-		CommonTypes::putBool($out, false); // used blob hashes
 		CommonTypes::putString($out, $this->getExtraPayload());
 	}
 

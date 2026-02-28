@@ -44,13 +44,13 @@ class v419NetworkChunkPublisherUpdatePacket extends NetworkChunkPublisherUpdateP
 
 	protected function decodePayload(ByteBufferReader $in) : void
 	{
-		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->blockPosition = CommonTypes::getSignedBlockPosition($in);
 		$this->radius = VarInt::readUnsignedInt($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void
 	{
-		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		CommonTypes::putSignedBlockPosition($out, $this->blockPosition);
 		VarInt::writeUnsignedInt($out, $this->radius);
 	}
 }

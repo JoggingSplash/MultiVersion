@@ -44,7 +44,6 @@ use pocketmine\network\mcpe\protocol\ItemStackRequestPacket;
 use pocketmine\network\mcpe\protocol\ItemStackResponsePacket;
 use pocketmine\network\mcpe\protocol\MobEquipmentPacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
-use pocketmine\network\mcpe\protocol\NetworkChunkPublisherUpdatePacket;
 use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\types\inventory\ContainerIds;
 use pocketmine\network\mcpe\protocol\types\inventory\MismatchTransactionData;
@@ -255,10 +254,6 @@ class v419InGamePacketHandler extends InGamePacketHandler
 	private function getPlayer() : Player
 	{
 		return $this->player;
-	}
-
-	public function handleNetworkChunkPublisherUpdate(NetworkChunkPublisherUpdatePacket $packet) : bool{
-		return true;
 	}
 
 	public function handleItemStackRequest(ItemStackRequestPacket $packet) : bool{

@@ -65,8 +65,7 @@ final class FormattedChunkSerializer implements MVChunkSerializer {
 		return $writer->getData();
 	}
 
-	public function getSubChunkCount(Chunk $chunk, int $dimensionId) : int
-	{
+	public function getSubChunkCount(Chunk $chunk, int $dimensionId) : int {
 		return ChunkSerializer::getSubChunkCount($chunk, $dimensionId);
 	}
 

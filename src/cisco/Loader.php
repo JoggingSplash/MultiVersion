@@ -124,7 +124,7 @@ final class Loader extends PluginBase {
 		if ($pk instanceof PacketViolationWarningPacket) {
 			/** @var NetworkSession $origin */
 			$origin = $event->getOrigin();
-			$pid = $pk->pid();
+			$pid = $pk->getPacketId();
 			$protocol = $origin->safeProtocol();
 
 			if($protocol === null){
@@ -134,7 +134,7 @@ final class Loader extends PluginBase {
 			}
 
 			$source = $protocol->getPacketPool()->getPacketById($pid);
-			$protocol->getLogger()->debug(
+			$this->getLogger()->debug(
 				"Packet Violation: pid={$pid} packet={$source?->getName()}"
 			);
 		}

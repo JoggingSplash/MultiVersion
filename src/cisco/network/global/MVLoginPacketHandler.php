@@ -29,6 +29,7 @@ use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\NetworkSession;
 use cisco\network\proto\v419\structure\v419ProtocolInfo;
 use cisco\network\proto\v486\structure\v486ProtocolInfo;
+use cisco\network\utils\ReflectionUtils;
 use Closure;
 use InvalidArgumentException;
 use JsonMapper;
@@ -58,41 +59,47 @@ use function assert;
 use function in_array;
 use function is_array;
 
-class MVLoginPacketHandler extends LoginPacketHandler
-{
+class MVLoginPacketHandler extends LoginPacketHandler {
+
+	private bool $receivedPacketPreLogin = false;
 
 	public function __construct(private Server $server, private NetworkSession $session, private Closure $playerInfoConsumer, private Closure $authCallback, private Closure $onSucess)
 	{
 		parent::__construct($server, $session, $playerInfoConsumer, $authCallback);
 	}
 
-	public function handleRequestNetworkSettings(RequestNetworkSettingsPacket $packet) : bool
-	{
-		$protocolVersion = $packet->getProtocolVersion();
-		$session = $this->session;
-		if (!in_array($protocolVersion, MCProtocols::getProtocols(), true)) {
-			$session->disconnectIncompatibleProtocol($protocolVersion);
+	public function handleRequestNetworkSettings(RequestNetworkSettingsPacket $packet) : bool {
+		if(!in_array($protocol = $packet->getProtocolVersion(), MCProtocols::getProtocols(), true)){
+			$this->session->disconnectIncompatibleProtocol($protocol);
 			return true;
 		}
 
-		$protocol = MCProtocols::getProtocolInstance($protocolVersion);
-		$session->setProtocol($protocol);
-		$session->getProtocol()->getLogger()->info("Translating packets from {$session->getIp()}:{$session->getPort()}");
-		$session->sendDataPacket(NetworkSettingsPacket::create(
+		$this->receivedPacketPreLogin = true;
+
+		$this->session->setProtocol(MCProtocols::getProtocolInstance($protocol));
+
+		if($protocol !== ProtocolInfo::CURRENT_PROTOCOL){
+			$this->session->getProtocol()->getLogger()->info("Translating packets from protocol $protocol");
+			ReflectionUtils::setProperty(RequestNetworkSettingsPacket::class, $packet, "protocolVersion", ProtocolInfo::CURRENT_PROTOCOL);
+		}
+
+		$this->session->sendDataPacket(NetworkSettingsPacket::create(
 			NetworkSettingsPacket::COMPRESS_EVERYTHING,
 			$this->session->getCompressor()->getNetworkId(),
 			false,
 			0,
 			0
 		));
-
 		($this->onSucess)();
 
 		return true;
 	}
 
-	public function handleLogin(LoginPacket $packet) : bool
-	{
+	public function handleLogin(LoginPacket $packet) : bool {
+		if($this->receivedPacketPreLogin){
+			return parent::handleLogin($packet);
+		}
+
 		assert($packet instanceof GlobalLoginPacket);
 		$protocol = $packet->protocol;
 
@@ -253,7 +260,7 @@ class MVLoginPacketHandler extends LoginPacketHandler
 			throw PacketDecodeException::wrap($e);
 		}
 
-		$this->session->getProtocol()->injectExtraData($clientDataClaims);
+		$this->session->safeProtocol()?->injectExtraData($clientDataClaims);
 
 		$mapper = new JsonMapper();
 		$mapper->bEnforceMapType = false; //TODO: we don't really need this as an array, but right now we don't have enough models
@@ -373,7 +380,7 @@ class MVLoginPacketHandler extends LoginPacketHandler
 			throw PacketHandlingException::wrap($e);
 		}
 
-		$this->session->getProtocol()->injectExtraData($clientDataClaims);
+		$this->session->safeProtocol()?->injectExtraData($clientDataClaims);
 
 		$mapper = new JsonMapper();
 		$mapper->bEnforceMapType = false; //TODO: we don't really need this as an array, but right now we don't have enough models
