@@ -496,7 +496,6 @@ class NetworkSession extends BaseNetworkSession {
 					continue;
 				}
 
-				$this->getLogger()->debug("Sending packet: {$packet->getName()}");
 				$this->addToSendBuffer(self::encodePacketTimed($writer, $packet));
 			}
 
