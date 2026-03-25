@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\proto\v486\packets;
 
 use cisco\network\proto\v486\structure\v486ProtocolInfo;
+use cisco\network\utils\RawPacketHelper;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -38,7 +39,8 @@ class v486PlayerActionPacket extends PlayerActionPacket
 	{
 		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
 		$this->action = VarInt::readSignedInt($in);
-		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->blockPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
+
 		$this->face = VarInt::readSignedInt($in);
 	}
 
@@ -46,7 +48,7 @@ class v486PlayerActionPacket extends PlayerActionPacket
 	{
 		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
 		VarInt::writeSignedInt($out, $this->action);
-		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		RawPacketHelper::putUnsignedYBlockPosition($out, $this->blockPosition);
 		VarInt::writeSignedInt($out, $this->face);
 	}
 }

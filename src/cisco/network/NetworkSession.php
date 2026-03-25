@@ -58,7 +58,6 @@ use pocketmine\network\mcpe\protocol\DisconnectPacket;
 use pocketmine\network\mcpe\protocol\Packet;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketPool;
-use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\PacketBatch;
 use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\types\CompressionAlgorithm;
@@ -527,8 +526,7 @@ class NetworkSession extends BaseNetworkSession {
 	 *
 	 * @phpstan-param Closure() : void $onCompletion
 	 */
-	public function startUsingChunk(int $chunkX, int $chunkZ, Closure $onCompletion) : void
-	{
+	public function startUsingChunk(int $chunkX, int $chunkZ, Closure $onCompletion) : void {
 		$world = $this->getPlayer()->getLocation()->getWorld();
 
 		$promise = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
@@ -667,8 +665,5 @@ class NetworkSession extends BaseNetworkSession {
 		ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "compressor", $protocol->getCompressor());
 		ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "typeConverter", $protocol->getTypeConverter());
 
-		if($protocol->hasOldCompressionMethod()){
-			$this->ops = new PacketLimiterOps(ProtocolInfo::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET);
-		}
 	}
 }

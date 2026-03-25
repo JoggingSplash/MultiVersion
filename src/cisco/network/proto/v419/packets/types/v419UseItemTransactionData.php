@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\proto\v419\packets\types;
 
 use cisco\network\proto\v419\structure\v419CommonTypes;
+use cisco\network\utils\RawPacketHelper;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -91,7 +92,7 @@ class v419UseItemTransactionData extends UseItemTransactionData
 	protected function decodeData(ByteBufferReader $in) : void
 	{
 		$this->actionType = VarInt::readUnsignedInt($in);
-		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->blockPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
 		$this->face = VarInt::readSignedInt($in);
 		$this->hotbarSlot = VarInt::readSignedInt($in);
 		$this->itemInHand = v419CommonTypes::getItemStackWrapper($in);
@@ -109,7 +110,7 @@ class v419UseItemTransactionData extends UseItemTransactionData
 	{
 		# Invalid raw value
 		VarInt::writeUnsignedInt($out, $this->actionType);
-		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		RawPacketHelper::putUnsignedYBlockPosition($out, $this->blockPosition);
 		VarInt::writeSignedInt($out, $this->face);
 		VarInt::writeSignedInt($out, $this->hotbarSlot);
 		v419CommonTypes::putItemStackWrapper($out, $this->itemInHand);

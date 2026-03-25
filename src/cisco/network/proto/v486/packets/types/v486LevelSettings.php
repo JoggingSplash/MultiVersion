@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\proto\v486\packets\types;
 
 use cisco\network\proto\v486\structure\v486CommonTypes;
+use cisco\network\utils\RawPacketHelper;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\DataDecodeException;
@@ -157,7 +158,7 @@ final class v486LevelSettings
 		$this->generator = VarInt::readSignedInt($in);
 		$this->worldGamemode = VarInt::readSignedInt($in);
 		$this->difficulty = VarInt::readSignedInt($in);
-		$this->spawnPosition = CommonTypes::getBlockPosition($in);
+		$this->spawnPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
 		$this->hasAchievementsDisabled = CommonTypes::getBool($in);
 		$this->time = VarInt::readSignedInt($in);
 		$this->eduEditionOffer = VarInt::readSignedInt($in);
@@ -200,7 +201,7 @@ final class v486LevelSettings
 		VarInt::writeSignedInt($out, $this->generator);
 		VarInt::writeSignedInt($out, $this->worldGamemode);
 		VarInt::writeSignedInt($out, $this->difficulty);
-		CommonTypes::putBlockPosition($out, $this->spawnPosition);
+		RawPacketHelper::putUnsignedYBlockPosition($out, $this->spawnPosition);
 		CommonTypes::putBool($out, $this->hasAchievementsDisabled);
 		VarInt::writeSignedInt($out, $this->time);
 		VarInt::writeSignedInt($out, $this->eduEditionOffer);

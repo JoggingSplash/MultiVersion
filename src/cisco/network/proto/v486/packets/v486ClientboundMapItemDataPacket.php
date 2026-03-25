@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\proto\v486\packets;
 
 use cisco\network\proto\v486\structure\v486ProtocolInfo;
+use cisco\network\utils\RawPacketHelper;
 use InvalidArgumentException;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
@@ -84,7 +85,8 @@ class v486ClientboundMapItemDataPacket extends ClientboundMapItemDataPacket
 				$object = new MapTrackedObject();
 				$object->type = LE::readUnsignedInt($in);
 				if ($object->type === MapTrackedObject::TYPE_BLOCK) {
-					$object->blockPosition = CommonTypes::getBlockPosition($in);
+					$object->blockPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
+
 				} elseif ($object->type === MapTrackedObject::TYPE_ENTITY) {
 					$object->actorUniqueId = CommonTypes::getActorUniqueId($in);
 				} else {
@@ -154,7 +156,7 @@ class v486ClientboundMapItemDataPacket extends ClientboundMapItemDataPacket
 			foreach ($this->trackedEntities as $object) {
 				LE::writeUnsignedInt($out, $object->type);
 				if ($object->type === MapTrackedObject::TYPE_BLOCK) {
-					CommonTypes::putBlockPosition($out, $object->blockPosition);
+					RawPacketHelper::putUnsignedYBlockPosition($out, $object->blockPosition);
 				} elseif ($object->type === MapTrackedObject::TYPE_ENTITY) {
 					CommonTypes::putActorUniqueId($out, $object->actorUniqueId);
 				} else {

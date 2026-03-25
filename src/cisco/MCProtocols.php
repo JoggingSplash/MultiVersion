@@ -28,7 +28,6 @@ use cisco\network\proto\v361\v361Protocol;
 use cisco\network\proto\v419\v419Protocol;
 use cisco\network\proto\v486\v486Protocol;
 use cisco\network\proto\v844\v844Protocol;
-use cisco\network\proto\v860\v860Protocol;
 use cisco\network\raknet\MVRakNetAcceptor;
 use InvalidArgumentException;
 use raklib\server\ProtocolAcceptor;
@@ -91,19 +90,7 @@ final class MCProtocols {
 
 	protected static function setup() : void {
 		self::register(new LatestProtocol()); /** 1.21.131 */
-		self::register(new v860Protocol()); /** 1.21.124 */
-		// This is fine since the 1.21.120 version only changes the way how StartGamePacket item hashes are made
-		self::register(new class extends v860Protocol {
-			public function getProtocolId() : int
-			{
-				return 859;
-			}
 
-			public function __toString() : string
-			{
-				return "v1.21.120";
-			}
-		});
 		self::register(new v844Protocol()); /** 1.21.114 */
 		self::register(new v486Protocol()); /** 1.18.12 */
 		self::register(new v419Protocol()); /** 1.16.100  */

@@ -24,7 +24,8 @@ namespace cisco\network\utils;
 
 use pocketmine\network\mcpe\protocol\Packet;
 use function microtime;
-use function var_dump;
+use function round;
+use const PHP_ROUND_HALF_DOWN;
 
 final class PacketLimiterOps {
 
@@ -39,11 +40,12 @@ final class PacketLimiterOps {
 
 		if(!isset($this->responses[$index])) {
 			$this->responses[$index] = microtime(true);
+			return false;
 		}
 
-		$diff = $this->responses[$index] - microtime(true);
-		var_dump($diff);
-		return false;
+		$diff = round($now = microtime(true) - $this->responses[$index], 2, PHP_ROUND_HALF_DOWN);
+		$this->responses[$index] = $now;
+		return $diff > 0.95;
 	}
 
 }

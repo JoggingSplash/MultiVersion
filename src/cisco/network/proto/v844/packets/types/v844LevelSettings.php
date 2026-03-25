@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v844\packets\types;
 
+use cisco\network\utils\RawPacketHelper;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
@@ -143,7 +144,7 @@ final class v844LevelSettings {
 		$this->worldGamemode = VarInt::readSignedInt($in);
 		$this->hardcore = CommonTypes::getBool($in);
 		$this->difficulty = VarInt::readSignedInt($in);
-		$this->spawnPosition = CommonTypes::getBlockPosition($in);
+		$this->spawnPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
 		$this->hasAchievementsDisabled = CommonTypes::getBool($in);
 		$this->editorWorldType = VarInt::readSignedInt($in);
 		$this->createdInEditorMode = CommonTypes::getBool($in);
@@ -198,7 +199,7 @@ final class v844LevelSettings {
 		VarInt::writeSignedInt($out, $this->worldGamemode);
 		CommonTypes::putBool($out, $this->hardcore);
 		VarInt::writeSignedInt($out, $this->difficulty);
-		CommonTypes::putBlockPosition($out, $this->spawnPosition);
+		RawPacketHelper::putUnsignedYBlockPosition($out, $this->spawnPosition);
 		CommonTypes::putBool($out, $this->hasAchievementsDisabled);
 		VarInt::writeSignedInt($out, $this->editorWorldType);
 		CommonTypes::putBool($out, $this->createdInEditorMode);

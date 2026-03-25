@@ -114,7 +114,7 @@ class LatestProtocol extends TProtocol
 
 	public function __toString() : string
 	{
-		return ProtocolInfo::MINECRAFT_VERSION;
+		return "v".ProtocolInfo::MINECRAFT_VERSION_NETWORK;
 	}
 
 }
