@@ -23,21 +23,19 @@ declare(strict_types=1);
 namespace cisco\network\proto\v486\packets;
 
 use cisco\network\utils\ReflectionUtils;
-use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\LevelChunkPacket;
-use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\network\mcpe\protocol\types\ChunkPosition;
+use pocketmine\utils\Limits;
 use const PHP_INT_MAX;
 
 class v486LevelChunkPacket extends LevelChunkPacket
 {
 
-	private const CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT = 0xff_ff_ff_ff;
-	private const CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT = 0xff_ff_ff_fe;
+	private const CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT = Limits::UINT32_MAX;
+	private const CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT = Limits::UINT32_MAX - 1;
 	private const MAX_BLOB_HASHES = 64;
 
 	public static function fromLatest(LevelChunkPacket $pk) : self
@@ -49,36 +47,6 @@ class v486LevelChunkPacket extends LevelChunkPacket
 		ReflectionUtils::setProperty(LevelChunkPacket::class, $npk, "usedBlobHashes", $pk->getUsedBlobHashes());
 		ReflectionUtils::setProperty(LevelChunkPacket::class, $npk, "extraPayload", $pk->getExtraPayload());
 		return $npk;
-	}
-
-	protected function decodePayload(ByteBufferReader $in) : void
-	{
-		ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "chunkPosition", ChunkPosition::read($in));
-		$subChunkCountButNotReally = VarInt::readUnsignedInt($in);
-		if ($subChunkCountButNotReally === self::CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT) {
-			ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "clientSubChunkRequestsEnabled", true);
-			ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "subChunkCount", PHP_INT_MAX);
-		} elseif ($subChunkCountButNotReally === self::CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT) {
-			ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "clientSubChunkRequestsEnabled", true);
-			ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "subChunkCount", LE::readUnsignedShort($in));
-		} else {
-			ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "clientSubChunkRequestsEnabled", false);
-			ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "subChunkCount", $subChunkCountButNotReally);
-		}
-
-		$cacheEnabled = CommonTypes::getBool($in);
-		if ($cacheEnabled) {
-			$usedBlobHashes = [];
-			$count = VarInt::readUnsignedInt($in);
-			if ($count > self::MAX_BLOB_HASHES) {
-				throw new PacketDecodeException("Expected at most " . self::MAX_BLOB_HASHES . " blob hashes, got " . $count);
-			}
-			for ($i = 0; $i < $count; ++$i) {
-				$usedBlobHashes[] = LE::readUnsignedLong($in);
-			}
-			ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "usedBlobHashes", $usedBlobHashes);
-		}
-		ReflectionUtils::setProperty(LevelChunkPacket::class, $this, "extraPayload", CommonTypes::getString($in));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void
@@ -96,7 +64,12 @@ class v486LevelChunkPacket extends LevelChunkPacket
 			}
 		}
 
-		CommonTypes::putBool($out, false);
+		CommonTypes::putBool($out, $this->getUsedBlobHashes() !== null);
+		if($this->getUsedBlobHashes() !== null){
+			foreach ($this->getUsedBlobHashes() as $hash){
+
+			}
+		}
 		CommonTypes::putString($out, $this->getExtraPayload());
 	}
 }

@@ -356,6 +356,11 @@ final class v419Protocol extends TProtocol
 		return $this->craftingManager;
 	}
 
+	public function hasDebug() : bool
+	{
+		return true;
+	}
+
 	public function getStaticPacketCache() : v419StaticPacketCache
 	{
 		return $this->staticPacketCache;

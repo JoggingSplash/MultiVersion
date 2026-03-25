@@ -70,7 +70,7 @@ class MVPacketBroadcaster implements PacketBroadcaster
 
 		$protocol = $this->protocol;
 		foreach ($recipients as $recipient) {
-			if ($recipient->getProtocol() !== $protocol) {
+			if ($recipient->safeProtocol() !== $protocol) {
 				throw new InvalidArgumentException("Only recipients with the same protocol context as the broadcaster can be broadcast to by this broadcaster");
 			}
 

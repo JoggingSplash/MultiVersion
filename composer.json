@@ -4,7 +4,11 @@
     "type": "project",
     "autoload": {},
     "require": {
-        "ext-encoding": "~1.0.0"
+        "ext-curl": "*",
+        "ext-pmmpthread": "*",
+        "ext-encoding": "*",
+        "ext-chunkutils2": "*",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "pocketmine/pocketmine-mp": "5.35.0"

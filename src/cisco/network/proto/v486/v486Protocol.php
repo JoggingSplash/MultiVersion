@@ -52,6 +52,7 @@ use cisco\network\proto\v486\packets\v486LevelChunkPacket;
 use cisco\network\proto\v486\packets\v486LevelSoundEventPacket;
 use cisco\network\proto\v486\packets\v486MobArmorEquipmentPacket;
 use cisco\network\proto\v486\packets\v486MobEffectPacket;
+use cisco\network\proto\v486\packets\v486MobEquipmentPacket;
 use cisco\network\proto\v486\packets\v486ModalFormResponsePacket;
 use cisco\network\proto\v486\packets\v486NetworkChunkPublisherUpdatePacket;
 use cisco\network\proto\v486\packets\v486NetworkSettingsPacket;
@@ -112,6 +113,7 @@ use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\MobArmorEquipmentPacket;
 use pocketmine\network\mcpe\protocol\MobEffectPacket;
+use pocketmine\network\mcpe\protocol\MobEquipmentPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\NetworkChunkPublisherUpdatePacket;
 use pocketmine\network\mcpe\protocol\NetworkSettingsPacket;
@@ -274,6 +276,7 @@ class v486Protocol extends TProtocol
 		}
 
 		return match (true) {
+			$packet instanceof MobEquipmentPacket => v486MobEquipmentPacket::fromLatest($packet),
 			$packet instanceof SetTitlePacket => v486SetTitlePacket::fromLatest($packet),
 			$packet instanceof MobArmorEquipmentPacket => v486MobArmorEquipmentPacket::fromLatest($packet),
 			$packet instanceof AddActorPacket => v486AddActorPacket::fromLatest($packet),

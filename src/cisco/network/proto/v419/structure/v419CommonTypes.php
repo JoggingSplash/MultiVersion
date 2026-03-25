@@ -241,7 +241,7 @@ final class v419CommonTypes
 		}
 		VarInt::writeUnsignedInt($out, count($extraData->getCanDestroy()));
 		foreach ($extraData->getCanDestroy() as $toWrite) {
-			VarInt::writeUnsignedInt($out, $toWrite);
+			VarInt::writeUnsignedInt($out, 0);
 		}
 
 		if ($shield) {
@@ -415,7 +415,6 @@ final class v419CommonTypes
 	{
 		VarInt::writeUnsignedInt($out, count($attributes));
 		foreach ($attributes as $attribute) {
-
 			LE::writeFloat($out, $attribute->getMin());
 			LE::writeFloat($out, $attribute->getMax());
 			LE::writeFloat($out, $attribute->getCurrent());

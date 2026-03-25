@@ -82,7 +82,8 @@ final class ReflectionUtils
 	 */
 	public static function invoke(string $className, object $instance, string $methodName, mixed ...$args) : mixed
 	{
-		return self::getCachedMethod($className, $methodName)->invoke($instance, ...$args);
+		$method = self::getCachedMethod($className, $methodName);
+		return $method->invokeArgs($instance, $args);
 	}
 
 	/**

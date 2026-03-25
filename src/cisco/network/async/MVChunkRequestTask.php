@@ -31,7 +31,6 @@ use pocketmine\network\mcpe\compression\Compressor;
 use pocketmine\network\mcpe\protocol\LevelChunkPacket;
 use pocketmine\network\mcpe\protocol\serializer\PacketBatch;
 use pocketmine\network\mcpe\protocol\types\ChunkPosition;
-use pocketmine\network\mcpe\serializer\ChunkSerializer;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\thread\NonThreadSafeValue;
 use pocketmine\world\format\Chunk;
@@ -58,7 +57,7 @@ class MVChunkRequestTask extends AsyncTask {
 		$this->chunkX = $chunkX;
 		$this->chunkZ = $chunkZ;
 		$this->dimensionId = $dimensionId;
-		$this->tiles = ChunkSerializer::serializeTiles($chunk);
+		$this->tiles = $protocol->getChunkSerializer()->serializeTiles($chunk);
 		$this->protocol = $protocol->getProtocolId();
 
 		$this->storeLocal(self::TLS_KEY_PROMISE, $promise);

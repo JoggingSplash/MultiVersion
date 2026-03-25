@@ -24,6 +24,7 @@ namespace cisco\network\etc;
 
 use cisco\network\global\MVChunkSerializer;
 use cisco\network\mcpe\MVBlockTranslator;
+use cisco\network\utils\OutdateBiomeStringToIdMap;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -34,7 +35,6 @@ use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\serializer\ChunkSerializer;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\format\SubChunk;
-use Throwable;
 use function chr;
 use function count;
 use function min;
@@ -50,16 +50,15 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 			self::serializeSubChunk($chunk->getSubChunk($y), $blockTranslator, $stream, false);
 		}
 
+		$biomeIdMap = OutdateBiomeStringToIdMap::getInstance();
 		$biome = str_repeat(chr(BiomeIds::OCEAN), 256); //2d biome array
 		for ($x = 0; $x < 16; ++$x) {
 			for ($z = 0; $z < 16; ++$z) {
-				try {
-					$biomeId = $chunk->getBiomeId($x, $chunk->getHighestBlockAt($x, $z), $z) ?? BiomeIds::OCEAN;
-				} catch (Throwable $e) {
+				$biomeId = $chunk->getBiomeId($x, $chunk->getHighestBlockAt($x, $z), $z) ?? BiomeIds::OCEAN;
+				if($biomeIdMap->legacyToString($biomeId) == null){
 					$biomeId = BiomeIds::OCEAN;
 				}
-
-				$biome[($z << 4) | $x] = chr($biomeId);
+				$biome[$x + ($z << 4)] = chr($biomeId);
 			}
 		}
 		$stream->writeByteArray($biome);
@@ -83,6 +82,7 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 	{
 		$layers = $subChunk->getBlockLayers();
 		Byte::writeUnsigned($writer, 8); //version
+
 		Byte::writeUnsigned($writer, count($layers));
 
 		$blockStateDictionary = $blockTranslator->getBlockStateDictionary();
@@ -95,7 +95,7 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 			$palette = $blocks->getPalette();
 
 			if ($bitsPerBlock !== 0) {
-				VarInt::writeUnsignedInt($writer, count($palette) << 1); //yes, this is intentionally zigzag
+				VarInt::writeSignedInt($writer, count($palette));
 			}
 
 			if ($persistentBlockStates) {
@@ -113,8 +113,8 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 			}
 
 			foreach ($palette as $p) {
-				VarInt::writeUnsignedInt(
-					$writer, $blockTranslator->internalIdToNetworkId($p) << 1
+				VarInt::writeSignedInt(
+					$writer, $blockTranslator->internalIdToNetworkId($p)
 				);
 			}
 		}

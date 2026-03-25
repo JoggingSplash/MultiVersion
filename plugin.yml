@@ -12,4 +12,5 @@ mcpe-protocol:
 - 486
 - 416
 main: cisco\Loader
+load: STARTUP
 ...

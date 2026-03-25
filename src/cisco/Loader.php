@@ -25,6 +25,7 @@ namespace cisco;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\NetworkSession;
 use cisco\network\raknet\MVRakLibInterface;
+use cisco\network\utils\OutdateBiomeStringToIdMap;
 use cisco\network\utils\ProtocolCommand;
 use cisco\sdb\Loader as SDBLoader;
 use pocketmine\event\EventPriority;
@@ -34,6 +35,7 @@ use pocketmine\network\mcpe\protocol\PacketPool;
 use pocketmine\network\mcpe\protocol\PacketViolationWarningPacket;
 use pocketmine\network\mcpe\raklib\RakLibInterface;
 use pocketmine\network\query\DedicatedQueryNetworkInterface;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\AsyncTask;
 use function class_exists;
@@ -87,6 +89,7 @@ final class Loader extends PluginBase {
 			$pool->submitTaskToWorker(new class extends AsyncTask{
 				public function onRun() : void {
 					MCProtocols::checkInit();
+					OutdateBiomeStringToIdMap::getInstance();
 				}
 			}, $workerId);
 		});
@@ -127,7 +130,7 @@ final class Loader extends PluginBase {
 			$pid = $pk->getPacketId();
 			$protocol = $origin->safeProtocol();
 
-			if($protocol === null){
+			if ($protocol === null) {
 				$this->getLogger()->debug("Received waring packet before initialization of the protocol from {$origin->getIp()}:{$origin->getPort()}");
 				$this->getLogger()->debug("Packet violation: pid=$pid");
 				return;

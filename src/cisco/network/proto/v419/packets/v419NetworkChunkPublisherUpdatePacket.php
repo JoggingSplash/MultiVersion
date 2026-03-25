@@ -34,8 +34,7 @@ class v419NetworkChunkPublisherUpdatePacket extends NetworkChunkPublisherUpdateP
 
 	public const NETWORK_ID = v419ProtocolInfo::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET;
 
-	public static function fromLatest(NetworkChunkPublisherUpdatePacket $packet) : self
-	{
+	public static function fromLatest(NetworkChunkPublisherUpdatePacket $packet) : self {
 		$result = new self();
 		$result->blockPosition = $packet->blockPosition;
 		$result->radius = $packet->radius;

@@ -27,6 +27,7 @@ use cisco\network\etc\MVBatch;
 use cisco\network\etc\MVChunkCache;
 use cisco\network\global\MVLoginPacketHandler;
 use cisco\network\proto\TProtocol;
+use cisco\network\utils\PacketLimiterOps;
 use cisco\network\utils\ReflectionUtils;
 use Closure;
 use InvalidArgumentException;
@@ -57,6 +58,7 @@ use pocketmine\network\mcpe\protocol\DisconnectPacket;
 use pocketmine\network\mcpe\protocol\Packet;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketPool;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\PacketBatch;
 use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\types\CompressionAlgorithm;
@@ -78,7 +80,6 @@ use function bin2hex;
 use function count;
 use function get_class;
 use function implode;
-use function is_string;
 use function ord;
 use function random_bytes;
 use function str_split;
@@ -88,7 +89,8 @@ use function time;
 
 class NetworkSession extends BaseNetworkSession {
 
-	protected TProtocol $protocol;
+	protected ?TProtocol $protocol = null;
+	protected ?PacketLimiterOps $ops = null;
 
 	private bool $enableCompression = true;
 
@@ -243,11 +245,6 @@ class NetworkSession extends BaseNetworkSession {
 						throw PacketHandlingException::wrap($e, "Error processing " . $packet->getName());
 					}
 
-					if(!$this->isConnected()){
-						//handling this packet may have caused a disconnection
-						$this->getLogger()->debug("Aborting batch processing due to server-side disconnection");
-						break;
-					}
 				}
 			} catch (PacketDecodeException|BinaryDataException $e) {
 				$this->getLogger()->logException($e);
@@ -296,11 +293,14 @@ class NetworkSession extends BaseNetworkSession {
 			}
 
 			if(isset($this->protocol)){
-				$packet = $this->protocol->incoming(clone $packet);
-				if($packet === null){
-					$this->protocol->getLogger()->debug("Ignoring packet");
+				$pk = $this->protocol->incoming(clone $packet);
+
+				if($pk === null){
+					$this->protocol->getLogger()->debug("Ignoring packet {$packet->getName()}");
 					return;
 				}
+
+				$packet = $pk;
 			}
 
 			if(DataPacketReceiveEvent::hasHandlers()){
@@ -478,18 +478,11 @@ class NetworkSession extends BaseNetworkSession {
 
 			$writer = new ByteBufferWriter();
 
-			$proto = null;
-			if(isset($this->protocol)){
-				$proto = $this->protocol;
-			}
-
 			foreach ($packets as $packet) {
 				// Memory reuse
 				$writer->clear();
 
-				if($proto !== null){
-					$packet = $proto->outcoming(clone $packet);
-				}
+				$packet = $this->outcoming($packet);
 
 				if ($packet === null) {
 					$this->getLogger()->debug("Ignoring packet sent to {$this->getIp()}:{$this->getPort()}");
@@ -509,6 +502,24 @@ class NetworkSession extends BaseNetworkSession {
 		}
 	}
 
+	private function outcoming(ClientboundPacket $packet) : ?ClientboundPacket {
+		if($this->ops !== null && $this->getPlayer() !== null && $this->ops->match($packet, $this->getPlayer()->getId())) {
+			return null;
+		}
+
+		if($this->protocol === null){
+			return $packet;
+		}
+
+		$pk = $this->protocol->outcoming(clone $packet);
+
+		if($pk !== null){
+			$this->protocol->getLogger()->debug("Sending {$pk->getName()}");
+		}
+
+		return $pk;
+	}
+
 	/**
 	 * Instructs the networksession to start using the chunk at the given coordinates. This may occur asynchronously.
 	 *
@@ -520,16 +531,11 @@ class NetworkSession extends BaseNetworkSession {
 	{
 		$world = $this->getPlayer()->getLocation()->getWorld();
 
-		$promiseOrString = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
-		if (is_string($promiseOrString)) {
-			$this->sendChunkPacket($promiseOrString, $onCompletion, $world);
-			return;
-		}
-		$promiseOrString->onResolve(function (CompressBatchPromise $promise) use ($world, $onCompletion, $chunkX, $chunkZ) : void {
-			if (!$this->isConnected()) {
+		$promise = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
+		$promise->onResolve(function (CompressBatchPromise $promise) use ($world, $onCompletion, $chunkX, $chunkZ) : void {
+			if(!$this->isConnected()){
 				return;
 			}
-
 			$currentWorld = $this->getPlayer()->getLocation()->getWorld();
 			if ($world !== $currentWorld || ($status = $this->getPlayer()->getUsedChunkStatus($chunkX, $chunkZ)) === null) {
 				$this->getLogger()->debug("Tried to send no-longer-active chunk $chunkX $chunkZ in world " . $world->getFolderName());
@@ -641,11 +647,11 @@ class NetworkSession extends BaseNetworkSession {
 	}
 
 	public function getProtocol() : TProtocol {
-		return $this->protocol;
+		return $this->protocol ?? throw new \RuntimeException("Protocol was not initialized");
 	}
 
 	public function safeProtocol() : ?TProtocol {
-		return !isset($this->protocol) ? null : $this->protocol;
+		return $this->protocol;
 	}
 
 	/**
@@ -660,5 +666,9 @@ class NetworkSession extends BaseNetworkSession {
 		ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "entityEventBroadcaster", $protocol->getEntityEventBroadcaster());
 		ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "compressor", $protocol->getCompressor());
 		ReflectionUtils::setProperty(BaseNetworkSession::class, $this, "typeConverter", $protocol->getTypeConverter());
+
+		if($protocol->hasOldCompressionMethod()){
+			$this->ops = new PacketLimiterOps(ProtocolInfo::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET);
+		}
 	}
 }
