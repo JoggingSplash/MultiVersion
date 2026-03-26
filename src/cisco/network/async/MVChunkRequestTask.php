@@ -40,7 +40,6 @@ use function chr;
 class MVChunkRequestTask extends AsyncTask {
 
 	private const TLS_KEY_PROMISE = "promise";
-	private const TLS_KEY_ERROR_HOOK = "errorHook";
 
 	protected string $chunk;
 	protected int $chunkX;
@@ -51,7 +50,7 @@ class MVChunkRequestTask extends AsyncTask {
 	private string $tiles;
 	private int $protocol;
 
-	public function __construct(int $chunkX, int $chunkZ, int $dimensionId, Chunk $chunk, CompressBatchPromise $promise, Compressor $compressor, TProtocol $protocol, ?Closure $onError = null) {
+	public function __construct(int $chunkX, int $chunkZ, int $dimensionId, Chunk $chunk, CompressBatchPromise $promise, Compressor $compressor, TProtocol $protocol) {
 		$this->compressor = new NonThreadSafeValue($compressor);
 		$this->chunk = FastChunkSerializer::serializeTerrain($chunk);
 		$this->chunkX = $chunkX;
@@ -61,7 +60,6 @@ class MVChunkRequestTask extends AsyncTask {
 		$this->protocol = $protocol->getProtocolId();
 
 		$this->storeLocal(self::TLS_KEY_PROMISE, $promise);
-		$this->storeLocal(self::TLS_KEY_ERROR_HOOK, $onError);
 	}
 
 	public function onRun() : void {
@@ -90,15 +88,6 @@ class MVChunkRequestTask extends AsyncTask {
 		$this->setResult((!$protocol->hasOldCompressionMethod() ? chr($compressor->getNetworkId()) : '') . $compressor->compress($stream->getData()));
 	}
 
-	public function onError() : void {
-		/**
-		 * @var ?Closure $hook
-		 */
-		$hook = $this->fetchLocal(self::TLS_KEY_ERROR_HOOK);
-		if($hook !== null) {
-			$hook();
-		}
-	}
 
 	public function onCompletion() : void {
 		/** @var CompressBatchPromise $promise */

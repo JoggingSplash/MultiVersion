@@ -529,8 +529,12 @@ class NetworkSession extends BaseNetworkSession {
 	public function startUsingChunk(int $chunkX, int $chunkZ, Closure $onCompletion) : void {
 		$world = $this->getPlayer()->getLocation()->getWorld();
 
-		$promise = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
-		$promise->onResolve(function (CompressBatchPromise $promise) use ($world, $onCompletion, $chunkX, $chunkZ) : void {
+		$promiseOrPacket = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
+		if(is_string($promiseOrPacket)) {
+            $this->sendChunkPacket($promiseOrPacket, $onCompletion, $world);
+            return;
+        }
+        $promiseOrPacket->onResolve(function (CompressBatchPromise $promise) use ($world, $onCompletion, $chunkX, $chunkZ) : void {
 			if(!$this->isConnected()){
 				return;
 			}
@@ -559,7 +563,8 @@ class NetworkSession extends BaseNetworkSession {
 	{
 		$world->timings->syncChunkSend->startTiming();
 		try {
-			$this->queueCompressed($chunkPacket);
+			$this->queueCompressed($chunkPacket, true);
+            $this->protocol->getLogger()->debug("Sent level chunk packet");
 			$onCompletion();
 		} finally {
 			$world->timings->syncChunkSend->stopTiming();

@@ -46,20 +46,17 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 	{
 		$stream = new ByteBufferWriter();
 		$subChunkCount = self::getSubChunkCount($chunk, $dimensionId);
-		for ($y = 0; $y < $subChunkCount; ++$y) {
-			self::serializeSubChunk($chunk->getSubChunk($y), $blockTranslator, $stream, false);
-		}
+        $subChunks = $chunk->getSubChunks();
+        for ($y = 0; $y < $subChunkCount; ++$y) {
+            self::serializeSubChunk($subChunks[$y], $blockTranslator, $stream, false);
+        }
 
-		$biomeIdMap = OutdateBiomeStringToIdMap::getInstance();
 		$biome = str_repeat(chr(BiomeIds::OCEAN), 256); //2d biome array
 		for ($x = 0; $x < 16; ++$x) {
 			for ($z = 0; $z < 16; ++$z) {
-				$biomeId = $chunk->getBiomeId($x, $chunk->getHighestBlockAt($x, $z), $z) ?? BiomeIds::OCEAN;
-				if($biomeIdMap->legacyToString($biomeId) == null){
-					$biomeId = BiomeIds::OCEAN;
-				}
-				$biome[$x + ($z << 4)] = chr($biomeId);
-			}
+                $biomeId = $chunk->getBiomeId($x, $chunk->getHighestBlockAt($x, $z), $z) ?? BiomeIds::OCEAN;
+                $biome[($z << 4) | $x] = chr($biomeId);
+            }
 		}
 		$stream->writeByteArray($biome);
 		Byte::writeUnsigned($stream, 0); //border block array count
@@ -95,7 +92,7 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 			$palette = $blocks->getPalette();
 
 			if ($bitsPerBlock !== 0) {
-				VarInt::writeSignedInt($writer, count($palette));
+				VarInt::writeUnsignedInt($writer, count($palette) << 1);
 			}
 
 			if ($persistentBlockStates) {
@@ -113,8 +110,8 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 			}
 
 			foreach ($palette as $p) {
-				VarInt::writeSignedInt(
-					$writer, $blockTranslator->internalIdToNetworkId($p)
+				VarInt::writeUnsignedInt(
+					$writer, $blockTranslator->internalIdToNetworkId($p) << 1
 				);
 			}
 		}

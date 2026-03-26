@@ -41,7 +41,7 @@ class MVChunkCache implements ChunkListener
 
 	/** @var MVChunkCache[][][] */
 	private static array $instances = [];
-	/** @var CompressBatchPromise[] */
+	/** @var CompressBatchPromise|string[] */
 	private array $caches = [];
 	private int $hits = 0;
 	private int $misses = 0;
@@ -83,12 +83,7 @@ class MVChunkCache implements ChunkListener
 		return self::$instances[$protocolId][$worldId][$compressorId] ??= new self($world, $compressor, $protocol);
 	}
 
-	public function request(int $chunkX, int $chunkZ) : CompressBatchPromise {
-		$this->world->registerChunkListener($this, $chunkX, $chunkZ);
-		$chunk = $this->world->getChunk($chunkX, $chunkZ);
-		if ($chunk === null) {
-			throw new InvalidArgumentException("Cannot request an unloaded chunk");
-		}
+	public function request(int $chunkX, int $chunkZ) : CompressBatchPromise|string {
 		$chunkHash = World::chunkHash($chunkX, $chunkZ);
 
 		if (isset($this->caches[$chunkHash])) {
@@ -96,45 +91,41 @@ class MVChunkCache implements ChunkListener
 			return $this->caches[$chunkHash];
 		}
 
-		++$this->misses;
-
-		$this->world->timings->syncChunkSendPrepare->startTiming();
-		try {
-			$promise = new CompressBatchPromise();
-			$this->caches[$chunkHash] = $promise;
-			$this->world->getServer()->getAsyncPool()->submitTask(new MVChunkRequestTask(
-				$chunkX,
-				$chunkZ,
-				DimensionIds::OVERWORLD,
-				$chunk,
-				$promise,
-				$this->compressor,
-				$this->protocol,
-				function () use ($chunkX, $chunkZ) : void {
-					$this->world->getLogger()->error("Failed preparing chunk $chunkX $chunkZ, retrying");
-					$this->restartPendingRequest($chunkX, $chunkZ);
-				}
-			));
-			return $promise;
-		} finally {
-			$this->world->timings->syncChunkSendPrepare->stopTiming();
-		}
+        return $this->prepareChunkAsync($chunkX, $chunkZ, $chunkHash);
 	}
 
-	/**
-	 * Restarts an async request for an unresolved chunk.
-	 */
-	private function restartPendingRequest(int $chunkX, int $chunkZ) : void {
-		$chunkHash = World::chunkHash($chunkX, $chunkZ);
-		$existing = $this->caches[$chunkHash] ?? null;
-		if($existing === null || $existing->hasResult()){
-			throw new InvalidArgumentException("Restart can only be applied to unresolved promises");
-		}
-		$existing->cancel();
-		unset($this->caches[$chunkHash]);
+    private function prepareChunkAsync(int $chunkX, int $chunkZ, int $chunkHash): CompressBatchPromise{
+        $this->world->registerChunkListener($this, $chunkX, $chunkZ);
+        $chunk = $this->world->getChunk($chunkX, $chunkZ);
+        if ($chunk === null) {
+            throw new InvalidArgumentException("Cannot request an unloaded chunk");
+        }
 
-		$this->request($chunkX, $chunkZ)->onResolve(...$existing->getResolveCallbacks());
-	}
+        ++$this->misses;
+
+        $this->world->timings->syncChunkSendPrepare->startTiming();
+        try {
+            $promise = new CompressBatchPromise();
+            $this->world->getServer()->getAsyncPool()->submitTask(new MVChunkRequestTask(
+                $chunkX,
+                $chunkZ,
+                DimensionIds::OVERWORLD,
+                $chunk,
+                $promise,
+                $this->compressor,
+                $this->protocol
+            ));
+            $this->caches[$chunkHash] = $promise;
+            $promise->onResolve(function (CompressBatchPromise $promise) use($chunkHash): void {
+                if(($this->caches[$chunkHash] ?? null) === $promise) {
+                    $this->caches[$chunkHash] = $promise->getResult();
+                }
+            });
+            return $promise;
+        } finally {
+            $this->world->timings->syncChunkSendPrepare->stopTiming();
+        }
+    }
 
 	/**
 	 * @see ChunkListener::onChunkChanged()
@@ -145,11 +136,14 @@ class MVChunkCache implements ChunkListener
 
 	private function destroyOrRestart(int $chunkX, int $chunkZ) : void
 	{
-		$cache = $this->caches[World::chunkHash($chunkX, $chunkZ)] ?? null;
+		$cache = $this->caches[$chunkHash = World::chunkHash($chunkX, $chunkZ)] ?? null;
 		if ($cache !== null) {
-			if (!$cache->hasResult()) {
+			if (!is_string($cache)) {
+                $cache->cancel();
+                unset($this->caches[$chunkHash]);
 				//some requesters are waiting for this chunk, so their request needs to be fulfilled
-				$this->restartPendingRequest($chunkX, $chunkZ);
+				$this->prepareChunkAsync($chunkX, $chunkZ, $chunkHash)
+                    ->onResolve(...$cache->getResolveCallbacks());
 			} else {
 				//dump the parts, it'll be regenerated the next time it's requested
 				$this->destroy($chunkX, $chunkZ);
@@ -190,5 +184,7 @@ class MVChunkCache implements ChunkListener
 		$this->destroy($chunkX, $chunkZ);
 		$this->world->unregisterChunkListener($this, $chunkX, $chunkZ);
 	}
+
+
 
 }
