@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\chunk;
 
 use cisco\network\async\MVChunkRequestTask;
+use cisco\network\chunk\payload\LevelChunk2D;
 use cisco\network\proto\TProtocol;
 use GlobalLogger;
 use InvalidArgumentException;
@@ -68,8 +69,7 @@ class MVChunkCache implements ChunkListener
 	/**
 	 * Fetches the ChunkCache instance for the given world. This lazily creates parts systems as needed.
 	 */
-	public static function getInstance(World $world, Compressor $compressor, TProtocol $protocol) : self
-	{
+	public static function getInstance(World $world, Compressor $compressor, TProtocol $protocol) : self {
 		$worldId = spl_object_id($world);
 		$compressorId = spl_object_id($compressor);
 		$protocolId = spl_object_id($protocol);
@@ -109,6 +109,7 @@ class MVChunkCache implements ChunkListener
 	private function prepareChunkAsync(int $chunkX, int $chunkZ, int $chunkHash) : CompressBatchPromise{
 		$this->world->registerChunkListener($this, $chunkX, $chunkZ);
 		$chunk = $this->world->getChunk($chunkX, $chunkZ);
+
 		if ($chunk === null) {
 			throw new InvalidArgumentException("Cannot request an unloaded chunk");
 		}

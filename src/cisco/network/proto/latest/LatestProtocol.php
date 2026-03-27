@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\latest;
 
-use cisco\network\chunk\payloads\FormattedChunkSerializer;
+use cisco\network\chunk\serializers\FormattedChunkSerializer;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\NetworkSession;
 use cisco\network\proto\TProtocol;

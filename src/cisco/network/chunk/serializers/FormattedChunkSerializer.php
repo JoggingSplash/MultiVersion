@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\chunk\payloads;
+namespace cisco\network\chunk\serializers;
 
 use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\mcpe\MVBlockTranslator;

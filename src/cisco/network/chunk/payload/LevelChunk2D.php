@@ -20,10 +20,11 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\chunk;
+namespace cisco\network\chunk\payload;
 
 use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\chunk\io\SubChunkDatum;
+use cisco\network\chunk\MVChunkPayload;
 use cisco\network\proto\TProtocol;
 use cisco\network\utils\ReflectionUtils;
 use GlobalLogger;
@@ -45,7 +46,6 @@ use pocketmine\world\format\io\leveldb\ChunkVersion;
 use pocketmine\world\format\io\leveldb\LevelDB as LevelDBI;
 use pocketmine\world\format\io\leveldb\SubChunkVersion;
 use pocketmine\world\format\PalettedBlockArray;
-use pocketmine\world\format\SubChunk;
 use pocketmine\world\World;
 use function chr;
 use function count;
@@ -113,7 +113,7 @@ final class LevelChunk2D implements MVChunkPayload {
 		$version = $this->readVersion($chunkX, $chunkZ);
 
 		if($version === null){
-			//bogus chunk
+			//bogus chunk?
 			return ChunkDatum::empty();
 		}
 
@@ -160,12 +160,13 @@ final class LevelChunk2D implements MVChunkPayload {
 			case ChunkVersion::v1_1_0_converted_from_console:
 			case ChunkVersion::v1_1_0:
 			case ChunkVersion::v1_0_0:
-				$biomes = $this->readBiomes($index, $version);
+				$biomes = $this->readBiomes2d($index, $version);
 				$subChunks = $this->deserializeSubChunks($index, $version);
 				break;
 			case ChunkVersion::v0_9_5:
 			case ChunkVersion::v0_9_2:
 			case ChunkVersion::v0_9_0:
+				//TODO: legacy deserialize then break
 			default:
 				throw new CorruptedChunkException("don't know how to decode chunk format version $version");
 		}
@@ -230,11 +231,10 @@ final class LevelChunk2D implements MVChunkPayload {
 				);
 			case SubChunkVersion::PALETTED_MULTI:
 			case SubChunkVersion::PALETTED_MULTI_WITH_OFFSET:
-				//legacy extradata layers intentionally ignored because they aren't supposed to exist in v8
 
-				$storageCount = $binaryStream->getByte();
+				$binaryStream->getByte(); //storage
 				if($subChunkVersion >= SubChunkVersion::PALETTED_MULTI_WITH_OFFSET){
-					//height ignored; this seems pointless since this is already in the key anyway
+					//height ignored
 					$binaryStream->getByte();
 				}
 
@@ -254,7 +254,7 @@ final class LevelChunk2D implements MVChunkPayload {
 	/**
 	 * @throws \ReflectionException
 	 */
-	private function readBiomes(string $index, int $chunkVersion) : string {
+	private function readBiomes2d(string $index, int $chunkVersion) : string {
 		$logger = GlobalLogger::get();
 		if(($maps2d = $this->db->get($index . ChunkDataKey::HEIGHTMAP_AND_2D_BIOMES)) !== false){
 			$binaryStream = new BinaryStream($maps2d);
@@ -410,7 +410,7 @@ final class LevelChunk2D implements MVChunkPayload {
 	/**
 	 * Converts a PalettedBlockArray into classic IDs (4096 bytes) + DATA (2048 bytes nibbles).
 	 *
-	 * @return array{string, string} [$blocks, $data]
+	 * @return array{$blocks, $data}
 	 */
 	private function palettedToClassic(PalettedBlockArray $paletted) : array {
 		$blocks = "";
@@ -441,7 +441,7 @@ final class LevelChunk2D implements MVChunkPayload {
 			}
 		}
 
-		// Flush nibble final (no debería pasar con 4096 bloques)
+		// Flush nibble-end
 		if (($i & 1) !== 0) {
 			$data .= chr($nibbleBuffer);
 		}

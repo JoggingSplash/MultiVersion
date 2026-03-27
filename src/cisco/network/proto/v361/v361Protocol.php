@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\proto\v361;
 
 use cisco\network\assemble\auth\JwtChain;
-use cisco\network\chunk\payloads\PreFormattedChunkSerializer;
+use cisco\network\chunk\serializers\PreFormattedChunkSerializer;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\NetworkSession;
 use cisco\network\proto\latest\LatestSkinHelper;
