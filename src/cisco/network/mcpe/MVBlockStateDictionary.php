@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\mcpe;
 
 use InvalidArgumentException;
+use JsonException;
 use pocketmine\data\bedrock\block\BlockStateData;
 use pocketmine\data\bedrock\block\BlockTypeNames;
 use pocketmine\nbt\NbtDataException;
@@ -52,6 +53,14 @@ class MVBlockStateDictionary
 	/** @var int[][]|null */
 	private ?array $idMetaToStateIdLookupCache = null;
 
+    /**
+     * Direct mapping from state ID to legacy numeric block ID (0-255).
+     * Built during loadFromString() using the original (pre-upgrade) block names.
+     * Used for pre-1.2 chunk format serialization.
+     * @var array<int, int>
+     */
+    private array $stateIdToLegacyBlockId = [];
+
 	/**
 	 * @param MVBlockStateDictionaryEntry[] $states
 	 */
@@ -74,15 +83,27 @@ class MVBlockStateDictionary
 		}
 	}
 
-	public static function loadFromString(string $blockPaletteContents, string $metaMapContents) : self {
+    /**
+     * @throws JsonException
+     */
+    public static function loadFromString(string $blockPaletteContents, string $metaMapContents, ?string $blockIdMapContents = null) : self {
 		$upgrader = GlobalBlockStateHandlers::getUpgrader()->getBlockStateUpgrader();
 		$metaMap = json_decode($metaMapContents, flags: JSON_THROW_ON_ERROR);
 		if (!is_array($metaMap)) {
 			throw new InvalidArgumentException("Invalid metaMap, expected array for root type, got " . get_debug_type($metaMap));
 		}
 
-		$entries = [];
+        $blockIdMap = null;
+        if($blockIdMapContents !== null){
+            $blockIdMap = json_decode($blockIdMapContents, true, flags: JSON_THROW_ON_ERROR);
 
+            if(!is_array($blockIdMap)){
+                throw new InvalidArgumentException("Invalid blockIdMap, expected array for root type, got " . get_debug_type($blockIdMap));
+            }
+        }
+
+		$entries = [];
+        $stateIdToLegacyBlockId = [];
 		$uniqueNames = [];
 
 		//this hack allows the internal parts index to use interned strings which are already available in the
@@ -104,9 +125,16 @@ class MVBlockStateDictionary
 			$newState = $upgrader->upgrade($state);
 			$uniqueName = $uniqueNames[$newState->getName()] ??= $newState->getName();
 			$entries[$i] = new MVBlockStateDictionaryEntry($uniqueName, $newState->getStates(), $meta, $newState->equals($state) ? null : $state);
-		}
 
-		return new self($entries);
+            // Use the ORIGINAL (pre-upgrade) name to look up in block_id_map.json
+            // because the map uses old names (e.g. "minecraft:grass") not upgraded ones (e.g. "minecraft:short_grass")
+            if ($blockIdMap !== null) {
+                $stateIdToLegacyBlockId[$i] = $blockIdMap[$state->getName()] ?? 0;
+            }
+		}
+        $dictionary = new self($entries);
+        $dictionary->stateIdToLegacyBlockId = $stateIdToLegacyBlockId;
+		return $dictionary;
 	}
 
 	/**
@@ -165,6 +193,16 @@ class MVBlockStateDictionary
 	{
 		return $this->states;
 	}
+
+    /**
+     * Returns the legacy numeric block ID for the given network state ID.
+     * Used for pre-1.2 chunk format serialization (subchunk version 0).
+     *
+     * @return int Legacy block ID (0-255), or 0 (air) if not found.
+     */
+    public function getLegacyBlockIdFromStateId(int $networkRuntimeId) : int {
+        return $this->stateIdToLegacyBlockId[$networkRuntimeId] ?? 0;
+    }
 
 	/**
 	 * Returns the blockstate meta value associated with the given blockstate runtime ID.

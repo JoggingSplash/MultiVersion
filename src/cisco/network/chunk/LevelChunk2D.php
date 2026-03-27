@@ -405,17 +405,16 @@ final class LevelChunk2D implements MVChunkPayload {
         $converter = $this->protocol->getTypeConverter();
         $runtimeToState = MVRuntimeIdToStateId::getInstance();
         $blockTranslator = $converter->getMVBlockTranslator();
+        $dictionary = $blockTranslator->getBlockStateDictionary();
         for ($x = 0; $x < 16; $x++) {
             for ($z = 0; $z < 16; $z++) {
                 for ($y = 0; $y < 16; $y++) {
-                    $fullId = $blockTranslator->internalIdToNetworkId(
-                        $stateId = $runtimeToState->getStateIdFromRuntimeId(
-                            $paletted->get($x, $y, $z)
-                        )
-                    );
-                    $meta = $blockTranslator->getBlockStateDictionary()->getMetaFromStateId($stateId) ?? 0;
+                    $stateId = $paletted->get($x, $y, $z);
+                    $networkStateId = $blockTranslator->internalIdToNetworkId($stateId);
+                    $legacyBlockId = $dictionary->getLegacyBlockIdFromStateId($networkStateId);
+                    $meta = $dictionary->getMetaFromStateId($stateId);
 
-                    $blocks .= chr($fullId & 0xFF);
+                    $blocks .= chr($legacyBlockId & 0xFF);
 
                     if (($i & 1) === 0) {
                         $nibbleBuffer = $meta;

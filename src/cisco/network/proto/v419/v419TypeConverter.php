@@ -48,7 +48,7 @@ class v419TypeConverter
 		$this->converter = new MVTypeConverter(
 			$blockItemIdMap = BlockItemIdMap::getInstance(),
 			$blockTranslator = new MVBlockTranslator(
-				MVBlockStateDictionary::loadFromString(Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "canonical_block_states.nbt")), Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "block_state_meta_map.json"))),
+				MVBlockStateDictionary::loadFromString(Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "canonical_block_states.nbt")), Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "block_state_meta_map.json")), Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "block_id_map.json"))),
 				GlobalBlockStateHandlers::getSerializer(),
 			),
 			$itemTypeDictionary = ItemTypeDictionaryFromDataHelper::loadFromString(Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "required_item_list.json"))),
