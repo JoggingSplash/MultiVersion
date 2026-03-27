@@ -48,7 +48,7 @@ final class PreFormattedChunkSerializer implements MVChunkSerializer {
 
 		for ($y = 0; $y < $subChunkCount; ++$y) {
 			$subChunk = $subChunks[$y];
-			Byte::writeUnsigned($stream, 0);
+			Byte::writeUnsigned($stream, 0); // sub chunk version
 			$stream->writeByteArray($subChunk->blocksId);
 			$stream->writeByteArray($subChunk->blocksData);
 		}
