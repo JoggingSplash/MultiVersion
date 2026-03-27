@@ -20,45 +20,40 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\etc;
+namespace cisco\network\chunk\payloads;
 
-use cisco\network\global\MVChunkSerializer;
+use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\mcpe\MVBlockTranslator;
-use cisco\network\utils\OutdateBiomeStringToIdMap;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\block\tile\Spawnable;
-use pocketmine\data\bedrock\BiomeIds;
 use pocketmine\nbt\TreeRoot;
 use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\serializer\ChunkSerializer;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\format\SubChunk;
-use function chr;
 use function count;
 use function min;
-use function str_repeat;
 
 final class PreFormattedChunkSerializer implements MVChunkSerializer {
 
-	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?string $tiles = null) : string
+	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?ChunkDatum $datum, ?string $tiles = null) : string
 	{
+		$datum !== null || throw new AssumptionFailedError();
 		$stream = new ByteBufferWriter();
 		$subChunkCount = self::getSubChunkCount($chunk, $dimensionId);
-        $subChunks = $chunk->getSubChunks();
-        for ($y = 0; $y < $subChunkCount; ++$y) {
-            self::serializeSubChunk($subChunks[$y], $blockTranslator, $stream, false);
-        }
+		$subChunks = $datum->subChunkDatum;
 
-		$biome = str_repeat(chr(BiomeIds::OCEAN), 256); //2d biome array
-		for ($x = 0; $x < 16; ++$x) {
-			for ($z = 0; $z < 16; ++$z) {
-                $biomeId = $chunk->getBiomeId($x, $chunk->getHighestBlockAt($x, $z), $z) ?? BiomeIds::OCEAN;
-                $biome[($z << 4) | $x] = chr($biomeId);
-            }
+		for ($y = 0; $y < $subChunkCount; ++$y) {
+			$subChunk = $subChunks[$y];
+			Byte::writeUnsigned($stream, 0);
+			$stream->writeByteArray($subChunk->blocksId);
+			$stream->writeByteArray($subChunk->blocksData);
 		}
-		$stream->writeByteArray($biome);
+
+		$stream->writeByteArray($datum->biomes);
 		Byte::writeUnsigned($stream, 0); //border block array count
 		//Border block entry format: 1 byte (4 bits X, 4 bits Z). These are however useless since they crash the regular client.
 

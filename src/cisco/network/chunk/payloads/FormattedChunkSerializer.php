@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\etc;
+namespace cisco\network\chunk\payloads;
 
-use cisco\network\global\MVChunkSerializer;
+use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\mcpe\MVBlockTranslator;
 use cisco\network\utils\ReflectionUtils;
 use pmmp\encoding\Byte;
@@ -38,7 +38,7 @@ use function count;
 
 final class FormattedChunkSerializer implements MVChunkSerializer {
 
-	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?string $tiles = null) : string
+	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?ChunkDatum $datum, ?string $tiles = null) : string
 	{
 		$writer = new ByteBufferWriter();
 		$subChunkCount = self::getSubChunkCount($chunk, $dimensionId);

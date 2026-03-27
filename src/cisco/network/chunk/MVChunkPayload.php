@@ -20,21 +20,14 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\global;
+namespace cisco\network\chunk;
 
-use cisco\network\mcpe\MVBlockTranslator;
-use pmmp\encoding\ByteBufferWriter;
-use pocketmine\world\format\Chunk;
-use pocketmine\world\format\SubChunk;
+use cisco\network\chunk\io\ChunkDatum;
 
-interface MVChunkSerializer
-{
+interface MVChunkPayload {
 
-	public function getSubChunkCount(Chunk $chunk, int $dimensionId) : int;
+	public function readChunk(int $chunkX, int $chunkZ) : void;
 
-	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?string $tiles = null) : string;
+	public function requestChunk(int $chunkX, int $chunkZ) : ChunkDatum;
 
-	public function serializeSubChunk(SubChunk $subChunk, MVBlockTranslator $blockTranslator, ByteBufferWriter $writer, bool $persistentBlockStates) : void;
-
-	public function serializeTiles(Chunk $chunk) : string;
 }

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace cisco\network\proto;
 
+use cisco\network\chunk\payloads\MVChunkSerializer;
 use cisco\network\etc\GlobalLoginPacket;
-use cisco\network\global\MVChunkSerializer;
 use cisco\network\global\MVPacketBroadcaster;
 use cisco\network\global\MVSkinHelper;
 use cisco\network\global\MVTypeConverter;

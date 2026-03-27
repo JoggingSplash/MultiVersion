@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace cisco\network;
 
+use cisco\network\chunk\MVChunkCache;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\etc\MVBatch;
-use cisco\network\etc\MVChunkCache;
 use cisco\network\global\MVLoginPacketHandler;
 use cisco\network\proto\TProtocol;
 use cisco\network\utils\PacketLimiterOps;
@@ -79,6 +79,7 @@ use function bin2hex;
 use function count;
 use function get_class;
 use function implode;
+use function is_string;
 use function ord;
 use function random_bytes;
 use function str_split;
@@ -531,10 +532,10 @@ class NetworkSession extends BaseNetworkSession {
 
 		$promiseOrPacket = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
 		if(is_string($promiseOrPacket)) {
-            $this->sendChunkPacket($promiseOrPacket, $onCompletion, $world);
-            return;
-        }
-        $promiseOrPacket->onResolve(function (CompressBatchPromise $promise) use ($world, $onCompletion, $chunkX, $chunkZ) : void {
+			$this->sendChunkPacket($promiseOrPacket, $onCompletion, $world);
+			return;
+		}
+		$promiseOrPacket->onResolve(function (CompressBatchPromise $promise) use ($world, $onCompletion, $chunkX, $chunkZ) : void {
 			if(!$this->isConnected()){
 				return;
 			}
@@ -564,7 +565,7 @@ class NetworkSession extends BaseNetworkSession {
 		$world->timings->syncChunkSend->startTiming();
 		try {
 			$this->queueCompressed($chunkPacket, true);
-            $this->protocol->getLogger()->debug("Sent level chunk packet");
+			$this->protocol->getLogger()->debug("Sent level chunk packet");
 			$onCompletion();
 		} finally {
 			$world->timings->syncChunkSend->stopTiming();

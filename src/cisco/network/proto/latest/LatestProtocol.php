@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\latest;
 
-use cisco\network\etc\FormattedChunkSerializer;
+use cisco\network\chunk\payloads\FormattedChunkSerializer;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\NetworkSession;
 use cisco\network\proto\TProtocol;
@@ -114,7 +114,7 @@ class LatestProtocol extends TProtocol
 
 	public function __toString() : string
 	{
-		return "v".ProtocolInfo::MINECRAFT_VERSION_NETWORK;
+		return "v" . ProtocolInfo::MINECRAFT_VERSION_NETWORK;
 	}
 
 }

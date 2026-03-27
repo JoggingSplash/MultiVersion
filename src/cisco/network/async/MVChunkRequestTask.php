@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace cisco\network\async;
 
 use cisco\MCProtocols;
+use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\proto\TProtocol;
-use Closure;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\compression\CompressBatchPromise;
 use pocketmine\network\mcpe\compression\Compressor;
@@ -46,11 +46,12 @@ class MVChunkRequestTask extends AsyncTask {
 	protected int $chunkZ;
 	/** @phpstan-var NonThreadSafeValue<Compressor> */
 	protected NonThreadSafeValue $compressor;
+	protected NonThreadSafeValue|null $datum;
 	private int $dimensionId;
 	private string $tiles;
 	private int $protocol;
 
-	public function __construct(int $chunkX, int $chunkZ, int $dimensionId, Chunk $chunk, CompressBatchPromise $promise, Compressor $compressor, TProtocol $protocol) {
+	public function __construct(int $chunkX, int $chunkZ, int $dimensionId, Chunk $chunk, CompressBatchPromise $promise, Compressor $compressor, TProtocol $protocol, ?ChunkDatum $datum) {
 		$this->compressor = new NonThreadSafeValue($compressor);
 		$this->chunk = FastChunkSerializer::serializeTerrain($chunk);
 		$this->chunkX = $chunkX;
@@ -58,6 +59,8 @@ class MVChunkRequestTask extends AsyncTask {
 		$this->dimensionId = $dimensionId;
 		$this->tiles = $protocol->getChunkSerializer()->serializeTiles($chunk);
 		$this->protocol = $protocol->getProtocolId();
+
+		$this->datum = $datum !== null ? new NonThreadSafeValue($datum) : null;
 
 		$this->storeLocal(self::TLS_KEY_PROMISE, $promise);
 	}
@@ -69,7 +72,8 @@ class MVChunkRequestTask extends AsyncTask {
 		$chunkSerializer = $protocol->getChunkSerializer();
 		$chunk = FastChunkSerializer::deserializeTerrain($this->chunk);
 		$subCount = $chunkSerializer->getSubChunkCount($chunk, $this->dimensionId);
-		$payload = $chunkSerializer->serializeFullChunk($chunk, $this->dimensionId, $protocol->getTypeConverter()->getMVBlockTranslator(), $this->tiles);
+		$datum = $this->datum?->deserialize() ?? null;
+		$payload = $chunkSerializer->serializeFullChunk($chunk, $this->dimensionId, $protocol->getTypeConverter()->getMVBlockTranslator(), $datum, $this->tiles);
 
 		$packet = $protocol->outcoming(LevelChunkPacket::create(
 			new ChunkPosition($this->chunkX, $this->chunkZ),
@@ -87,7 +91,6 @@ class MVChunkRequestTask extends AsyncTask {
 		$compressor = $this->compressor->deserialize();
 		$this->setResult((!$protocol->hasOldCompressionMethod() ? chr($compressor->getNetworkId()) : '') . $compressor->compress($stream->getData()));
 	}
-
 
 	public function onCompletion() : void {
 		/** @var CompressBatchPromise $promise */
