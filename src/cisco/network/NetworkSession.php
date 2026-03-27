@@ -27,7 +27,6 @@ use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\etc\MVBatch;
 use cisco\network\global\MVLoginPacketHandler;
 use cisco\network\proto\TProtocol;
-use cisco\network\utils\PacketLimiterOps;
 use cisco\network\utils\ReflectionUtils;
 use Closure;
 use InvalidArgumentException;
@@ -90,7 +89,6 @@ use function time;
 class NetworkSession extends BaseNetworkSession {
 
 	protected ?TProtocol $protocol = null;
-	protected ?PacketLimiterOps $ops = null;
 
 	private bool $enableCompression = true;
 
@@ -503,21 +501,11 @@ class NetworkSession extends BaseNetworkSession {
 	}
 
 	private function outcoming(ClientboundPacket $packet) : ?ClientboundPacket {
-		if($this->ops !== null && $this->getPlayer() !== null && $this->ops->match($packet, $this->getPlayer()->getId())) {
-			return null;
-		}
-
 		if($this->protocol === null){
 			return $packet;
 		}
 
-		$pk = $this->protocol->outcoming(clone $packet);
-
-		if($pk !== null){
-			$this->protocol->getLogger()->debug("Sending {$pk->getName()}");
-		}
-
-		return $pk;
+		return $this->protocol->outcoming(clone $packet);
 	}
 
 	/**
@@ -565,7 +553,6 @@ class NetworkSession extends BaseNetworkSession {
 		$world->timings->syncChunkSend->startTiming();
 		try {
 			$this->queueCompressed($chunkPacket, true);
-			$this->protocol->getLogger()->debug("Sent level chunk packet");
 			$onCompletion();
 		} finally {
 			$world->timings->syncChunkSend->stopTiming();

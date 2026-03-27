@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network\chunk\io;
 
+use function count;
 use function str_repeat;
 
 final readonly class ChunkDatum {
@@ -44,6 +45,23 @@ final readonly class ChunkDatum {
 		public string $biomes,
 		public array $subChunkDatum = []
 	) {
+		if(count($this->subChunkDatum) !== 16){
+			throw new \InvalidArgumentException("SubChunk count must be 16, " . count($this->subChunkDatum) . " given.");
+		}
+	}
 
+	public function isEmpty() : bool    {
+		static $emptyBiomes = null;
+		$emptyBiomes ??= str_repeat("\0", 256);
+		if($this->biomes === $emptyBiomes) {
+			return true;
+		}
+
+		foreach($this->subChunkDatum as $subChunkDatum) {
+			if($subChunkDatum->isEmpty()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

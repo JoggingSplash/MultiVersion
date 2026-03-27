@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace cisco\network\chunk;
 
 use cisco\network\chunk\io\ChunkDatum;
+use pocketmine\world\format\Chunk;
 
 interface MVChunkPayload {
 
-	public function readChunk(int $chunkX, int $chunkZ) : void;
+	public function readChunk(int $chunkX, int $chunkZ, Chunk $chunk) : void;
 
 	public function requestChunk(int $chunkX, int $chunkZ) : ChunkDatum;
 

@@ -52,4 +52,14 @@ final class SubChunkDatum {
 		$this->blocksId = self::assignData($this->blocksId, 4096, true);
 		$this->blocksData = self::assignData($this->blocksData, 2048, true);
 	}
+
+	public function isEmpty() : bool {
+		static $emptyId = null;
+		static $emptyData = null;
+		$emptyId ??= self::assignData("", 4096, false);
+		$emptyData ??= self::assignData("", 2048, false);
+
+		return $this->blocksId === $emptyId
+			&& $this->blocksData === $emptyData;
+	}
 }

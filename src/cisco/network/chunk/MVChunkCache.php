@@ -57,7 +57,7 @@ class MVChunkCache implements ChunkListener
 		private TProtocol  $protocol,
 	) {
 		$provider = $this->world->getProvider();
-        $protocol = $this->protocol;
+		$protocol = $this->protocol;
 		if($this->protocol->hasOldCompressionMethod() && $provider instanceof LevelDB){
 			$this->payload = new LevelChunk2D($provider->getDatabase(), $protocol);
 		}else{
@@ -107,15 +107,16 @@ class MVChunkCache implements ChunkListener
 	}
 
 	private function prepareChunkAsync(int $chunkX, int $chunkZ, int $chunkHash) : CompressBatchPromise{
-		$data = null;
-		if($this->payload !== null){
-			$this->payload->readChunk($chunkX, $chunkZ);
-			$data = $this->payload->requestChunk($chunkX, $chunkZ);
-		}
 		$this->world->registerChunkListener($this, $chunkX, $chunkZ);
 		$chunk = $this->world->getChunk($chunkX, $chunkZ);
 		if ($chunk === null) {
 			throw new InvalidArgumentException("Cannot request an unloaded chunk");
+		}
+
+		$data = null;
+		if($this->payload !== null){
+			$this->payload->readChunk($chunkX, $chunkZ, $chunk);
+			$data = $this->payload->requestChunk($chunkX, $chunkZ);
 		}
 
 		++$this->misses;

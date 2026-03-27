@@ -24,15 +24,12 @@ namespace cisco\network\chunk;
 
 use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\chunk\io\SubChunkDatum;
-use cisco\network\mcpe\MVRuntimeIdToStateId;
 use cisco\network\proto\TProtocol;
 use cisco\network\utils\ReflectionUtils;
 use GlobalLogger;
-use pocketmine\block\RuntimeBlockStateRegistry;
 use pocketmine\data\bedrock\BiomeIds;
 use pocketmine\data\bedrock\block\BlockStateDeserializeException;
 use pocketmine\data\bedrock\block\convert\UnsupportedBlockStateException;
-use pocketmine\data\bedrock\block\upgrade\LegacyBlockIdToStringIdMap;
 use pocketmine\nbt\LittleEndianNbtSerializer;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\NbtDataException;
@@ -65,19 +62,35 @@ final class LevelChunk2D implements MVChunkPayload {
 
 	public function __construct(
 		protected \LevelDB $db,
-        protected TProtocol $protocol
+		protected TProtocol $protocol
 	){
 
 	}
 
-	public function readChunk(int $chunkX, int $chunkZ) : void {
+	public function readChunk(int $chunkX, int $chunkZ, Chunk $chunk) : void {
 		$hash = World::chunkHash($chunkX, $chunkZ);
 		if(isset($this->chunks[$hash])) {
 			//should not re-read
 			return;
 		}
 
-		$this->chunks[$hash] = $this->prepareChunk($chunkX, $chunkZ);
+		$this->chunks[$hash] = $chunk->isPopulated() ? $this->prepareChunk($chunk) : $this->prepareChunkFromDb($chunkX, $chunkZ);
+	}
+
+	private function prepareChunk(Chunk $chunk) : ChunkDatum {
+		$biomes = self::reduce3DBiomes($chunk->getSubChunk(Chunk::MIN_SUBCHUNK_INDEX)->getBiomeArray());
+		$subChunks = [];
+		for($y = 0; $y < 16; $y++) {
+			$subChunk = $chunk->getSubChunk($y);
+			$layers = $subChunk->getBlockLayers();
+			if(empty($layers)) {
+				$subChunks[$y] = SubChunkDatum::empty();
+				continue;
+			}
+			[$blocks, $data] = $this->palettedToClassic($layers[0]);
+			$subChunks[$y] = new SubChunkDatum($blocks, $data);
+		}
+		return new ChunkDatum($biomes, $subChunks);
 	}
 
 	private function readVersion(int $chunkX, int $chunkZ) : ?int{
@@ -93,7 +106,7 @@ final class LevelChunk2D implements MVChunkPayload {
 		return ord($chunkVersionRaw);
 	}
 
-	private function prepareChunk(int $chunkX, int $chunkZ) : ChunkDatum {
+	private function prepareChunkFromDb(int $chunkX, int $chunkZ) : ChunkDatum {
 		$version = $this->readVersion($chunkX, $chunkZ);
 
 		if($version === null){
@@ -396,43 +409,42 @@ final class LevelChunk2D implements MVChunkPayload {
 	 *
 	 * @return array{string, string} [$blocks, $data]
 	 */
-    private function palettedToClassic(PalettedBlockArray $paletted) : array {
-        $blocks = "";
-        $data = "";
-        $nibbleBuffer = 0;
-        $i = 0;
+	private function palettedToClassic(PalettedBlockArray $paletted) : array {
+		$blocks = "";
+		$data = "";
+		$nibbleBuffer = 0;
+		$i = 0;
 
-        $converter = $this->protocol->getTypeConverter();
-        $runtimeToState = MVRuntimeIdToStateId::getInstance();
-        $blockTranslator = $converter->getMVBlockTranslator();
-        $dictionary = $blockTranslator->getBlockStateDictionary();
-        for ($x = 0; $x < 16; $x++) {
-            for ($z = 0; $z < 16; $z++) {
-                for ($y = 0; $y < 16; $y++) {
-                    $stateId = $paletted->get($x, $y, $z);
-                    $networkStateId = $blockTranslator->internalIdToNetworkId($stateId);
-                    $legacyBlockId = $dictionary->getLegacyBlockIdFromStateId($networkStateId);
-                    $meta = $dictionary->getMetaFromStateId($stateId);
+		$converter = $this->protocol->getTypeConverter();
+		$blockTranslator = $converter->getMVBlockTranslator();
+		$dictionary = $blockTranslator->getBlockStateDictionary();
+		for ($x = 0; $x < 16; $x++) {
+			for ($z = 0; $z < 16; $z++) {
+				for ($y = 0; $y < 16; $y++) {
+					$stateId = $paletted->get($x, $y, $z);
+					$networkStateId = $blockTranslator->internalIdToNetworkId($stateId);
+					$legacyBlockId = $dictionary->getLegacyBlockIdFromStateId($networkStateId);
+					$meta = $dictionary->getMetaFromStateId($stateId);
 
-                    $blocks .= chr($legacyBlockId & 0xFF);
+					$blocks .= chr($legacyBlockId & 0xFF);
 
-                    if (($i & 1) === 0) {
-                        $nibbleBuffer = $meta;
-                    } else {
-                        $data .= chr($nibbleBuffer | ($meta << 4));
-                    }
-                    $i++;
-                }
-            }
-        }
+					if (($i & 1) === 0) {
+						$nibbleBuffer = $meta;
+					} else {
+						$data .= chr($nibbleBuffer | ($meta << 4));
+					}
+					$i++;
+				}
+			}
+		}
 
-        // Flush nibble final (no debería pasar con 4096 bloques)
-        if (($i & 1) !== 0) {
-            $data .= chr($nibbleBuffer);
-        }
+		// Flush nibble final (no debería pasar con 4096 bloques)
+		if (($i & 1) !== 0) {
+			$data .= chr($nibbleBuffer);
+		}
 
-        return [$blocks, $data];
-    }
+		return [$blocks, $data];
+	}
 
 	public function requestChunk(int $chunkX, int $chunkZ) : ChunkDatum {
 		return $this->chunks[World::chunkHash($chunkX, $chunkZ)] ?? throw new AssumptionFailedError();
