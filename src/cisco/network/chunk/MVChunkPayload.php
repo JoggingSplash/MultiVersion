@@ -31,4 +31,6 @@ interface MVChunkPayload {
 
 	public function requestChunk(int $chunkX, int $chunkZ) : ChunkDatum;
 
+	public function destroyChunk(int $chunkX, int $chunkZ) : void;
+
 }

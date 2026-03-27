@@ -52,7 +52,6 @@ use function count;
 use function implode;
 use function ord;
 use function str_repeat;
-use function str_split;
 use function strlen;
 
 final class LevelChunk2D implements MVChunkPayload {
@@ -75,6 +74,10 @@ final class LevelChunk2D implements MVChunkPayload {
 		}
 
 		$this->chunks[$hash] = $chunk->isPopulated() ? $this->prepareChunk($chunk) : $this->prepareChunkFromDb($chunkX, $chunkZ);
+	}
+
+	public function destroyChunk(int $chunkX, int $chunkZ) : void    {
+		unset($this->chunks[World::chunkHash($chunkX, $chunkZ)]);
 	}
 
 	private function prepareChunk(Chunk $chunk) : ChunkDatum {
@@ -158,7 +161,7 @@ final class LevelChunk2D implements MVChunkPayload {
 			case ChunkVersion::v1_1_0:
 			case ChunkVersion::v1_0_0:
 				$biomes = $this->readBiomes($index, $version);
-				$subChunks = $this->deserializeSubChunks($index, $version, str_split($biomes, 16));
+				$subChunks = $this->deserializeSubChunks($index, $version);
 				break;
 			case ChunkVersion::v0_9_5:
 			case ChunkVersion::v0_9_2:
@@ -173,7 +176,7 @@ final class LevelChunk2D implements MVChunkPayload {
 		);
 	}
 
-	private function deserializeSubChunks(string $index, int $version, array $biomes) : array {
+	private function deserializeSubChunks(string $index, int $version) : array {
 		$subChunks = [];
 		for($i = 0; $i < 16; $i++){
 			$data = $this->db->get($index . ChunkDataKey::SUBCHUNK . chr($i));
@@ -271,7 +274,7 @@ final class LevelChunk2D implements MVChunkPayload {
 			try{
 				$binaryStream->get(512);
 				$biomes3d = ReflectionUtils::invokeStatic(LevelDBI::class, "deserialize3dBiomes", $binaryStream, $chunkVersion, $logger);
-				$biomes = self::reduce3DBiomes($biomes3d[Chunk::MIN_SUBCHUNK_INDEX]);
+				$biomes = self::reduce3DBiomes(clone $biomes3d[Chunk::MIN_SUBCHUNK_INDEX]);
 			}catch(BinaryDataException $e){
 				throw new CorruptedChunkException($e->getMessage(), 0, $e);
 			}

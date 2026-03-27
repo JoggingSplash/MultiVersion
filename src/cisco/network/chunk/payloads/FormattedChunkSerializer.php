@@ -85,7 +85,7 @@ final class FormattedChunkSerializer implements MVChunkSerializer {
 			$palette = $blocks->getPalette();
 
 			if ($bitsPerBlock !== 0) {
-				VarInt::writeUnsignedInt($writer, count($palette) << 1);
+				VarInt::writeSignedInt($writer, count($palette));
 			}
 
 			if ($persistentBlockStates) {
@@ -102,7 +102,7 @@ final class FormattedChunkSerializer implements MVChunkSerializer {
 			}
 
 			foreach ($palette as $p) {
-				VarInt::writeUnsignedInt($writer, $blockTranslator->internalIdToNetworkId($p) << 1);
+				VarInt::writeSignedInt($writer, $blockTranslator->internalIdToNetworkId($p));
 			}
 		}
 	}

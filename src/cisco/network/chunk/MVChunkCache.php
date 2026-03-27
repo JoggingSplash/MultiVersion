@@ -115,7 +115,7 @@ class MVChunkCache implements ChunkListener
 
 		$data = null;
 		if($this->payload !== null){
-			$this->payload->readChunk($chunkX, $chunkZ, $chunk);
+			$this->payload->readChunk($chunkX, $chunkZ, clone $chunk);
 			$data = $this->payload->requestChunk($chunkX, $chunkZ);
 		}
 
@@ -153,10 +153,6 @@ class MVChunkCache implements ChunkListener
 		$this->destroyOrRestart($chunkX, $chunkZ);
 	}
 
-	public function onChunkLoaded(int $chunkX, int $chunkZ, Chunk $chunk) : void {
-		$this->payload?->readChunk($chunkX, $chunkZ);
-	}
-
 	private function destroyOrRestart(int $chunkX, int $chunkZ) : void
 	{
 		$cache = $this->caches[$chunkHash = World::chunkHash($chunkX, $chunkZ)] ?? null;
@@ -184,6 +180,7 @@ class MVChunkCache implements ChunkListener
 	private function destroy(int $chunkX, int $chunkZ) : bool {
 		$chunkHash = World::chunkHash($chunkX, $chunkZ);
 		$existing = $this->caches[$chunkHash] ?? null;
+		$this->payload?->destroyChunk($chunkX, $chunkZ);
 		unset($this->caches[$chunkHash]);
 
 		return $existing !== null;
