@@ -73,7 +73,7 @@ final class LevelChunk2D implements MVChunkPayload {
 			return;
 		}
 
-		$this->chunks[$hash] = $chunk->isPopulated() ? $this->prepareChunk($chunk) : $this->prepareChunkFromDb($chunkX, $chunkZ);
+		$this->chunks[$hash] = $this->prepareChunk($chunk); // $chunk->isPopulated() ? $this->prepareChunk($chunk) : $this->prepareChunkFromDb($chunkX, $chunkZ);
 	}
 
 	public function destroyChunk(int $chunkX, int $chunkZ) : void    {
