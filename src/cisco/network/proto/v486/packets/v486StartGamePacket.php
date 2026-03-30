@@ -128,13 +128,9 @@ class v486StartGamePacket extends StartGamePacket
 
 		VarInt::writeSignedInt($out, $this->enchantmentSeed);
 
-		VarInt::writeUnsignedInt($out, count($this->blockPalette));
-		foreach ($this->blockPalette as $entry) {
-			CommonTypes::putString($out, $entry->getName());
-			$out->writeByteArray($entry->getStates()->getEncodedNbt());
-		}
+		VarInt::writeUnsignedInt($out, 0);
 
-		VarInt::writeUnsignedInt($out, count($this->itemTable)); // item table
+		VarInt::writeUnsignedInt($out, 0); // item table
 
 		CommonTypes::putString($out, $this->multiplayerCorrelationId);
 		CommonTypes::putBool($out, $this->enableNewInventorySystem);

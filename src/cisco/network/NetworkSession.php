@@ -261,6 +261,8 @@ class NetworkSession extends BaseNetworkSession {
 			throw new PacketHandlingException("Unexpected non-serverbound packet");
 		}
 
+        var_dump("Received={$packet->getName()}");
+
 		$timings = Timings::getReceiveDataPacketTimings($packet);
 		$timings->startTiming();
 
@@ -506,7 +508,8 @@ class NetworkSession extends BaseNetworkSession {
 			return $packet;
 		}
 
-        return $this->protocol->outcoming(clone $packet);
+        $pk = $this->protocol->outcoming(clone $packet);
+        return $pk;
     }
 
 	/**
@@ -520,10 +523,12 @@ class NetworkSession extends BaseNetworkSession {
 		$world = $this->getPlayer()->getLocation()->getWorld();
 
 		$promiseOrPacket = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
-		if(is_string($promiseOrPacket)) {
+
+        if(is_string($promiseOrPacket)) {
 			$this->sendChunkPacket($promiseOrPacket, $onCompletion, $world);
 			return;
 		}
+
 		$promiseOrPacket->onResolve(function (CompressBatchPromise $promise) use ($world, $onCompletion, $chunkX, $chunkZ) : void {
 			if(!$this->isConnected()){
 				return;
@@ -546,7 +551,7 @@ class NetworkSession extends BaseNetworkSession {
 		});
 	}
 
-	/**
+    /**
 	 * @phpstan-param Closure() : void $onCompletion
 	 */
 	private function sendChunkPacket(string $chunkPacket, Closure $onCompletion, World $world) : void

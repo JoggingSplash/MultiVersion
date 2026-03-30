@@ -28,6 +28,7 @@ use cisco\network\assemble\command\CommandEnum;
 use cisco\network\assemble\command\CommandOverload;
 use cisco\network\assemble\command\CommandParameter;
 use cisco\network\chunk\serializers\PreFormattedChunkSerializer;
+use cisco\network\chunk\serializers\v486ChunkSerializer;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\mcpe\MVRuntimeIdToStateId;
 use cisco\network\NetworkSession;
@@ -161,7 +162,7 @@ class v486Protocol extends TProtocol
 
 	public function __construct()
 	{
-		parent::__construct(v486TypeConverter::getInstance()->getConverter(), new v486PacketPool(), new PreFormattedChunkSerializer(), new v486SkinHelper());
+		parent::__construct(v486TypeConverter::getInstance()->getConverter(), new v486PacketPool(), new v486ChunkSerializer(), new v486SkinHelper());
 		$this->staticPacketCache = new v486StaticPacketCache($this);
 	}
 
@@ -241,7 +242,7 @@ class v486Protocol extends TProtocol
 			if (($packet->sound === LevelSoundEvent::BREAK && $packet->extraData !== -1) || $packet->sound === LevelSoundEvent::PLACE || $packet->sound === LevelSoundEvent::HIT || $packet->sound === LevelSoundEvent::LAND || $packet->sound === LevelSoundEvent::ITEM_USE_ON) {
 				$packet->extraData = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->extraData));
 			}
-			return $packet;
+			return v486LevelSoundEventPacket::fromLatest($packet);
 		} elseif ($packet instanceof UpdateAbilitiesPacket) {
 			foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
 				$player = $world->getPlayers()[$packet->getData()->getTargetActorUniqueId()] ?? null;
@@ -307,7 +308,6 @@ class v486Protocol extends TProtocol
 			$packet instanceof StartGamePacket => v486StartGamePacket::fromLatest($packet),
 			$packet instanceof UpdateAttributesPacket => v486UpdateAttributesPacket::fromLatest($packet),
 			$packet instanceof TransferPacket => v486TransferPacket::fromLatest($packet),
-			$packet instanceof LevelSoundEventPacket => v486LevelSoundEventPacket::fromLatest($packet),
 			$packet instanceof InventoryTransactionPacket => v486InventoryTransactionPacket::fromLatest($packet),
 			$packet instanceof GameRulesChangedPacket => v486GameRulesChangedPacket::fromLatest($packet),
 			default => $packet

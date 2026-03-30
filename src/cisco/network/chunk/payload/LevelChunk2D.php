@@ -93,6 +93,7 @@ final class LevelChunk2D implements MVChunkPayload {
 			[$blocks, $data] = $this->palettedToClassic($layers[0]);
 			$subChunks[$y] = new SubChunkDatum($blocks, $data);
 		}
+
 		return new ChunkDatum($biomes, $subChunks);
 	}
 

@@ -22,7 +22,15 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v486\packets;
 
+use cisco\network\proto\v486\structure\v486CommonTypes;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\AddActorPacket;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\entity\Attribute;
+use pocketmine\network\mcpe\protocol\types\entity\PropertySyncData;
 
 class v486AddActorPacket extends AddActorPacket
 {
@@ -43,5 +51,60 @@ class v486AddActorPacket extends AddActorPacket
 		$npk->links = $pk->links;
 		return $npk;
 	}
+
+    protected function decodePayload(ByteBufferReader $in) : void
+    {
+        $this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+        $this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+        $this->type = CommonTypes::getString($in);
+        $this->position = CommonTypes::getVector3($in);
+        $this->motion = CommonTypes::getVector3($in);
+        $this->pitch = LE::readFloat($in);
+        $this->yaw = LE::readFloat($in);
+        $this->headYaw = LE::readFloat($in);
+
+        $attrCount = VarInt::readUnsignedInt($in);
+        for ($i = 0; $i < $attrCount; ++$i) {
+            $id = CommonTypes::getString($in);
+            $min = LE::readFloat($in);
+            $current = LE::readFloat($in);
+            $max = LE::readFloat($in);
+            $this->attributes[] = new Attribute($id, $min, $max, $current, $current, []);
+        }
+
+        $this->metadata = v486CommonTypes::getEntityMetadata($in);
+
+        $linkCount = VarInt::readUnsignedInt($in);
+        for($i = 0; $i < $linkCount; ++$i){
+            $this->links[] = CommonTypes::getEntityLink($in);
+        }
+    }
+
+    protected function encodePayload(ByteBufferWriter $out) : void{
+        CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+        CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+        CommonTypes::putString($out, $this->type);
+        CommonTypes::putVector3($out, $this->position);
+        CommonTypes::putVector3Nullable($out, $this->motion);
+        LE::writeFloat($out, $this->pitch);
+        LE::writeFloat($out, $this->yaw);
+        LE::writeFloat($out, $this->headYaw);
+
+        VarInt::writeUnsignedInt($out, count($this->attributes));
+        foreach($this->attributes as $attribute){
+            CommonTypes::putString($out, $attribute->getId());
+            LE::writeFloat($out, $attribute->getMin());
+            LE::writeFloat($out, $attribute->getCurrent());
+            LE::writeFloat($out, $attribute->getMax());
+        }
+
+        v486CommonTypes::putEntityMetadata($out, $this->metadata);
+        VarInt::writeUnsignedInt($out, count($this->links));
+        foreach($this->links as $link){
+            CommonTypes::putEntityLink($out, $link);
+        }
+    }
+
+
 
 }

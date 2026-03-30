@@ -466,7 +466,7 @@ final class v486CommonTypes
 
 		$type_converter = v486TypeConverter::getInstance()->getConverter();
 
-		[$id, $meta] = $type_converter->getMVItemTranslator()->fromNetworkId($id, $netData, ItemTranslator::NO_BLOCK_RUNTIME_ID);
+		[$id, $meta] = $type_converter->getMVItemTranslator()->toNetworkId(TypeConverter::getInstance()->getItemTranslator()->fromNetworkId($id, $netData, ItemTranslator::NO_BLOCK_RUNTIME_ID));
 
 		$readExtraCrapInTheMiddle($in);
 
