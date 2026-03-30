@@ -1,5 +1,23 @@
 <?php
 
+/*
+ *     __  ___      ____  _ _    __               _
+ *    /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
+ *   / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
+ *  / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
+ * /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * @author JoggingSplash23
+ * @link https://www.github.com/JoggingSplash
+ *
+ *
+ */
+
 declare(strict_types=1);
 
 namespace cisco\network\chunk\serializers;
@@ -27,7 +45,7 @@ use function str_repeat;
 
 final class v486ChunkSerializer implements MVChunkSerializer {
 
-    private static SubChunkDatum $emptyDatum;
+	private static SubChunkDatum $emptyDatum;
 	public const LOWER_PADDING_SIZE = 4;
 
 	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?ChunkDatum $datum, ?string $tiles = null) : string
@@ -35,13 +53,13 @@ final class v486ChunkSerializer implements MVChunkSerializer {
 		$datum !== null || throw new AssumptionFailedError();
 		$stream = new ByteBufferWriter();
 
-        $emptyDatum = self::$emptyDatum ??= SubChunkDatum::empty();
+		$emptyDatum = self::$emptyDatum ??= SubChunkDatum::empty();
 
 		// HACK: fill in fake subchunks to make up for the new negative space client-side (-64 height)
 		for($y = 0; $y < self::LOWER_PADDING_SIZE; $y++){
 			Byte::writeUnsigned($stream, 0); //subchunk version
-            $stream->writeByteArray($emptyDatum->blocksId);
-            $stream->writeByteArray($emptyDatum->blocksData);
+			$stream->writeByteArray($emptyDatum->blocksId);
+			$stream->writeByteArray($emptyDatum->blocksData);
 		}
 
 		$subChunkCount = self::getSubChunkCount($chunk, $dimensionId);
@@ -65,7 +83,7 @@ final class v486ChunkSerializer implements MVChunkSerializer {
 		} else {
 			$stream->writeByteArray($this->serializeTiles($chunk));
 		}
-		
+
 		return $stream->getData();
 	}
 
@@ -150,7 +168,7 @@ final class v486ChunkSerializer implements MVChunkSerializer {
 
 		$biomePaletteBitsPerBlock = $biomePalette->getBitsPerBlock();
 		$tempStream = new ByteBufferWriter();
-		
+
 		Byte::writeUnsigned($tempStream, ($biomePaletteBitsPerBlock << 1) | 1); // the last bit is non-persistence
 		$tempStream->writeByteArray($biomePalette->getWordArray());
 

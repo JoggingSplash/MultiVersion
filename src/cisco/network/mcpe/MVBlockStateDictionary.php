@@ -115,7 +115,7 @@ class MVBlockStateDictionary
 		}
 
 		$logger = \GlobalLogger::get();
-        $misses = 0;
+		$misses = 0;
 
 		foreach (self::loadPaletteFromString($blockPaletteContents) as $i => $state) {
 			$meta = $metaMap[$i] ?? null;
@@ -137,15 +137,15 @@ class MVBlockStateDictionary
 				}elseif(isset($blockIdMap[$uniqueName])){
 					$stateIdToLegacyBlockId[$i] = $blockIdMap[$uniqueName];
 				}else{
-                    ++$misses;
+					++$misses;
 					$stateIdToLegacyBlockId[$i] = 0;
 				}
 			}
 		}
 
-        if($misses > 0){
-            $logger->debug("Almost $misses blocks had no blockmap id found");
-        }
+		if($misses > 0){
+			$logger->debug("Almost $misses blocks had no blockmap id found");
+		}
 		$dictionary = new self($entries);
 		$dictionary->stateIdToLegacyBlockId = $stateIdToLegacyBlockId;
 		return $dictionary;

@@ -29,7 +29,6 @@ use cisco\network\utils\RawPacketHelper;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
-use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 
 class v419UpdateBlockPacket extends UpdateBlockPacket
@@ -55,18 +54,18 @@ class v419UpdateBlockPacket extends UpdateBlockPacket
 		return $npk;
 	}
 
-    protected function decodePayload(ByteBufferReader $in) : void{
-        $this->blockPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
-        $this->blockRuntimeId = VarInt::readUnsignedInt($in);
-        $this->flags = VarInt::readUnsignedInt($in);
-        $this->dataLayerId = VarInt::readUnsignedInt($in);
-    }
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->blockPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
+		$this->blockRuntimeId = VarInt::readUnsignedInt($in);
+		$this->flags = VarInt::readUnsignedInt($in);
+		$this->dataLayerId = VarInt::readUnsignedInt($in);
+	}
 
-    protected function encodePayload(ByteBufferWriter $out) : void{
-        RawPacketHelper::putUnsignedYBlockPosition($out, $this->blockPosition);
-        VarInt::writeUnsignedInt($out, $this->blockRuntimeId);
-        VarInt::writeUnsignedInt($out, $this->flags);
-        VarInt::writeUnsignedInt($out, $this->dataLayerId);
-    }
-	
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		RawPacketHelper::putUnsignedYBlockPosition($out, $this->blockPosition);
+		VarInt::writeUnsignedInt($out, $this->blockRuntimeId);
+		VarInt::writeUnsignedInt($out, $this->flags);
+		VarInt::writeUnsignedInt($out, $this->dataLayerId);
+	}
+
 }

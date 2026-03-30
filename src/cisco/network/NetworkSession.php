@@ -57,7 +57,6 @@ use pocketmine\network\mcpe\protocol\DisconnectPacket;
 use pocketmine\network\mcpe\protocol\Packet;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketPool;
-use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\PacketBatch;
 use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\types\CompressionAlgorithm;
@@ -506,9 +505,9 @@ class NetworkSession extends BaseNetworkSession {
 			return $packet;
 		}
 
-        $pk = $this->protocol->outcoming(clone $packet);
-        return $pk;
-    }
+		$pk = $this->protocol->outcoming(clone $packet);
+		return $pk;
+	}
 
 	/**
 	 * Instructs the networksession to start using the chunk at the given coordinates. This may occur asynchronously.
@@ -522,7 +521,7 @@ class NetworkSession extends BaseNetworkSession {
 
 		$promiseOrPacket = MVChunkCache::getInstance($world, $this->getCompressor(), $this->protocol)->request($chunkX, $chunkZ);
 
-        if(is_string($promiseOrPacket)) {
+		if(is_string($promiseOrPacket)) {
 			$this->sendChunkPacket($promiseOrPacket, $onCompletion, $world);
 			return;
 		}
@@ -549,7 +548,7 @@ class NetworkSession extends BaseNetworkSession {
 		});
 	}
 
-    /**
+	/**
 	 * @phpstan-param Closure() : void $onCompletion
 	 */
 	private function sendChunkPacket(string $chunkPacket, Closure $onCompletion, World $world) : void

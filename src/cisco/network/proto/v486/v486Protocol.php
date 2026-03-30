@@ -27,7 +27,6 @@ use cisco\network\assemble\command\CommandData;
 use cisco\network\assemble\command\CommandEnum;
 use cisco\network\assemble\command\CommandOverload;
 use cisco\network\assemble\command\CommandParameter;
-use cisco\network\chunk\serializers\PreFormattedChunkSerializer;
 use cisco\network\chunk\serializers\v486ChunkSerializer;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\mcpe\MVRuntimeIdToStateId;

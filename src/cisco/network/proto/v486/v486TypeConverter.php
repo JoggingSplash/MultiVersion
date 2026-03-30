@@ -53,10 +53,10 @@ final class v486TypeConverter
 			$blockItemIdMap = BlockItemIdMap::getInstance(),
 			$blockTranslator = new MVBlockTranslator(
 				MVBlockStateDictionary::loadFromString(
-                    Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v486", "canonical_block_states.nbt")),
-                    Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v486", "block_state_meta_map.json")),
-                    Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v486", "block_id_map.json")),
-                ),
+					Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v486", "canonical_block_states.nbt")),
+					Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v486", "block_state_meta_map.json")),
+					Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v486", "block_id_map.json")),
+				),
 				GlobalBlockStateHandlers::getSerializer(),
 			),
 			$itemTypeDictionary = ItemTypeDictionaryFromDataHelper::loadFromString(Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v486", "required_item_list.json"))),
