@@ -261,8 +261,6 @@ class NetworkSession extends BaseNetworkSession {
 			throw new PacketHandlingException("Unexpected non-serverbound packet");
 		}
 
-        var_dump("Received={$packet->getName()}");
-
 		$timings = Timings::getReceiveDataPacketTimings($packet);
 		$timings->startTiming();
 
