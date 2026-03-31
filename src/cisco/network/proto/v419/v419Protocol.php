@@ -286,11 +286,13 @@ final class v419Protocol extends TProtocol
 				$packet->extraData = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->extraData));
 			}
 			return v419LevelSoundEventPacket::fromLatest($packet);
-		}
+		}elseif ($packet instanceof UpdateBlockPacket){
+            $packet->blockRuntimeId = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->blockRuntimeId));
+            return v419UpdateBlockPacket::fromLatest($packet);
+        }
 
 		return match (true) {
 			$packet instanceof CraftingDataPacket => $this->staticPacketCache->getCraftingDataPacket(),
-			$packet instanceof UpdateBlockPacket => v419UpdateBlockPacket::fromLatest($packet),
 			$packet instanceof AddActorPacket => v419AddActorPacket::fromLatest($packet),
 			$packet instanceof ResourcePacksInfoPacket => v419ResourcePacksInfoPacket::fromLatest($packet),
 			$packet instanceof AddPlayerPacket => v419AddPlayerPacket::fromLatest($packet),

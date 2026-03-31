@@ -70,6 +70,7 @@ use cisco\network\proto\v486\packets\v486StartGamePacket;
 use cisco\network\proto\v486\packets\v486TextPacket;
 use cisco\network\proto\v486\packets\v486TransferPacket;
 use cisco\network\proto\v486\packets\v486UpdateAttributesPacket;
+use cisco\network\proto\v486\packets\v486UpdateBlockPacket;
 use cisco\network\proto\v486\structure\v486InGamePacketHandler;
 use cisco\network\proto\v486\structure\v486PacketPool;
 use cisco\network\proto\v486\structure\v486ProtocolInfo;
@@ -261,7 +262,7 @@ class v486Protocol extends TProtocol
 			throw new AssumptionFailedError("This line should be unreachable");
 		} elseif ($packet instanceof UpdateBlockPacket) {
 			$packet->blockRuntimeId = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->blockRuntimeId));
-			return $packet;
+			return v486UpdateBlockPacket::fromLatest($packet);
 		} elseif ($packet instanceof PlayerListPacket) {
 			foreach ($packet->entries as $entry) {
 				if (!isset($entry->skinData)) {
@@ -375,7 +376,7 @@ class v486Protocol extends TProtocol
 				chainedSubCommandData: []
 			);
 		}
-		return null; // v486AvailableCommandsPacket::create($commandData, [], [], []);
+		return v486AvailableCommandsPacket::create($commandData, [], [], []);
 	}
 
 	public function __toString() : string

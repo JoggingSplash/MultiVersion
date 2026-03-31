@@ -57,11 +57,9 @@ final class v486ItemStackResponse
 		$result = Byte::readUnsigned($in);
 		$requestId = VarInt::readSignedInt($in);
 		$containerInfos = [];
-		if ($result === self::RESULT_OK) {
-			for ($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i) {
-				$containerInfos[] = v486ItemStackResponseContainerInfo::read($in);
-			}
-		}
+        for ($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i) {
+            $containerInfos[] = v486ItemStackResponseContainerInfo::read($in);
+        }
 		return new self($result, $requestId, $containerInfos);
 	}
 
@@ -85,12 +83,14 @@ final class v486ItemStackResponse
 	{
 		Byte::writeUnsigned($out, $this->result);
 		VarInt::writeSignedInt($out, $this->requestId);
-		if ($this->result === self::RESULT_OK) {
-			VarInt::writeUnsignedInt($out, count($this->containerInfos));
-			foreach ($this->containerInfos as $containerInfo) {
-				$containerInfo->write($out);
-			}
-		}
+        VarInt::writeUnsignedInt($out, count($this->containerInfos));
+        foreach ($this->containerInfos as $containerInfo) {
+            Byte::writeUnsigned($out, $containerInfo->getContainerName()->getContainerId());
+            VarInt::writeUnsignedInt($out, count($containerInfo->getSlots()));
+            foreach ($containerInfo->getSlots() as $slot) {
+                (new v486ItemStackResponseSlotInfo($slot->getSlot(), $slot->getHotbarSlot(), $slot->getCount(), $slot->getItemStackId(), $slot->getCustomName(), $slot->getDurabilityCorrection()))->write($out);
+            }
+        }
 	}
 
 }

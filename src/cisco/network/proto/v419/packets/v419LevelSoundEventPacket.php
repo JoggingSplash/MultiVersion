@@ -27,6 +27,7 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\mcpe\protocol\PacketHandlerInterface;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class v419LevelSoundEventPacket extends LevelSoundEventPacket
@@ -65,4 +66,9 @@ class v419LevelSoundEventPacket extends LevelSoundEventPacket
 		CommonTypes::putBool($out, $this->isBabyMob);
 		CommonTypes::putBool($out, $this->disableRelativeVolume);
 	}
+
+    public function handle(PacketHandlerInterface $handler): bool
+    {
+        return true;
+    }
 }

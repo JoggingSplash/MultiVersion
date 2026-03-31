@@ -20,25 +20,18 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v419\packets;
+namespace cisco\network\proto\v486\packets;
 
-use cisco\network\mcpe\MVRuntimeIdToStateId;
-use cisco\network\proto\v419\structure\v419ProtocolInfo;
-use cisco\network\proto\v419\v419TypeConverter;
 use cisco\network\utils\RawPacketHelper;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 
-class v419UpdateBlockPacket extends UpdateBlockPacket
-{
+class v486UpdateBlockPacket extends UpdateBlockPacket {
 
-	public const NETWORK_ID = v419ProtocolInfo::UPDATE_BLOCK_PACKET;
-
-	public static function fromLatest(UpdateBlockPacket $packet) : v419UpdateBlockPacket
-	{
-		$npk = new v419UpdateBlockPacket();
+	static public function fromLatest(UpdateBlockPacket $packet) : self {
+		$npk = new self();
 		$npk->blockPosition = $packet->blockPosition;
 		$npk->flags = $packet->flags;
 		$npk->dataLayerId = $packet->dataLayerId;
@@ -59,5 +52,4 @@ class v419UpdateBlockPacket extends UpdateBlockPacket
 		VarInt::writeUnsignedInt($out, $this->flags);
 		VarInt::writeUnsignedInt($out, $this->dataLayerId);
 	}
-
 }

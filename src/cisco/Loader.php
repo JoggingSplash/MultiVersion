@@ -89,7 +89,6 @@ final class Loader extends PluginBase {
 			$pool->submitTaskToWorker(new class extends AsyncTask{
 				public function onRun() : void {
 					MCProtocols::checkInit();
-					OutdateBiomeStringToIdMap::getInstance();
 				}
 			}, $workerId);
 		});

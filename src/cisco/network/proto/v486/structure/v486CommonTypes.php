@@ -464,10 +464,6 @@ final class v486CommonTypes
 		$count = LE::readUnsignedShort($in);
 		$netData = VarInt::readUnsignedInt($in);
 
-		$type_converter = v486TypeConverter::getInstance()->getConverter();
-
-		[$id, $meta] = $type_converter->getMVItemTranslator()->toNetworkId(TypeConverter::getInstance()->getItemTranslator()->fromNetworkId($id, $netData, ItemTranslator::NO_BLOCK_RUNTIME_ID));
-
 		$readExtraCrapInTheMiddle($in);
 
 		$blockRuntimeId = VarInt::readSignedInt($in);
@@ -504,7 +500,7 @@ final class v486CommonTypes
 		}
 
 		$shieldBlockingTick = null;
-		if ($id === $type_converter->getShieldRuntimeId()) {
+		if ($id === v486TypeConverter::getInstance()->getConverter()->getShieldRuntimeId()) {
 			$shieldBlockingTick = LE::readUnsignedLong($newIn);
 		}
 
@@ -518,7 +514,7 @@ final class v486CommonTypes
 		$extraDataSerializer = new ByteBufferWriter();
 		$extraData->write($extraDataSerializer);
 
-		return new ItemStack($id, $meta, $count, $blockRuntimeId, $extraDataSerializer->getData());
+		return new ItemStack($id, $netData, $count, $blockRuntimeId, $extraDataSerializer->getData());
 	}
 
 	static public function putItemStackWrapper(ByteBufferWriter $out, ItemStackWrapper $itemStack) : void {
@@ -538,13 +534,9 @@ final class v486CommonTypes
 			return;
 		}
 
-		$type_converter = v486TypeConverter::getInstance()->getConverter();
-
-		[$netId, $netData] = $type_converter->getMVItemTranslator()->toNetworkId(TypeConverter::getInstance()->getItemTranslator()->fromNetworkId($itemStack->getId(), $itemStack->getMeta(), ItemTranslator::NO_BLOCK_RUNTIME_ID));
-
-		VarInt::writeSignedInt($out, $netId);
+		VarInt::writeSignedInt($out, $itemStack->getId());
 		LE::writeUnsignedShort($out, $itemStack->getCount());
-		VarInt::writeUnsignedInt($out, $netData);
+		VarInt::writeUnsignedInt($out, $itemStack->getMeta());
 
 		$writeExtraCrapInTheMiddle($out);
 
@@ -553,7 +545,7 @@ final class v486CommonTypes
 		$newOut = new ByteBufferWriter(); // FUCK MOJANG WTF
 		$decoder = new ByteBufferReader($itemStack->getRawExtraData());
 
-		if ($itemStack->getId() === $type_converter->getShieldRuntimeId()) {
+		if ($itemStack->getId() === v486TypeConverter::getInstance()->getConverter()->getShieldRuntimeId()) {
 			$extraData = ItemStackExtraDataShield::read($decoder);
 		} else {
 			$extraData = ItemStackExtraData::read($decoder);
