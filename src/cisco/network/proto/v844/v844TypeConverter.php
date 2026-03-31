@@ -49,7 +49,9 @@ final class v844TypeConverter
 		$this->converter = new MVTypeConverter(
 			$blockItemIdMap = BlockItemIdMap::getInstance(),
 			$blockTranslator = new MVBlockTranslator(
-				MVBlockStateDictionary::loadFromString(Filesystem::fileGetContents(BedrockDataFiles::CANONICAL_BLOCK_STATES_NBT), Filesystem::fileGetContents(
+				MVBlockStateDictionary::loadFromString(Filesystem::fileGetContents(
+                    Path::join(Loader::getPluginResourcePath(), "v844", "canonical_block_states.nbt")
+                ), Filesystem::fileGetContents(
 					Path::join(Loader::getPluginResourcePath(), "v844", "block_state_meta_map.json")
 				)),
 				GlobalBlockStateHandlers::getSerializer(),
