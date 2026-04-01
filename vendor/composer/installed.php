@@ -3,7 +3,7 @@
         'name' => 'cisco/multiversion-encoding',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '804ca5055805f49016166ae1008424c9a706037c',
+        'reference' => '48be404a5b5fbd1853e51e2a1256165a7caa0f56',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'cisco/multiversion-encoding' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '804ca5055805f49016166ae1008424c9a706037c',
+            'reference' => '48be404a5b5fbd1853e51e2a1256165a7caa0f56',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -279,7 +279,7 @@ class v486Protocol extends TProtocol
 		}
 
 		return match (true) {
-            $packet instanceof ContainerOpenPacket => v486ContainerOpenPacket::fromLatest($packet),
+			$packet instanceof ContainerOpenPacket => v486ContainerOpenPacket::fromLatest($packet),
 			$packet instanceof MobEquipmentPacket => v486MobEquipmentPacket::fromLatest($packet),
 			$packet instanceof SetTitlePacket => v486SetTitlePacket::fromLatest($packet),
 			$packet instanceof MobArmorEquipmentPacket => v486MobArmorEquipmentPacket::fromLatest($packet),

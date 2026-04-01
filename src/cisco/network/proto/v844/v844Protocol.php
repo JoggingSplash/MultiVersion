@@ -95,7 +95,7 @@ class v844Protocol extends LatestProtocol
 		return match (true) {
 			$packet instanceof v844AnimatePacket => AnimatePacket::create($packet->actorRuntimeId, $packet->action, $packet->data, null),
 			$packet instanceof v844InteractPacket => RawPacketHelper::translateInteractPacketToLatest($packet),
-            $packet instanceof v844InventoryTransactionPacket => InventoryTransactionPacket::create($packet->requestId, $packet->requestChangedSlots, $packet->trData),
+			$packet instanceof v844InventoryTransactionPacket => InventoryTransactionPacket::create($packet->requestId, $packet->requestChangedSlots, $packet->trData),
 			default => parent::incoming($packet)
 		};
 	}
@@ -103,14 +103,14 @@ class v844Protocol extends LatestProtocol
 	public function outcoming(ClientboundPacket $packet) : ?ClientboundPacket
 	{
 		return match (true) {
-            $packet instanceof InventoryTransactionPacket => v844InventoryTransactionPacket::fromLatest($packet),
+			$packet instanceof InventoryTransactionPacket => v844InventoryTransactionPacket::fromLatest($packet),
 			$packet instanceof AnimatePacket => v844AnimatePacket::fromLatest($packet),
 			$packet instanceof BiomeDefinitionListPacket => $this->staticPacketCache->getBiomeDefinitionListPacket(),
 			$packet instanceof ResourcePackStackPacket => v844ResourcePackStackPacket::fromLatest($packet),
 			$packet instanceof StartGamePacket => v844StartGamePacket::fromLatest($packet),
 			$packet instanceof TextPacket => v844TextPacket::fromLatest($packet),
 			$packet instanceof MobEffectPacket => v844MobEffectPacket::fromLatest($packet),
-            $packet instanceof NetworkChunkPublisherUpdatePacket => v844NetworkChunkPublisherUpdatePacket::fromLatest($packet),
+			$packet instanceof NetworkChunkPublisherUpdatePacket => v844NetworkChunkPublisherUpdatePacket::fromLatest($packet),
 			$packet instanceof AvailableCommandsPacket => v844AvailableCommandsPacket::create($packet->enumValues, $packet->chainedSubCommandValues, $packet->postfixes, $packet->postfixes, $packet->chainedSubCommandData, $packet->commandData, $packet->softEnums, $packet->enumConstraints),
 			default => parent::outcoming($packet)
 		};

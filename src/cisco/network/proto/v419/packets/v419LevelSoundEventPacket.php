@@ -67,8 +67,8 @@ class v419LevelSoundEventPacket extends LevelSoundEventPacket
 		CommonTypes::putBool($out, $this->disableRelativeVolume);
 	}
 
-    public function handle(PacketHandlerInterface $handler): bool
-    {
-        return true;
-    }
+	public function handle(PacketHandlerInterface $handler) : bool
+	{
+		return true;
+	}
 }
