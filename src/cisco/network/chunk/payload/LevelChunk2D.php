@@ -26,32 +26,11 @@ use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\chunk\io\SubChunkDatum;
 use cisco\network\chunk\MVChunkPayload;
 use cisco\network\proto\TProtocol;
-use cisco\network\utils\ReflectionUtils;
-use GlobalLogger;
-use pocketmine\data\bedrock\BiomeIds;
-use pocketmine\data\bedrock\block\BlockStateDeserializeException;
-use pocketmine\data\bedrock\block\convert\UnsupportedBlockStateException;
-use pocketmine\nbt\LittleEndianNbtSerializer;
-use pocketmine\nbt\NBT;
-use pocketmine\nbt\NbtDataException;
 use pocketmine\utils\AssumptionFailedError;
-use pocketmine\utils\BinaryDataException;
-use pocketmine\utils\BinaryStream;
-use pocketmine\utils\Utils;
 use pocketmine\world\format\Chunk;
-use pocketmine\world\format\io\exception\CorruptedChunkException;
-use pocketmine\world\format\io\GlobalBlockStateHandlers;
-use pocketmine\world\format\io\leveldb\ChunkDataKey;
-use pocketmine\world\format\io\leveldb\ChunkVersion;
-use pocketmine\world\format\io\leveldb\LevelDB as LevelDBI;
-use pocketmine\world\format\io\leveldb\SubChunkVersion;
 use pocketmine\world\format\PalettedBlockArray;
 use pocketmine\world\World;
 use function chr;
-use function count;
-use function implode;
-use function ord;
-use function str_repeat;
 use function strlen;
 
 final class LevelChunk2D implements MVChunkPayload {
@@ -125,7 +104,6 @@ final class LevelChunk2D implements MVChunkPayload {
 
 		return $biomes2d;
 	}
-
 
 	/**
 	 * Converts a PalettedBlockArray into classic IDs (4096 bytes) + DATA (2048 bytes nibbles).

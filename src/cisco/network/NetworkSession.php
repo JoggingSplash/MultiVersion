@@ -505,8 +505,7 @@ class NetworkSession extends BaseNetworkSession {
 			return $packet;
 		}
 
-		$pk = $this->protocol->outcoming(clone $packet);
-		return $pk;
+		return $this->protocol->outcoming(clone $packet);
 	}
 
 	/**
