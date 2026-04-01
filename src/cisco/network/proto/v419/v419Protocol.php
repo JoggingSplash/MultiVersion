@@ -45,6 +45,7 @@ use cisco\network\proto\v419\packets\v419BossEventPacket;
 use cisco\network\proto\v419\packets\v419CameraShakePacket;
 use cisco\network\proto\v419\packets\v419ClientboundMapItemDataPacket;
 use cisco\network\proto\v419\packets\v419ContainerClosePacket;
+use cisco\network\proto\v419\packets\v419ContainerOpenPacket;
 use cisco\network\proto\v419\packets\v419CorrectPlayerMovePredictionPacket;
 use cisco\network\proto\v419\packets\v419DisconnectPacket;
 use cisco\network\proto\v419\packets\v419EducationSettingsPacket;
@@ -110,6 +111,7 @@ use pocketmine\network\mcpe\protocol\CameraShakePacket;
 use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\ContainerClosePacket;
+use pocketmine\network\mcpe\protocol\ContainerOpenPacket;
 use pocketmine\network\mcpe\protocol\CorrectPlayerMovePredictionPacket;
 use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 use pocketmine\network\mcpe\protocol\CreativeContentPacket;
@@ -292,6 +294,7 @@ final class v419Protocol extends TProtocol
         }
 
 		return match (true) {
+            $packet instanceof ContainerOpenPacket => v419ContainerOpenPacket::fromLatest($packet),
 			$packet instanceof CraftingDataPacket => $this->staticPacketCache->getCraftingDataPacket(),
 			$packet instanceof AddActorPacket => v419AddActorPacket::fromLatest($packet),
 			$packet instanceof ResourcePacksInfoPacket => v419ResourcePacksInfoPacket::fromLatest($packet),

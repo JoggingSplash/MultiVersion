@@ -40,6 +40,7 @@ use cisco\network\proto\v486\packets\v486AnimatePacket;
 use cisco\network\proto\v486\packets\v486AvailableCommandsPacket;
 use cisco\network\proto\v486\packets\v486ClientboundMapItemDataPacket;
 use cisco\network\proto\v486\packets\v486ContainerClosePacket;
+use cisco\network\proto\v486\packets\v486ContainerOpenPacket;
 use cisco\network\proto\v486\packets\v486DisconnectPacket;
 use cisco\network\proto\v486\packets\v486EmotePacket;
 use cisco\network\proto\v486\packets\v486GameRulesChangedPacket;
@@ -99,6 +100,7 @@ use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\CodeBuilderPacket;
 use pocketmine\network\mcpe\protocol\ContainerClosePacket;
+use pocketmine\network\mcpe\protocol\ContainerOpenPacket;
 use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 use pocketmine\network\mcpe\protocol\CreativeContentPacket;
 use pocketmine\network\mcpe\protocol\DisconnectPacket;
@@ -277,6 +279,7 @@ class v486Protocol extends TProtocol
 		}
 
 		return match (true) {
+            $packet instanceof ContainerOpenPacket => v486ContainerOpenPacket::fromLatest($packet),
 			$packet instanceof MobEquipmentPacket => v486MobEquipmentPacket::fromLatest($packet),
 			$packet instanceof SetTitlePacket => v486SetTitlePacket::fromLatest($packet),
 			$packet instanceof MobArmorEquipmentPacket => v486MobArmorEquipmentPacket::fromLatest($packet),

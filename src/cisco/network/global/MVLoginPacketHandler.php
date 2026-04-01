@@ -75,7 +75,7 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 		$this->session->setProtocol(MCProtocols::getProtocolInstance($protocol));
 
 		if($protocol !== ProtocolInfo::CURRENT_PROTOCOL){
-			$this->session->getProtocol()->getLogger()->info("Translating packets from protocol $protocol");
+			$this->session->safeProtocol()?->getLogger()->info("Translating packets from protocol $protocol");
 			ReflectionUtils::setProperty(RequestNetworkSettingsPacket::class, $packet, "protocolVersion", ProtocolInfo::CURRENT_PROTOCOL);
 		}
 
@@ -103,7 +103,7 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 			}
 
 			$session->setProtocol(MCProtocols::getProtocolInstance($protocol));
-			$this->session->getProtocol()->getLogger()->info("Translating packets from {$this->session->getIp()}:{$this->session->getPort()}");
+			$this->session->safeProtocol()?->getLogger()->info("Translating packets from {$this->session->getIp()}:{$this->session->getPort()}");
 			$packet->protocol = ProtocolInfo::CURRENT_PROTOCOL;
 			if ($protocol === v419ProtocolInfo::CURRENT_PROTOCOL) {
 				return $this->handle419Login($packet);

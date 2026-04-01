@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v361\structure;
 
+use cisco\network\legacy\types\LegacyBlockPosMetadataProperty;
 use cisco\network\proto\v361\v361TypeConverter;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
@@ -140,7 +141,7 @@ final class v361CommonTypes {
 			FloatMetadataProperty::ID => FloatMetadataProperty::read($in),
 			StringMetadataProperty::ID => StringMetadataProperty::read($in),
 			CompoundTagMetadataProperty::ID => CompoundTagMetadataProperty::read($in),
-			BlockPosMetadataProperty::ID => BlockPosMetadataProperty::read($in),
+			BlockPosMetadataProperty::ID => LegacyBlockPosMetadataProperty::read($in),
 			LongMetadataProperty::ID => LongMetadataProperty::read($in),
 			Vec3MetadataProperty::ID => Vec3MetadataProperty::read($in),
 			default => throw new PacketDecodeException("Unknown entity metadata type " . $type),
