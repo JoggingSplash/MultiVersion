@@ -25,8 +25,11 @@ namespace cisco\network\proto\v844;
 use cisco\Loader;
 use cisco\network\proto\latest\LatestProtocol;
 use cisco\network\proto\v844\packets\v844AnimatePacket;
+use cisco\network\proto\v844\packets\v844AvailableCommandsPacket;
 use cisco\network\proto\v844\packets\v844InteractPacket;
+use cisco\network\proto\v844\packets\v844InventoryTransactionPacket;
 use cisco\network\proto\v844\packets\v844MobEffectPacket;
+use cisco\network\proto\v844\packets\v844NetworkChunkPublisherUpdatePacket;
 use cisco\network\proto\v844\packets\v844ResourcePackStackPacket;
 use cisco\network\proto\v844\packets\v844StartGamePacket;
 use cisco\network\proto\v844\packets\v844TextPacket;
@@ -39,7 +42,9 @@ use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
+use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\MobEffectPacket;
+use pocketmine\network\mcpe\protocol\NetworkChunkPublisherUpdatePacket;
 use pocketmine\network\mcpe\protocol\ResourcePackStackPacket;
 use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
@@ -90,6 +95,7 @@ class v844Protocol extends LatestProtocol
 		return match (true) {
 			$packet instanceof v844AnimatePacket => AnimatePacket::create($packet->actorRuntimeId, $packet->action, $packet->data, null),
 			$packet instanceof v844InteractPacket => RawPacketHelper::translateInteractPacketToLatest($packet),
+			$packet instanceof v844InventoryTransactionPacket => InventoryTransactionPacket::create($packet->requestId, $packet->requestChangedSlots, $packet->trData),
 			default => parent::incoming($packet)
 		};
 	}
@@ -97,13 +103,15 @@ class v844Protocol extends LatestProtocol
 	public function outcoming(ClientboundPacket $packet) : ?ClientboundPacket
 	{
 		return match (true) {
+			$packet instanceof InventoryTransactionPacket => v844InventoryTransactionPacket::fromLatest($packet),
 			$packet instanceof AnimatePacket => v844AnimatePacket::fromLatest($packet),
 			$packet instanceof BiomeDefinitionListPacket => $this->staticPacketCache->getBiomeDefinitionListPacket(),
 			$packet instanceof ResourcePackStackPacket => v844ResourcePackStackPacket::fromLatest($packet),
 			$packet instanceof StartGamePacket => v844StartGamePacket::fromLatest($packet),
 			$packet instanceof TextPacket => v844TextPacket::fromLatest($packet),
 			$packet instanceof MobEffectPacket => v844MobEffectPacket::fromLatest($packet),
-			$packet instanceof AvailableCommandsPacket => null,
+			$packet instanceof NetworkChunkPublisherUpdatePacket => v844NetworkChunkPublisherUpdatePacket::fromLatest($packet),
+			$packet instanceof AvailableCommandsPacket => v844AvailableCommandsPacket::create($packet->enumValues, $packet->chainedSubCommandValues, $packet->postfixes, $packet->postfixes, $packet->chainedSubCommandData, $packet->commandData, $packet->softEnums, $packet->enumConstraints),
 			default => parent::outcoming($packet)
 		};
 	}

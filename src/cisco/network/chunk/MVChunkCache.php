@@ -114,16 +114,16 @@ class MVChunkCache implements ChunkListener
 			throw new InvalidArgumentException("Cannot request an unloaded chunk");
 		}
 
-		$data = null;
-		if($this->payload !== null){
-			$this->payload->readChunk($chunkX, $chunkZ, clone $chunk);
-			$data = $this->payload->requestChunk($chunkX, $chunkZ);
-		}
-
 		++$this->misses;
 
 		$this->world->timings->syncChunkSendPrepare->startTiming();
 		try {
+			$data = null;
+			if($this->payload !== null){
+				$this->payload->readChunk($chunkX, $chunkZ, clone $chunk);
+				$data = $this->payload->requestChunk($chunkX, $chunkZ);
+			}
+
 			$promise = new CompressBatchPromise();
 			$this->world->getServer()->getAsyncPool()->submitTask(new MVChunkRequestTask(
 				$chunkX,
@@ -161,6 +161,7 @@ class MVChunkCache implements ChunkListener
 			if (!is_string($cache)) {
 				$cache->cancel();
 				unset($this->caches[$chunkHash]);
+				$this->payload?->destroyChunk($chunkX, $chunkZ);
 				//some requesters are waiting for this chunk, so their request needs to be fulfilled
 				$this->prepareChunkAsync($chunkX, $chunkZ, $chunkHash)
 					->onResolve(...$cache->getResolveCallbacks());
@@ -190,8 +191,7 @@ class MVChunkCache implements ChunkListener
 	/**
 	 * @see ChunkListener::onBlockChanged()
 	 */
-	public function onBlockChanged(Vector3 $block) : void
-	{
+	public function onBlockChanged(Vector3 $block) : void {
 		//FIXME: requesters will still receive this chunk after it's been dropped, but we can't mark this for a simple
 		//sync here because it can spam the worker pool
 		$this->destroy($block->getFloorX() >> Chunk::COORD_BIT_SIZE, $block->getFloorZ() >> Chunk::COORD_BIT_SIZE);

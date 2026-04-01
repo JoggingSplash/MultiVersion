@@ -61,8 +61,6 @@ use function is_array;
 
 class MVLoginPacketHandler extends LoginPacketHandler {
 
-	private bool $receivedPacketPreLogin = false;
-
 	public function __construct(private Server $server, private NetworkSession $session, private Closure $playerInfoConsumer, private Closure $authCallback, private Closure $onSucess)
 	{
 		parent::__construct($server, $session, $playerInfoConsumer, $authCallback);
@@ -74,12 +72,10 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 			return true;
 		}
 
-		$this->receivedPacketPreLogin = true;
-
 		$this->session->setProtocol(MCProtocols::getProtocolInstance($protocol));
 
 		if($protocol !== ProtocolInfo::CURRENT_PROTOCOL){
-			$this->session->getProtocol()->getLogger()->info("Translating packets from protocol $protocol");
+			$this->session->safeProtocol()?->getLogger()->info("Translating packets from protocol $protocol");
 			ReflectionUtils::setProperty(RequestNetworkSettingsPacket::class, $packet, "protocolVersion", ProtocolInfo::CURRENT_PROTOCOL);
 		}
 
@@ -96,10 +92,6 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 	}
 
 	public function handleLogin(LoginPacket $packet) : bool {
-		if($this->receivedPacketPreLogin){
-			return parent::handleLogin($packet);
-		}
-
 		assert($packet instanceof GlobalLoginPacket);
 		$protocol = $packet->protocol;
 
@@ -111,7 +103,7 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 			}
 
 			$session->setProtocol(MCProtocols::getProtocolInstance($protocol));
-			$this->session->getProtocol()->getLogger()->info("Translating packets from {$this->session->getIp()}:{$this->session->getPort()}");
+			$this->session->safeProtocol()?->getLogger()->info("Translating packets from {$this->session->getIp()}:{$this->session->getPort()}");
 			$packet->protocol = ProtocolInfo::CURRENT_PROTOCOL;
 			if ($protocol === v419ProtocolInfo::CURRENT_PROTOCOL) {
 				return $this->handle419Login($packet);

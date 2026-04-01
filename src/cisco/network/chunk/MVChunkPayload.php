@@ -27,29 +27,18 @@ use pocketmine\world\format\Chunk;
 
 interface MVChunkPayload {
 
-    /**
-     * Reads the chunk payload
-     *
-     * @param int $chunkX
-     * @param int $chunkZ
-     * @param Chunk $chunk
-     * @return void
-     */
+	/**
+	 * Reads the chunk payload
+	 */
 	public function readChunk(int $chunkX, int $chunkZ, Chunk $chunk) : void;
 
-    /**
-     * Request the chunk payload
-     * @param int $chunkX
-     * @param int $chunkZ
-     * @return ChunkDatum
-     */
+	/**
+	 * Request the chunk payload
+	 */
 	public function requestChunk(int $chunkX, int $chunkZ) : ChunkDatum;
 
 	/**
 	 * Destroy a chunk payload
-     * @param int $chunkX
-     * @param int $chunkZ
-     * @return void
 	 */
 	public function destroyChunk(int $chunkX, int $chunkZ) : void;
 

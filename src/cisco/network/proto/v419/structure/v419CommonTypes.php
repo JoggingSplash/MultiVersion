@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace cisco\network\proto\v419\structure;
 
 use cisco\network\assemble\CommandOriginData;
+use cisco\network\legacy\types\LegacyBlockPosMetadataProperty;
 use cisco\network\proto\v419\packets\types\recipe\v419RecipeIngredient;
 use cisco\network\proto\v419\v419TypeConverter;
 use InvalidArgumentException;
@@ -465,7 +466,7 @@ final class v419CommonTypes
 			FloatMetadataProperty::ID => FloatMetadataProperty::read($in),
 			StringMetadataProperty::ID => StringMetadataProperty::read($in),
 			CompoundTagMetadataProperty::ID => CompoundTagMetadataProperty::read($in),
-			BlockPosMetadataProperty::ID => BlockPosMetadataProperty::read($in),
+			BlockPosMetadataProperty::ID => LegacyBlockPosMetadataProperty::read($in),
 			LongMetadataProperty::ID => LongMetadataProperty::read($in),
 			Vec3MetadataProperty::ID => Vec3MetadataProperty::read($in),
 			default => throw new PacketDecodeException("Unknown entity metadata type " . $type),

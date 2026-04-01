@@ -28,7 +28,6 @@ use cisco\network\mcpe\MVBlockStateDictionary;
 use cisco\network\mcpe\MVBlockTranslator;
 use cisco\network\mcpe\MVItemIdMetaDowngrader;
 use cisco\network\mcpe\MVItemTranslator;
-use pocketmine\data\bedrock\BedrockDataFiles;
 use pocketmine\data\bedrock\item\BlockItemIdMap;
 use pocketmine\network\mcpe\convert\ItemTypeDictionaryFromDataHelper;
 use pocketmine\network\mcpe\convert\LegacySkinAdapter;
@@ -49,7 +48,9 @@ final class v844TypeConverter
 		$this->converter = new MVTypeConverter(
 			$blockItemIdMap = BlockItemIdMap::getInstance(),
 			$blockTranslator = new MVBlockTranslator(
-				MVBlockStateDictionary::loadFromString(Filesystem::fileGetContents(BedrockDataFiles::CANONICAL_BLOCK_STATES_NBT), Filesystem::fileGetContents(
+				MVBlockStateDictionary::loadFromString(Filesystem::fileGetContents(
+					Path::join(Loader::getPluginResourcePath(), "v844", "canonical_block_states.nbt")
+				), Filesystem::fileGetContents(
 					Path::join(Loader::getPluginResourcePath(), "v844", "block_state_meta_map.json")
 				)),
 				GlobalBlockStateHandlers::getSerializer(),

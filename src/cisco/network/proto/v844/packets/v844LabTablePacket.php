@@ -20,42 +20,25 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v419\packets;
+namespace cisco\network\proto\v844\packets;
 
-use cisco\network\proto\v419\structure\v419ProtocolInfo;
 use cisco\network\utils\RawPacketHelper;
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pmmp\encoding\VarInt;
-use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
+use pocketmine\network\mcpe\protocol\LabTablePacket;
 
-class v419UpdateBlockPacket extends UpdateBlockPacket
-{
-
-	public const NETWORK_ID = v419ProtocolInfo::UPDATE_BLOCK_PACKET;
-
-	public static function fromLatest(UpdateBlockPacket $packet) : v419UpdateBlockPacket
-	{
-		$npk = new v419UpdateBlockPacket();
-		$npk->blockPosition = $packet->blockPosition;
-		$npk->flags = $packet->flags;
-		$npk->dataLayerId = $packet->dataLayerId;
-		$npk->blockRuntimeId = $packet->blockRuntimeId;
-		return $npk;
-	}
+class v844LabTablePacket extends LabTablePacket{
 
 	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actionType = Byte::readUnsigned($in);
 		$this->blockPosition = RawPacketHelper::getUnsignedYBlockPosition($in);
-		$this->blockRuntimeId = VarInt::readUnsignedInt($in);
-		$this->flags = VarInt::readUnsignedInt($in);
-		$this->dataLayerId = VarInt::readUnsignedInt($in);
+		$this->reactionType = Byte::readUnsigned($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->actionType);
 		RawPacketHelper::putUnsignedYBlockPosition($out, $this->blockPosition);
-		VarInt::writeUnsignedInt($out, $this->blockRuntimeId);
-		VarInt::writeUnsignedInt($out, $this->flags);
-		VarInt::writeUnsignedInt($out, $this->dataLayerId);
+		Byte::writeUnsigned($out, $this->reactionType);
 	}
-
 }

@@ -25,7 +25,6 @@ namespace cisco;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\NetworkSession;
 use cisco\network\raknet\MVRakLibInterface;
-use cisco\network\utils\OutdateBiomeStringToIdMap;
 use cisco\network\utils\ProtocolCommand;
 use cisco\sdb\Loader as SDBLoader;
 use pocketmine\event\EventPriority;
@@ -89,7 +88,6 @@ final class Loader extends PluginBase {
 			$pool->submitTaskToWorker(new class extends AsyncTask{
 				public function onRun() : void {
 					MCProtocols::checkInit();
-					OutdateBiomeStringToIdMap::getInstance();
 				}
 			}, $workerId);
 		});

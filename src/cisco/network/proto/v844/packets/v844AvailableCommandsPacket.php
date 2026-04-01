@@ -27,10 +27,13 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\ClientboundPacket;
+use pocketmine\network\mcpe\protocol\DataPacket;
 use pocketmine\network\mcpe\protocol\PacketHandlerInterface;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameterTypes as ArgTypes;
+use pocketmine\network\mcpe\protocol\types\command\CommandPermissions;
 use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
@@ -38,7 +41,7 @@ use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandRawData;
 use function count;
 
-class v844AvailableCommandsPacket  { // todo
+class v844AvailableCommandsPacket extends DataPacket implements ClientboundPacket { // todo
 
 	public const NETWORK_ID = ProtocolInfo::AVAILABLE_COMMANDS_PACKET;
 
@@ -161,7 +164,7 @@ class v844AvailableCommandsPacket  { // todo
 		array $chainedSubCommandData,
 		array $commandData,
 		array $softEnums,
-		array $enumConstraints,
+		array $enumConstraints
 	) : self{
 		$result = new self();
 		$result->enumValues = $enumValues;
@@ -192,7 +195,9 @@ class v844AvailableCommandsPacket  { // todo
 		}
 
 		$this->enums = [];
+		$valueListSize = count($this->enumValues);
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; $i++){
+			$this->enums[] = CommandEnumRawData::read($in, $valueListSize);
 			$this->enums[] = CommandEnumRawData::read($in);
 		}
 
@@ -233,28 +238,41 @@ class v844AvailableCommandsPacket  { // todo
 			CommonTypes::putString($out, $postfix);
 		}
 
-		VarInt::writeUnsignedInt($out, count($this->enums));
-		$valueListSize = count($this->enumValues);
-		foreach($this->enums as $enum){
-			CommonTypes::putString($out, $enum->getName());
-			VarInt::writeUnsignedInt($out, count($enum->getValueIndexes()));
-			foreach ($enum->getValueIndexes() as $index){
-				match(true){
-					$valueListSize < 256 => Byte::writeUnsigned($out, $index),
-					$valueListSize < 65536 => LE::writeUnsignedShort($out, $index),
-					default => LE::writeUnsignedInt($out, $index)
-				};
-			}
-		}
+		VarInt::writeUnsignedInt($out, 0);
+		// $valueListSize = count($this->enumValues);
+		// foreach($this->enums as $enum){
+		//     $enum->write($out, $valueListSize);
+		//     $enum->write($out);
+		// }
 
 		VarInt::writeUnsignedInt($out, count($this->chainedSubCommandData));
 		foreach($this->chainedSubCommandData as $data){
-			$data->write($out);
+			CommonTypes::putString($out, $data->getName());
+			$values = $data->getValueData();
+			VarInt::writeUnsignedInt($out, count($values));
+			foreach($values as $value){
+				LE::writeUnsignedShort($out, $value->getType());
+				LE::writeUnsignedShort($out, $value->getNameIndex());
+			}
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->commandData));
 		foreach($this->commandData as $data){
-			$data->write($out);
+			CommonTypes::putString($out, $data->getName());
+			CommonTypes::putString($out, $data->getDescription());
+			LE::writeUnsignedShort($out, $data->getFlags());
+			Byte::writeUnsigned($out, CommandPermissions::fromName($data->getPermission()));
+			LE::writeSignedInt($out, $data->getAliasEnumIndex());
+
+			VarInt::writeUnsignedInt($out, count($data->getChainedSubCommandDataIndexes()));
+			foreach($data->getChainedSubCommandDataIndexes() as $index){
+				LE::writeUnsignedShort($out, $index);
+			}
+
+			VarInt::writeUnsignedInt($out, count($data->getOverloads()));
+			foreach($data->getOverloads() as $overload){
+				$overload->write($out);
+			}
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->softEnums));

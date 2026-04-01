@@ -33,7 +33,6 @@ use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
-use function count;
 
 class v486StartGamePacket extends StartGamePacket
 {
@@ -128,13 +127,9 @@ class v486StartGamePacket extends StartGamePacket
 
 		VarInt::writeSignedInt($out, $this->enchantmentSeed);
 
-		VarInt::writeUnsignedInt($out, count($this->blockPalette));
-		foreach ($this->blockPalette as $entry) {
-			CommonTypes::putString($out, $entry->getName());
-			$out->writeByteArray($entry->getStates()->getEncodedNbt());
-		}
+		VarInt::writeUnsignedInt($out, 0);
 
-		VarInt::writeUnsignedInt($out, count($this->itemTable)); // item table
+		VarInt::writeUnsignedInt($out, 0); // item table
 
 		CommonTypes::putString($out, $this->multiplayerCorrelationId);
 		CommonTypes::putBool($out, $this->enableNewInventorySystem);

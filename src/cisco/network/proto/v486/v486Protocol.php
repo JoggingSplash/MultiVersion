@@ -27,7 +27,7 @@ use cisco\network\assemble\command\CommandData;
 use cisco\network\assemble\command\CommandEnum;
 use cisco\network\assemble\command\CommandOverload;
 use cisco\network\assemble\command\CommandParameter;
-use cisco\network\chunk\serializers\PreFormattedChunkSerializer;
+use cisco\network\chunk\serializers\v486ChunkSerializer;
 use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\mcpe\MVRuntimeIdToStateId;
 use cisco\network\NetworkSession;
@@ -40,6 +40,7 @@ use cisco\network\proto\v486\packets\v486AnimatePacket;
 use cisco\network\proto\v486\packets\v486AvailableCommandsPacket;
 use cisco\network\proto\v486\packets\v486ClientboundMapItemDataPacket;
 use cisco\network\proto\v486\packets\v486ContainerClosePacket;
+use cisco\network\proto\v486\packets\v486ContainerOpenPacket;
 use cisco\network\proto\v486\packets\v486DisconnectPacket;
 use cisco\network\proto\v486\packets\v486EmotePacket;
 use cisco\network\proto\v486\packets\v486GameRulesChangedPacket;
@@ -70,6 +71,7 @@ use cisco\network\proto\v486\packets\v486StartGamePacket;
 use cisco\network\proto\v486\packets\v486TextPacket;
 use cisco\network\proto\v486\packets\v486TransferPacket;
 use cisco\network\proto\v486\packets\v486UpdateAttributesPacket;
+use cisco\network\proto\v486\packets\v486UpdateBlockPacket;
 use cisco\network\proto\v486\structure\v486InGamePacketHandler;
 use cisco\network\proto\v486\structure\v486PacketPool;
 use cisco\network\proto\v486\structure\v486ProtocolInfo;
@@ -98,6 +100,7 @@ use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\CodeBuilderPacket;
 use pocketmine\network\mcpe\protocol\ContainerClosePacket;
+use pocketmine\network\mcpe\protocol\ContainerOpenPacket;
 use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 use pocketmine\network\mcpe\protocol\CreativeContentPacket;
 use pocketmine\network\mcpe\protocol\DisconnectPacket;
@@ -161,7 +164,7 @@ class v486Protocol extends TProtocol
 
 	public function __construct()
 	{
-		parent::__construct(v486TypeConverter::getInstance()->getConverter(), new v486PacketPool(), new PreFormattedChunkSerializer(), new v486SkinHelper());
+		parent::__construct(v486TypeConverter::getInstance()->getConverter(), new v486PacketPool(), new v486ChunkSerializer(), new v486SkinHelper());
 		$this->staticPacketCache = new v486StaticPacketCache($this);
 	}
 
@@ -241,7 +244,7 @@ class v486Protocol extends TProtocol
 			if (($packet->sound === LevelSoundEvent::BREAK && $packet->extraData !== -1) || $packet->sound === LevelSoundEvent::PLACE || $packet->sound === LevelSoundEvent::HIT || $packet->sound === LevelSoundEvent::LAND || $packet->sound === LevelSoundEvent::ITEM_USE_ON) {
 				$packet->extraData = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->extraData));
 			}
-			return $packet;
+			return v486LevelSoundEventPacket::fromLatest($packet);
 		} elseif ($packet instanceof UpdateAbilitiesPacket) {
 			foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
 				$player = $world->getPlayers()[$packet->getData()->getTargetActorUniqueId()] ?? null;
@@ -261,7 +264,7 @@ class v486Protocol extends TProtocol
 			throw new AssumptionFailedError("This line should be unreachable");
 		} elseif ($packet instanceof UpdateBlockPacket) {
 			$packet->blockRuntimeId = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->blockRuntimeId));
-			return $packet;
+			return v486UpdateBlockPacket::fromLatest($packet);
 		} elseif ($packet instanceof PlayerListPacket) {
 			foreach ($packet->entries as $entry) {
 				if (!isset($entry->skinData)) {
@@ -276,6 +279,7 @@ class v486Protocol extends TProtocol
 		}
 
 		return match (true) {
+			$packet instanceof ContainerOpenPacket => v486ContainerOpenPacket::fromLatest($packet),
 			$packet instanceof MobEquipmentPacket => v486MobEquipmentPacket::fromLatest($packet),
 			$packet instanceof SetTitlePacket => v486SetTitlePacket::fromLatest($packet),
 			$packet instanceof MobArmorEquipmentPacket => v486MobArmorEquipmentPacket::fromLatest($packet),
@@ -307,7 +311,6 @@ class v486Protocol extends TProtocol
 			$packet instanceof StartGamePacket => v486StartGamePacket::fromLatest($packet),
 			$packet instanceof UpdateAttributesPacket => v486UpdateAttributesPacket::fromLatest($packet),
 			$packet instanceof TransferPacket => v486TransferPacket::fromLatest($packet),
-			$packet instanceof LevelSoundEventPacket => v486LevelSoundEventPacket::fromLatest($packet),
 			$packet instanceof InventoryTransactionPacket => v486InventoryTransactionPacket::fromLatest($packet),
 			$packet instanceof GameRulesChangedPacket => v486GameRulesChangedPacket::fromLatest($packet),
 			default => $packet
@@ -376,7 +379,7 @@ class v486Protocol extends TProtocol
 				chainedSubCommandData: []
 			);
 		}
-		return null; // v486AvailableCommandsPacket::create($commandData, [], [], []);
+		return v486AvailableCommandsPacket::create($commandData, [], [], []);
 	}
 
 	public function __toString() : string
