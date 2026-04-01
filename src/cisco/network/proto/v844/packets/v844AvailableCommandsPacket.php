@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v844\packets;
 
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\DataPacket;
@@ -31,6 +33,7 @@ use pocketmine\network\mcpe\protocol\PacketHandlerInterface;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameterTypes as ArgTypes;
+use pocketmine\network\mcpe\protocol\types\command\CommandPermissions;
 use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
@@ -244,12 +247,32 @@ class v844AvailableCommandsPacket extends DataPacket implements ClientboundPacke
 
 		VarInt::writeUnsignedInt($out, count($this->chainedSubCommandData));
 		foreach($this->chainedSubCommandData as $data){
-			$data->write($out);
+			CommonTypes::putString($out, $data->getName());
+			$values = $data->getValueData();
+			VarInt::writeUnsignedInt($out, count($values));
+			foreach($values as $value){
+				LE::writeUnsignedShort($out, $value->getType());
+				LE::writeUnsignedShort($out, $value->getNameIndex());
+			}
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->commandData));
 		foreach($this->commandData as $data){
-			$data->write($out);
+			CommonTypes::putString($out, $data->getName());
+			CommonTypes::putString($out, $data->getDescription());
+			LE::writeUnsignedShort($out, $data->getFlags());
+			Byte::writeUnsigned($out, CommandPermissions::fromName($data->getPermission()));
+			LE::writeSignedInt($out, $data->getAliasEnumIndex());
+
+			VarInt::writeUnsignedInt($out, count($data->getChainedSubCommandDataIndexes()));
+			foreach($data->getChainedSubCommandDataIndexes() as $index){
+				LE::writeUnsignedShort($out, $index);
+			}
+
+			VarInt::writeUnsignedInt($out, count($data->getOverloads()));
+			foreach($data->getOverloads() as $overload){
+				$overload->write($out);
+			}
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->softEnums));
