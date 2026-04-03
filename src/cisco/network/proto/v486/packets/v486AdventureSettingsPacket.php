@@ -30,10 +30,11 @@ use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\DataPacket;
 use pocketmine\network\mcpe\protocol\PacketHandlerInterface;
+use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\types\command\CommandPermissions;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
 
-class v486AdventureSettingsPacket extends DataPacket implements ClientboundPacket
+class v486AdventureSettingsPacket extends DataPacket implements ClientboundPacket, ServerboundPacket
 {
 
 	public const NETWORK_ID = v486ProtocolInfo::ADVENTURE_SETTINGS_PACKET;
