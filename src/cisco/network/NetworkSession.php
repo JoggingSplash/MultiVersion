@@ -613,7 +613,7 @@ class NetworkSession extends BaseNetworkSession {
 	private function flushGamePacketQueue() : void
 	{
 		$sendBuffer = ReflectionUtils::getProperty(BaseNetworkSession::class, $this, "sendBuffer");
-		if (count($sendBuffer) > 0) {
+		if (count($sendBuffer) > 0 && $this->protocol !== null) {
 			Timings::$playerNetworkSend->startTiming();
 			try {
 				$syncMode = null;
