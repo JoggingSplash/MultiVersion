@@ -94,7 +94,7 @@ final class MCProtocols {
 		self::register(new LatestProtocol()); /** 1.21.131 */
 
 		self::register(new v844Protocol()); /** 1.21.114 */
-		//self::register(new v486Protocol()); /** 1.18.12 */
+		self::register(new v486Protocol()); /** 1.18.12 */
 		self::register(new v419Protocol()); /** 1.16.100  */
 		// self::register(new v361Protocol()); /** 1.12 */
 	}
