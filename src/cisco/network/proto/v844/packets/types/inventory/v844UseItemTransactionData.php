@@ -1,19 +1,21 @@
 <?php
 
 /*
- *     __  ___      ____  _ _    __               _
- *    /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
- *   / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
- *  / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
- * /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * @author JoggingSplash23
- * @link https://www.github.com/JoggingSplash
+ *      __  ___      ____  _ _    __               _
+ *     /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
+ *    / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
+ *   / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
+ *  /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  @author JoggingSplash23
+ *  @link https://www.github.com/JoggingSplash
  *
  *
  */
@@ -22,6 +24,7 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v844\packets\types\inventory;
 
+use cisco\network\utils\RawPacketHelper;
 use cisco\network\utils\ReflectionUtils;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
@@ -35,7 +38,7 @@ class v844UseItemTransactionData extends UseItemTransactionData {
 	protected function decodeData(ByteBufferReader $in) : void{
 		ReflectionUtils::setProperty(UseItemTransactionData::class, $this, "actionType", VarInt::readUnsignedInt($in));
 		ReflectionUtils::setProperty(UseItemTransactionData::class, $this, "triggerType", TriggerType::fromPacket(VarInt::readUnsignedInt($in)));
-		ReflectionUtils::setProperty(UseItemTransactionData::class, $this, "blockPosition", CommonTypes::getBlockPosition($in));
+		ReflectionUtils::setProperty(UseItemTransactionData::class, $this, "blockPosition", RawPacketHelper::getUnsignedYBlockPosition($in));
 		ReflectionUtils::setProperty(UseItemTransactionData::class, $this, "face", VarInt::readSignedInt($in));
 		ReflectionUtils::setProperty(UseItemTransactionData::class, $this, "hotbarSlot", VarInt::readSignedInt($in));
 		ReflectionUtils::setProperty(UseItemTransactionData::class, $this, "itemInHand", CommonTypes::getItemStackWrapper($in));
@@ -48,7 +51,7 @@ class v844UseItemTransactionData extends UseItemTransactionData {
 	protected function encodeData(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, $this->getActionType());
 		VarInt::writeUnsignedInt($out, $this->getTriggerType()->value);
-		CommonTypes::putBlockPosition($out, $this->getBlockPosition());
+		RawPacketHelper::putUnsignedYBlockPosition($out, $this->getBlockPosition());
 		VarInt::writeSignedInt($out, $this->getFace());
 		VarInt::writeSignedInt($out, $this->getHotbarSlot());
 		CommonTypes::putItemStackWrapper($out, $this->getItemInHand());

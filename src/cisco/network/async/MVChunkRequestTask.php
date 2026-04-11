@@ -1,19 +1,21 @@
 <?php
 
 /*
- *     __  ___      ____  _ _    __               _
- *    /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
- *   / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
- *  / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
- * /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * @author JoggingSplash23
- * @link https://www.github.com/JoggingSplash
+ *      __  ___      ____  _ _    __               _
+ *     /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
+ *    / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
+ *   / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
+ *  /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  @author JoggingSplash23
+ *  @link https://www.github.com/JoggingSplash
  *
  *
  */
@@ -23,7 +25,6 @@ declare(strict_types=1);
 namespace cisco\network\async;
 
 use cisco\MCProtocols;
-use cisco\network\chunk\io\ChunkDatum;
 use cisco\network\proto\TProtocol;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\compression\CompressBatchPromise;
@@ -46,12 +47,11 @@ class MVChunkRequestTask extends AsyncTask {
 	protected int $chunkZ;
 	/** @phpstan-var NonThreadSafeValue<Compressor> */
 	protected NonThreadSafeValue $compressor;
-	protected NonThreadSafeValue|null $datum;
 	private int $dimensionId;
 	private string $tiles;
 	private int $protocol;
 
-	public function __construct(int $chunkX, int $chunkZ, int $dimensionId, Chunk $chunk, CompressBatchPromise $promise, Compressor $compressor, TProtocol $protocol, ?ChunkDatum $datum) {
+	public function __construct(int $chunkX, int $chunkZ, int $dimensionId, Chunk $chunk, CompressBatchPromise $promise, Compressor $compressor, TProtocol $protocol) {
 		$this->compressor = new NonThreadSafeValue($compressor);
 		$this->chunk = FastChunkSerializer::serializeTerrain($chunk);
 		$this->chunkX = $chunkX;
@@ -59,8 +59,6 @@ class MVChunkRequestTask extends AsyncTask {
 		$this->dimensionId = $dimensionId;
 		$this->tiles = $protocol->getChunkSerializer()->serializeTiles($chunk);
 		$this->protocol = $protocol->getProtocolId();
-
-		$this->datum = $datum !== null ? new NonThreadSafeValue($datum) : null;
 
 		$this->storeLocal(self::TLS_KEY_PROMISE, $promise);
 	}
@@ -72,8 +70,7 @@ class MVChunkRequestTask extends AsyncTask {
 		$chunkSerializer = $protocol->getChunkSerializer();
 		$chunk = FastChunkSerializer::deserializeTerrain($this->chunk);
 		$subCount = $chunkSerializer->getSubChunkCount($chunk, $this->dimensionId);
-		$datum = $this->datum?->deserialize() ?? null;
-		$payload = $chunkSerializer->serializeFullChunk($chunk, $this->dimensionId, $protocol->getTypeConverter()->getMVBlockTranslator(), $datum, $this->tiles);
+		$payload = $chunkSerializer->serializeFullChunk($chunk, $this->dimensionId, $protocol->getTypeConverter()->getMVBlockTranslator(), $this->tiles);
 
 		$packet = $protocol->outcoming(LevelChunkPacket::create(
 			new ChunkPosition($this->chunkX, $this->chunkZ),

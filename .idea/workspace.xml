@@ -6,17 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="fab520b7-626a-4ca2-810f-80ae08388f36" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/LevelChunk2D.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/LevelChunk2D.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cisco/network/mcpe/MVBlockStateDictionary.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/mcpe/MVBlockStateDictionary.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419TypeConverter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419TypeConverter.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/ClassLoader.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/ClassLoader.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_namespaces.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_namespaces.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_real.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_real.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.json" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/MCProtocols.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/MCProtocols.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/async/MVChunkRequestTask.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/async/MVChunkRequestTask.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/MVChunkCache.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/MVChunkCache.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/MVChunkPayload.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/payload/LevelChunk2D.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/FormattedChunkSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/FormattedChunkSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/MVChunkSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/MVChunkSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/PreFormattedChunkSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/PreFormattedChunkSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/v486ChunkSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/v486ChunkSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419Protocol.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419Protocol.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v486/packets/v486AddPlayerPacket.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v486/packets/v486AddPlayerPacket.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v486/v486Protocol.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v486/v486Protocol.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v844/packets/types/inventory/v844UseItemTransactionData.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v844/packets/types/inventory/v844UseItemTransactionData.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v844/v844Protocol.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v844/v844Protocol.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vendor/composer/installed.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,8 +42,15 @@
     </execution>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="417" />
+    <option name="cachedIndexableFilesCount" value="435" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="PHP File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -54,28 +66,6 @@
       <path value="$PROJECT_DIR$/../libs/ext-encoding-master" />
       <path value="$PROJECT_DIR$/../libs/phpstorm-stubs" />
       <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/adhocore/json-comment" />
-      <path value="$PROJECT_DIR$/vendor/brick/math" />
-      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-block-upgrade-schema" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-data" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-item-upgrade-schema" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-protocol" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/binaryutils" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/callback-validator" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/color" />
-      <path value="$PROJECT_DIR$/vendor/netresearch/jsonmapper" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/errorhandler" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/locale-data" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/log" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/math" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/nbt" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/pocketmine-mp" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/raklib" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/raklib-ipc" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/snooze" />
-      <path value="$PROJECT_DIR$/vendor/ramsey/collection" />
-      <path value="$PROJECT_DIR$/vendor/ramsey/uuid" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -89,30 +79,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JavaScript Debug.CommonTypes.php.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "chunk-payloads",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/php-8.2-pocketmine/php.exe",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.CommonTypes.php.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/php-8.2-pocketmine/php.exe&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.webide.settings.project.settings.php&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -149,6 +139,15 @@
       <workItem from="1764043515393" duration="35000" />
       <workItem from="1769642500187" duration="2338000" />
       <workItem from="1774579682444" duration="1013000" />
+      <workItem from="1775330916981" duration="216000" />
+      <workItem from="1775595670837" duration="34000" />
+      <workItem from="1775715148859" duration="176000" />
+      <workItem from="1775847210469" duration="112000" />
+      <workItem from="1775847688224" duration="705000" />
+      <workItem from="1775873670713" duration="1937000" />
+      <workItem from="1775875840324" duration="1341000" />
+      <workItem from="1775882630814" duration="4850000" />
+      <workItem from="1775887784194" duration="1972000" />
     </task>
     <servers />
   </component>

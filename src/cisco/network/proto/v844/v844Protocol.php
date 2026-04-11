@@ -1,19 +1,21 @@
 <?php
 
 /*
- *     __  ___      ____  _ _    __               _
- *    /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
- *   / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
- *  / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
- * /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * @author JoggingSplash23
- * @link https://www.github.com/JoggingSplash
+ *      __  ___      ____  _ _    __               _
+ *     /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
+ *    / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
+ *   / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
+ *  /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  @author JoggingSplash23
+ *  @link https://www.github.com/JoggingSplash
  *
  *
  */
@@ -23,32 +25,53 @@ declare(strict_types=1);
 namespace cisco\network\proto\v844;
 
 use cisco\Loader;
+use cisco\network\mcpe\MVRuntimeIdToStateId;
 use cisco\network\proto\latest\LatestProtocol;
+use cisco\network\proto\v844\packets\v844AddVolumeEntityPacket;
 use cisco\network\proto\v844\packets\v844AnimatePacket;
+use cisco\network\proto\v844\packets\v844AnvilDamagePacket;
 use cisco\network\proto\v844\packets\v844AvailableCommandsPacket;
+use cisco\network\proto\v844\packets\v844BlockActorDataPacket;
+use cisco\network\proto\v844\packets\v844BlockEventPacket;
+use cisco\network\proto\v844\packets\v844ContainerOpenPacket;
 use cisco\network\proto\v844\packets\v844InteractPacket;
 use cisco\network\proto\v844\packets\v844InventoryTransactionPacket;
 use cisco\network\proto\v844\packets\v844MobEffectPacket;
 use cisco\network\proto\v844\packets\v844NetworkChunkPublisherUpdatePacket;
+use cisco\network\proto\v844\packets\v844OpenSignPacket;
+use cisco\network\proto\v844\packets\v844PlayerActionPacket;
+use cisco\network\proto\v844\packets\v844PlaySoundPacket;
 use cisco\network\proto\v844\packets\v844ResourcePackStackPacket;
+use cisco\network\proto\v844\packets\v844SetSpawnPositionPacket;
 use cisco\network\proto\v844\packets\v844StartGamePacket;
 use cisco\network\proto\v844\packets\v844TextPacket;
+use cisco\network\proto\v844\packets\v844UpdateBlockPacket;
 use cisco\network\proto\v844\structure\v844PacketPool;
 use cisco\network\proto\v844\structure\v844StaticPacketCache;
 use cisco\network\utils\RawPacketHelper;
 use pocketmine\crafting\CraftingManager;
 use pocketmine\crafting\CraftingManagerFromDataHelper;
+use pocketmine\network\mcpe\protocol\AddVolumeEntityPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
+use pocketmine\network\mcpe\protocol\AnvilDamagePacket;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
+use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
+use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
+use pocketmine\network\mcpe\protocol\ContainerOpenPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\MobEffectPacket;
 use pocketmine\network\mcpe\protocol\NetworkChunkPublisherUpdatePacket;
+use pocketmine\network\mcpe\protocol\OpenSignPacket;
+use pocketmine\network\mcpe\protocol\PlayerActionPacket;
+use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\network\mcpe\protocol\ResourcePackStackPacket;
 use pocketmine\network\mcpe\protocol\ServerboundPacket;
+use pocketmine\network\mcpe\protocol\SetSpawnPositionPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\network\mcpe\protocol\TextPacket;
+use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use Symfony\Component\Filesystem\Path;
 
 class v844Protocol extends LatestProtocol
@@ -102,7 +125,22 @@ class v844Protocol extends LatestProtocol
 
 	public function outcoming(ClientboundPacket $packet) : ?ClientboundPacket
 	{
+
+		if ($packet instanceof UpdateBlockPacket) {
+			$packet->blockRuntimeId = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->blockRuntimeId));
+			return v844UpdateBlockPacket::fromLatest($packet);
+		}
+
 		return match (true) {
+			$packet instanceof PlayerActionPacket => v844PlayerActionPacket::fromLatest($packet),
+			$packet instanceof PlaySoundPacket => v844PlaySoundPacket::fromLatest($packet),
+			$packet instanceof SetSpawnPositionPacket => v844SetSpawnPositionPacket::fromLatest($packet),
+			$packet instanceof ContainerOpenPacket => v844ContainerOpenPacket::fromLatest($packet),
+			$packet instanceof BlockEventPacket => v844BlockEventPacket::fromLatest($packet),
+			$packet instanceof BlockActorDataPacket => v844BlockActorDataPacket::fromLatest($packet),
+			$packet instanceof AddVolumeEntityPacket => v844AddVolumeEntityPacket::fromLatest($packet),
+			$packet instanceof AnvilDamagePacket => v844AnvilDamagePacket::fromLatest($packet),
+			$packet instanceof OpenSignPacket => v844OpenSignPacket::fromLatest($packet),
 			$packet instanceof InventoryTransactionPacket => v844InventoryTransactionPacket::fromLatest($packet),
 			$packet instanceof AnimatePacket => v844AnimatePacket::fromLatest($packet),
 			$packet instanceof BiomeDefinitionListPacket => $this->staticPacketCache->getBiomeDefinitionListPacket(),

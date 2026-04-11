@@ -1,19 +1,21 @@
 <?php
 
 /*
- *     __  ___      ____  _ _    __               _
- *    /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
- *   / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
- *  / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
- * /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * @author JoggingSplash23
- * @link https://www.github.com/JoggingSplash
+ *      __  ___      ____  _ _    __               _
+ *     /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
+ *    / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
+ *   / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
+ *  /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  @author JoggingSplash23
+ *  @link https://www.github.com/JoggingSplash
  *
  *
  */
@@ -37,7 +39,10 @@ use cisco\network\proto\v486\packets\v486AddPlayerPacket;
 use cisco\network\proto\v486\packets\v486AddVolumeEntityPacket;
 use cisco\network\proto\v486\packets\v486AdventureSettingsPacket;
 use cisco\network\proto\v486\packets\v486AnimatePacket;
+use cisco\network\proto\v486\packets\v486AnvilDamagePacket;
 use cisco\network\proto\v486\packets\v486AvailableCommandsPacket;
+use cisco\network\proto\v486\packets\v486BlockActorDataPacket;
+use cisco\network\proto\v486\packets\v486BlockEventPacket;
 use cisco\network\proto\v486\packets\v486ClientboundMapItemDataPacket;
 use cisco\network\proto\v486\packets\v486ContainerClosePacket;
 use cisco\network\proto\v486\packets\v486ContainerOpenPacket;
@@ -59,12 +64,14 @@ use cisco\network\proto\v486\packets\v486NetworkChunkPublisherUpdatePacket;
 use cisco\network\proto\v486\packets\v486NetworkSettingsPacket;
 use cisco\network\proto\v486\packets\v486PlayerActionPacket;
 use cisco\network\proto\v486\packets\v486PlayerListPacket;
+use cisco\network\proto\v486\packets\v486PlaySoundPacket;
 use cisco\network\proto\v486\packets\v486RemoveVolumeEntityPacket;
 use cisco\network\proto\v486\packets\v486RequestChunkRadiusPacket;
 use cisco\network\proto\v486\packets\v486ResourcePacksInfoPacket;
 use cisco\network\proto\v486\packets\v486ResourcePackStackPacket;
 use cisco\network\proto\v486\packets\v486SetActorDataPacket;
 use cisco\network\proto\v486\packets\v486SetActorMotionPacket;
+use cisco\network\proto\v486\packets\v486SetSpawnPositionPacket;
 use cisco\network\proto\v486\packets\v486SetTitlePacket;
 use cisco\network\proto\v486\packets\v486SpawnParticleEffectPacket;
 use cisco\network\proto\v486\packets\v486StartGamePacket;
@@ -93,9 +100,12 @@ use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\AddVolumeEntityPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
+use pocketmine\network\mcpe\protocol\AnvilDamagePacket;
 use pocketmine\network\mcpe\protocol\AvailableActorIdentifiersPacket;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
+use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
+use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\CodeBuilderPacket;
@@ -124,6 +134,7 @@ use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\PlayerListPacket;
 use pocketmine\network\mcpe\protocol\PlayerSkinPacket;
+use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\network\mcpe\protocol\RemoveVolumeEntityPacket;
 use pocketmine\network\mcpe\protocol\RequestChunkRadiusPacket;
 use pocketmine\network\mcpe\protocol\ResourcePacksInfoPacket;
@@ -131,6 +142,7 @@ use pocketmine\network\mcpe\protocol\ResourcePackStackPacket;
 use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\SetActorDataPacket;
 use pocketmine\network\mcpe\protocol\SetActorMotionPacket;
+use pocketmine\network\mcpe\protocol\SetSpawnPositionPacket;
 use pocketmine\network\mcpe\protocol\SetTitlePacket;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
@@ -279,6 +291,11 @@ class v486Protocol extends TProtocol
 		}
 
 		return match (true) {
+			$packet instanceof SetSpawnPositionPacket => v486SetSpawnPositionPacket::fromLatest($packet),
+			$packet instanceof PlaySoundPacket => v486PlaySoundPacket::fromLatest($packet),
+			$packet instanceof BlockEventPacket => v486BlockEventPacket::fromLatest($packet),
+			$packet instanceof AnvilDamagePacket => v486AnvilDamagePacket::fromLatest($packet),
+			$packet instanceof BlockActorDataPacket => v486BlockActorDataPacket::fromLatest($packet),
 			$packet instanceof ContainerOpenPacket => v486ContainerOpenPacket::fromLatest($packet),
 			$packet instanceof MobEquipmentPacket => v486MobEquipmentPacket::fromLatest($packet),
 			$packet instanceof SetTitlePacket => v486SetTitlePacket::fromLatest($packet),

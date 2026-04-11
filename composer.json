@@ -11,7 +11,7 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "pocketmine/pocketmine-mp": "5.35.0"
+        "pocketmine/pocketmine-mp": "^5.0.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

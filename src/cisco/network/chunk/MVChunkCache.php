@@ -1,19 +1,21 @@
 <?php
 
 /*
- *     __  ___      ____  _ _    __               _
- *    /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
- *   / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
- *  / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
- * /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * @author JoggingSplash23
- * @link https://www.github.com/JoggingSplash
+ *      __  ___      ____  _ _    __               _
+ *     /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
+ *    / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
+ *   / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
+ *  /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  @author JoggingSplash23
+ *  @link https://www.github.com/JoggingSplash
  *
  *
  */
@@ -23,7 +25,6 @@ declare(strict_types=1);
 namespace cisco\network\chunk;
 
 use cisco\network\async\MVChunkRequestTask;
-use cisco\network\chunk\payload\LevelChunk2D;
 use cisco\network\proto\TProtocol;
 use GlobalLogger;
 use InvalidArgumentException;
@@ -34,9 +35,7 @@ use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\world\ChunkListener;
 use pocketmine\world\ChunkListenerNoOpTrait;
 use pocketmine\world\format\Chunk;
-use pocketmine\world\format\io\leveldb\LevelDB;
 use pocketmine\world\World;
-use function get_class;
 use function is_string;
 use function spl_object_id;
 
@@ -48,7 +47,6 @@ class MVChunkCache implements ChunkListener
 	/** @var CompressBatchPromise|string[] */
 	private array $caches = [];
 
-	private ?MVChunkPayload $payload = null;
 	private int $hits = 0;
 	private int $misses = 0;
 
@@ -57,13 +55,6 @@ class MVChunkCache implements ChunkListener
 		private Compressor $compressor,
 		private TProtocol  $protocol,
 	) {
-		$provider = $this->world->getProvider();
-		$protocol = $this->protocol;
-		if($this->protocol->hasOldCompressionMethod() && $provider instanceof LevelDB){
-			$this->payload = new LevelChunk2D($provider->getDatabase(), $protocol);
-		}else{
-			$this->protocol->getLogger()->debug("Cannot create chunk payload for " . get_class($provider));
-		}
 	}
 
 	/**
@@ -118,12 +109,6 @@ class MVChunkCache implements ChunkListener
 
 		$this->world->timings->syncChunkSendPrepare->startTiming();
 		try {
-			$data = null;
-			if($this->payload !== null){
-				$this->payload->readChunk($chunkX, $chunkZ, clone $chunk);
-				$data = $this->payload->requestChunk($chunkX, $chunkZ);
-			}
-
 			$promise = new CompressBatchPromise();
 			$this->world->getServer()->getAsyncPool()->submitTask(new MVChunkRequestTask(
 				$chunkX,
@@ -133,7 +118,6 @@ class MVChunkCache implements ChunkListener
 				$promise,
 				$this->compressor,
 				$this->protocol,
-				$data
 			));
 			$this->caches[$chunkHash] = $promise;
 			$promise->onResolve(function (CompressBatchPromise $promise) use($chunkHash) : void {
@@ -161,7 +145,6 @@ class MVChunkCache implements ChunkListener
 			if (!is_string($cache)) {
 				$cache->cancel();
 				unset($this->caches[$chunkHash]);
-				$this->payload?->destroyChunk($chunkX, $chunkZ);
 				//some requesters are waiting for this chunk, so their request needs to be fulfilled
 				$this->prepareChunkAsync($chunkX, $chunkZ, $chunkHash)
 					->onResolve(...$cache->getResolveCallbacks());
@@ -182,7 +165,6 @@ class MVChunkCache implements ChunkListener
 	private function destroy(int $chunkX, int $chunkZ) : bool {
 		$chunkHash = World::chunkHash($chunkX, $chunkZ);
 		$existing = $this->caches[$chunkHash] ?? null;
-		$this->payload?->destroyChunk($chunkX, $chunkZ);
 		unset($this->caches[$chunkHash]);
 
 		return $existing !== null;
