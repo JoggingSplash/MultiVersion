@@ -149,7 +149,7 @@ class v844Protocol extends LatestProtocol
 			$packet instanceof TextPacket => v844TextPacket::fromLatest($packet),
 			$packet instanceof MobEffectPacket => v844MobEffectPacket::fromLatest($packet),
 			$packet instanceof NetworkChunkPublisherUpdatePacket => v844NetworkChunkPublisherUpdatePacket::fromLatest($packet),
-			$packet instanceof AvailableCommandsPacket => v844AvailableCommandsPacket::create($packet->enumValues, $packet->chainedSubCommandValues, $packet->postfixes, $packet->postfixes, $packet->chainedSubCommandData, $packet->commandData, $packet->softEnums, $packet->enumConstraints),
+			$packet instanceof AvailableCommandsPacket => null,
 			default => parent::outcoming($packet)
 		};
 	}

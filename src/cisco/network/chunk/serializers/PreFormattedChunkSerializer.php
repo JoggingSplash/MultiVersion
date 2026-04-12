@@ -161,10 +161,10 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 		$i = 0;
 
 		$dictionary = $blockTranslator->getBlockStateDictionary();
-		for ($x = 0; $x < 16; $x++) {
+        for ($y = 0; $y < 16; $y++) {
 			for ($z = 0; $z < 16; $z++) {
-				for ($y = 0; $y < 16; $y++) {
-					$stateId = $paletted->get($x, $y, $z);
+                for ($x = 0; $x < 16; $x++) {
+                    $stateId = $paletted->get($x, $y, $z);
 					$networkStateId = $blockTranslator->internalIdToNetworkId($stateId);
 					$legacyBlockId = $dictionary->getLegacyBlockIdFromStateId($networkStateId);
 					$meta = $dictionary->getMetaFromStateId($stateId);
