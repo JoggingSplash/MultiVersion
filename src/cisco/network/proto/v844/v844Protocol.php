@@ -27,15 +27,18 @@ namespace cisco\network\proto\v844;
 use cisco\Loader;
 use cisco\network\mcpe\MVRuntimeIdToStateId;
 use cisco\network\proto\latest\LatestProtocol;
+use cisco\network\proto\v844\packets\v844ActorEventPacket;
 use cisco\network\proto\v844\packets\v844AddVolumeEntityPacket;
 use cisco\network\proto\v844\packets\v844AnimatePacket;
 use cisco\network\proto\v844\packets\v844AnvilDamagePacket;
-use cisco\network\proto\v844\packets\v844AvailableCommandsPacket;
 use cisco\network\proto\v844\packets\v844BlockActorDataPacket;
 use cisco\network\proto\v844\packets\v844BlockEventPacket;
 use cisco\network\proto\v844\packets\v844ContainerOpenPacket;
+use cisco\network\proto\v844\packets\v844DisconnectPacket;
 use cisco\network\proto\v844\packets\v844InteractPacket;
+use cisco\network\proto\v844\packets\v844InventorySlotPacket;
 use cisco\network\proto\v844\packets\v844InventoryTransactionPacket;
+use cisco\network\proto\v844\packets\v844LevelSoundEventPacket;
 use cisco\network\proto\v844\packets\v844MobEffectPacket;
 use cisco\network\proto\v844\packets\v844NetworkChunkPublisherUpdatePacket;
 use cisco\network\proto\v844\packets\v844OpenSignPacket;
@@ -51,6 +54,8 @@ use cisco\network\proto\v844\structure\v844StaticPacketCache;
 use cisco\network\utils\RawPacketHelper;
 use pocketmine\crafting\CraftingManager;
 use pocketmine\crafting\CraftingManagerFromDataHelper;
+use pocketmine\network\mcpe\cache\CraftingDataCache;
+use pocketmine\network\mcpe\protocol\ActorEventPacket;
 use pocketmine\network\mcpe\protocol\AddVolumeEntityPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\AnvilDamagePacket;
@@ -60,7 +65,11 @@ use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\ContainerOpenPacket;
+use pocketmine\network\mcpe\protocol\CraftingDataPacket;
+use pocketmine\network\mcpe\protocol\DisconnectPacket;
+use pocketmine\network\mcpe\protocol\InventorySlotPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\MobEffectPacket;
 use pocketmine\network\mcpe\protocol\NetworkChunkPublisherUpdatePacket;
 use pocketmine\network\mcpe\protocol\OpenSignPacket;
@@ -119,6 +128,9 @@ class v844Protocol extends LatestProtocol
 			$packet instanceof v844AnimatePacket => AnimatePacket::create($packet->actorRuntimeId, $packet->action, $packet->data, null),
 			$packet instanceof v844InteractPacket => RawPacketHelper::translateInteractPacketToLatest($packet),
 			$packet instanceof v844InventoryTransactionPacket => InventoryTransactionPacket::create($packet->requestId, $packet->requestChangedSlots, $packet->trData),
+            $packet instanceof v844LevelSoundEventPacket => LevelSoundEventPacket::create($packet->sound, $packet->position, $packet->extraData, $packet->entityType, $packet->isBabyMob, $packet->disableRelativeVolume, $packet->actorUniqueId, null),
+            $packet instanceof v844DisconnectPacket => DisconnectPacket::create($packet->reason, $packet->message, $packet->filteredMessage),
+            $packet instanceof v844ActorEventPacket => ActorEventPacket::create($packet->actorRuntimeId, $packet->eventId, $packet->eventData, null),
 			default => parent::incoming($packet)
 		};
 	}
@@ -132,6 +144,7 @@ class v844Protocol extends LatestProtocol
 		}
 
 		return match (true) {
+            $packet instanceof LevelSoundEventPacket => v844LevelSoundEventPacket::fromLatest($packet),
 			$packet instanceof PlayerActionPacket => v844PlayerActionPacket::fromLatest($packet),
 			$packet instanceof PlaySoundPacket => v844PlaySoundPacket::fromLatest($packet),
 			$packet instanceof SetSpawnPositionPacket => v844SetSpawnPositionPacket::fromLatest($packet),
@@ -149,8 +162,13 @@ class v844Protocol extends LatestProtocol
 			$packet instanceof TextPacket => v844TextPacket::fromLatest($packet),
 			$packet instanceof MobEffectPacket => v844MobEffectPacket::fromLatest($packet),
 			$packet instanceof NetworkChunkPublisherUpdatePacket => v844NetworkChunkPublisherUpdatePacket::fromLatest($packet),
+            $packet instanceof CraftingDataPacket => CraftingDataCache::getInstance()->getCache($this->craftingManager),
 			$packet instanceof AvailableCommandsPacket => null,
+            $packet instanceof DisconnectPacket => v844DisconnectPacket::fromLatest($packet),
+            $packet instanceof ActorEventPacket => v844ActorEventPacket::fromLatest($packet),
+            $packet instanceof InventorySlotPacket => v844InventorySlotPacket::fromLatest($packet),
 			default => parent::outcoming($packet)
 		};
+
 	}
 }

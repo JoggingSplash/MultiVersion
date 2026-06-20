@@ -91,7 +91,7 @@ final class MCProtocols {
 	}
 
 	protected static function setup() : void {
-		self::register(new LatestProtocol()); /** 1.21.131 */
+		self::register(new LatestProtocol()); /** 26.20 */
 
 		self::register(new v844Protocol()); /** 1.21.114 */
 		self::register(new v486Protocol()); /** 1.18.12 */

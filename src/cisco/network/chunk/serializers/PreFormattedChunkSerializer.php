@@ -76,47 +76,7 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 		return min(ChunkSerializer::getSubChunkCount($chunk, $dimensionId), 16);
 	}
 
-	public function serializeSubChunk(SubChunk $subChunk, MVBlockTranslator $blockTranslator, ByteBufferWriter $writer, bool $persistentBlockStates) : void
-	{
-		$layers = $subChunk->getBlockLayers();
-		Byte::writeUnsigned($writer, 8); //version
-
-		Byte::writeUnsigned($writer, count($layers));
-
-		$blockStateDictionary = $blockTranslator->getBlockStateDictionary();
-
-		foreach ($layers as $blocks) {
-			$bitsPerBlock = $blocks->getBitsPerBlock();
-			$words = $blocks->getWordArray();
-			Byte::writeUnsigned($writer, ($bitsPerBlock << 1) | ($persistentBlockStates ? 0 : 1));
-			$writer->writeByteArray($words);
-			$palette = $blocks->getPalette();
-
-			if ($bitsPerBlock !== 0) {
-				VarInt::writeUnsignedInt($writer, count($palette) << 1);
-			}
-
-			if ($persistentBlockStates) {
-				$nbtSerializer = new NetworkNbtSerializer();
-				foreach ($palette as $p) {
-					//TODO: introduce a binary parts for this
-					$state = $blockStateDictionary->generateDataFromStateId($blockTranslator->internalIdToNetworkId($p));
-					if ($state === null) {
-						$state = $blockTranslator->getFallbackStateData();
-					}
-
-					$writer->writeByteArray($nbtSerializer->write(new TreeRoot($state->toNbt())));
-				}
-				continue;
-			}
-
-			foreach ($palette as $p) {
-				VarInt::writeUnsignedInt(
-					$writer, $blockTranslator->internalIdToNetworkId($p) << 1
-				);
-			}
-		}
-	}
+	public function serializeSubChunk(SubChunk $subChunk, MVBlockTranslator $blockTranslator, ByteBufferWriter $writer, bool $persistentBlockStates) : void{}
 
 	public function serializeTiles(Chunk $chunk) : string
 	{
@@ -155,8 +115,8 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 	 * @return array{$blocks, $data}
 	 */
 	static private function palettedToClassic(PalettedBlockArray $paletted, MVBlockTranslator $blockTranslator) : array {
-		$blocks = "";
-		$data = "";
+		$blocks = new ByteBufferWriter();
+		$data = new ByteBufferWriter();
 		$nibbleBuffer = 0;
 		$i = 0;
 
@@ -166,27 +126,21 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
                 for ($y = 0; $y < 16; $y++) {
                     $stateId = $paletted->get($x, $y, $z);
 					$networkStateId = $blockTranslator->internalIdToNetworkId($stateId);
-					$legacyBlockId = $dictionary->getLegacyBlockIdFromStateId($networkStateId);
-					$meta = $dictionary->getMetaFromStateId($stateId);
+					$meta = $dictionary->getMetaFromStateId($stateId) & 0x0F;
 
-					$blocks .= chr($legacyBlockId & 0xFF);
+                    Byte::writeUnsigned($blocks, $networkStateId & 0xFF);
 
 					if (($i & 1) === 0) {
 						$nibbleBuffer = $meta;
 					} else {
-						$data .= chr($nibbleBuffer | ($meta << 4));
+                        Byte::writeUnsigned($data, $nibbleBuffer | ($meta << 4));
 					}
 					$i++;
 				}
 			}
 		}
 
-		// Flush nibble-end
-		if (($i & 1) !== 0) {
-			$data .= chr($nibbleBuffer);
-		}
-
-		return [$blocks, $data];
+		return [$blocks->getData(), $data->getData()];
 	}
 
 	/**
@@ -194,7 +148,7 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 	 * Assumes that all Y layers contain the same biome for each X/Z.
 	 */
 	private static function reduce3DBiomes(PalettedBlockArray $biomes3d) : string{
-		$biomes2d = "";
+		$biomes2d = new ByteBufferWriter();
 
 		for($z = 0; $z < 16; ++$z){
 			for($x = 0; $x < 16; ++$x){
@@ -207,14 +161,10 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 					}
 				}
 
-				$biomes2d .= chr($biomeId);
+				Byte::writeUnsigned($biomes2d, $biomeId);
 			}
 		}
 
-		if(strlen($biomes2d) !== 256){
-			throw new \LogicException("Generated biome array is not exactly 256 bytes");
-		}
-
-		return $biomes2d;
+		return $biomes2d->getData();
 	}
 }
