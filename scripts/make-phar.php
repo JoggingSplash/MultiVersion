@@ -1,129 +1,149 @@
 <?php
 
+/*
+ *
+ *
+ *      __  ___      ____  _ _    __               _
+ *     /  |/  /_  __/ / /_(_) |  / /__  __________(_)___  ____
+ *    / /|_/ / / / / / __/ /| | / / _ \/ ___/ ___/ / __ \/ __ \
+ *   / /  / / /_/ / / /_/ / | |/ /  __/ /  (__  ) / /_/ / / / /
+ *  /_/  /_/\__,_/_/\__/_/  |___/\___/_/  /____/_/\____/_/ /_/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  @author JoggingSplash23
+ *  @link https://www.github.com/JoggingSplash
+ *
+ *
+ */
+
 declare(strict_types=1);
 
 require dirname(__DIR__) . "/vendor/autoload.php";
 
-function main(): Generator {
-    $start = microtime(true);
+function main() : Generator {
+	$start = microtime(true);
 
-    $opts = getopt("", ['out:', 'release']);
+	$opts = getopt("", ['out:', 'release']);
 
-    $basePath = realpath(__DIR__ . '/..') . DIRECTORY_SEPARATOR;
-    $targetPath = ($opts['out'] ?? $basePath) . DIRECTORY_SEPARATOR;
+	$basePath = realpath(__DIR__ . '/..') . DIRECTORY_SEPARATOR;
+	$targetPath = ($opts['out'] ?? $basePath) . DIRECTORY_SEPARATOR;
 
-    $array = readAndUpdatePluginYml($basePath, isset($opts['release']));
+	$array = readAndUpdatePluginYml($basePath, isset($opts['release']));
 
-    if(empty($array)) {
-        throw new InvalidArgumentException("plugin.yml was not successful read");
-    }
+	if(empty($array)) {
+		throw new InvalidArgumentException("plugin.yml was not successful read");
+	}
 
-    $pharName = $array['name'] . '.phar';
+	$pharName = $array['name'] . '.phar';
 
-    if (file_exists($targetPath . $pharName)) {
-        yield 'Phar file already exists, overwriting...';
+	if (file_exists($targetPath . $pharName)) {
+		yield 'Phar file already exists, overwriting...';
 
-        try {
-            Phar::unlinkArchive($targetPath . $pharName);
-        } catch (PharException) {
-            unlink($targetPath . $pharName);
-        }
-    }
+		try {
+			Phar::unlinkArchive($targetPath . $pharName);
+		} catch (PharException) {
+			unlink($targetPath . $pharName);
+		}
+	}
 
-    yield 'Adding files...';
+	yield 'Adding files...';
 
-    $files = [];
-    $exclusions = [
-        '.idea', '.gitignore', 'composer.json', 'composer.lock',
-        'make-phar.php', '.git', 'composer.phar',
-        'TODO.md', 'README.md', $pharName, 'convert_recipes.py', 'parse_hardcoded_nbt.py',
-        '.php-cs-fixer.php', 'php-cs-fixer.parts'
-    ];
+	$files = [];
+	$exclusions = [
+		'.idea', '.gitignore', 'composer.json', 'composer.lock',
+		'make-phar.php', '.git', 'composer.phar',
+		'TODO.md', 'README.md', $pharName, 'convert_recipes.py', 'parse_hardcoded_nbt.py',
+		'.php-cs-fixer.php', 'php-cs-fixer.parts'
+	];
 
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basePath)) as $path => $file) {
-        $bool = true;
+	foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basePath)) as $path => $file) {
+		$bool = true;
 
-        foreach ($exclusions as $exclusion) {
-            if (str_contains($path, $exclusion)) {
-                $bool = false;
-                break;
-            }
-        }
+		foreach ($exclusions as $exclusion) {
+			if (str_contains($path, $exclusion)) {
+				$bool = false;
+				break;
+			}
+		}
 
-        if (!$bool || !$file->isFile()) {
-            continue;
-        }
+		if (!$bool || !$file->isFile()) {
+			continue;
+		}
 
-        $string = str_replace($basePath, '', $path);
-        yield 'Adding ' . $string;
+		$string = str_replace($basePath, '', $path);
+		yield 'Adding ' . $string;
 
-        $files[$string] = $path;
-    }
+		$files[$string] = $path;
+	}
 
-    yield 'Compressing...' . PHP_EOL;
+	yield 'Compressing...' . PHP_EOL;
 
-    $phar = new Phar($targetPath . $pharName);
-    $phar->startBuffering();
-    $phar->setSignatureAlgorithm(Phar::SHA1);
+	$phar = new Phar($targetPath . $pharName);
+	$phar->startBuffering();
+	$phar->setSignatureAlgorithm(Phar::SHA1);
 
-    $array = readAndUpdatePluginYml($basePath, isset($opts['release']));
-    $phar->setMetadata($array);
+	$array = readAndUpdatePluginYml($basePath, isset($opts['release']));
+	$phar->setMetadata($array);
 
-    yield '------------------------------------------------';
-    yield 'BUILD SUCCESS';
-    yield '------------------------------------------------';
+	yield '------------------------------------------------';
+	yield 'BUILD SUCCESS';
+	yield '------------------------------------------------';
 
-    $count = count($phar->buildFromIterator(new ArrayIterator($files)));
-    yield 'Added ' . $count . ' files';
+	$count = count($phar->buildFromIterator(new ArrayIterator($files)));
+	yield 'Added ' . $count . ' files';
 
-    $phar->compressFiles(Phar::GZ);
-    $phar->stopBuffering();
+	$phar->compressFiles(Phar::GZ);
+	$phar->stopBuffering();
 
-    yield 'Done in ' . round(microtime(true) - $start, 1, PHP_ROUND_HALF_UP) . 's';
+	yield 'Done in ' . round(microtime(true) - $start, 1, PHP_ROUND_HALF_UP) . 's';
 }
 
-function readAndUpdatePluginYml(string $ymlPath, bool $updateVersion): array {
-    $plYml = $ymlPath . 'plugin.yml';
+function readAndUpdatePluginYml(string $ymlPath, bool $updateVersion) : array {
+	$plYml = $ymlPath . 'plugin.yml';
 
-    if(!file_exists($plYml)) {
-        return [];
-    }
+	if(!file_exists($plYml)) {
+		return [];
+	}
 
-    $array = yaml_parse_file($plYml);
+	$array = yaml_parse_file($plYml);
 
-    if(!is_array($array)) {
-        return [];
-    }
+	if(!is_array($array)) {
+		return [];
+	}
 
-    if (empty($array)) {
-        return [];
-    }
+	if (empty($array)) {
+		return [];
+	}
 
-    if(!isset($array['version'])) {
-        throw new LogicException("'version' parameter is required in the plugin.yml");
-    }
+	if(!isset($array['version'])) {
+		throw new LogicException("'version' parameter is required in the plugin.yml");
+	}
 
-    $matches = array_map('intval', explode('.', $array['version']));
+	$matches = array_map('intval', explode('.', $array['version']));
 
-    if (count($matches) < 2) {
-        throw new InvalidArgumentException("Invalid version '{$array['version']}'");
-    }
+	if (count($matches) < 2) {
+		throw new InvalidArgumentException("Invalid version '{$array['version']}'");
+	}
 
-    if ($updateVersion) {
-        if ($matches[1] === 9) {
-            $matches[0]++;
-            $matches[1] = 0;
-        } else {
-            $matches[1]++;
-        }
-    }
+	if ($updateVersion) {
+		if ($matches[1] === 9) {
+			$matches[0]++;
+			$matches[1] = 0;
+		} else {
+			$matches[1]++;
+		}
+	}
 
-    $array['version'] = "{$matches[0]}.{$matches[1]}";
+	$array['version'] = "{$matches[0]}.{$matches[1]}";
 
-    yaml_emit_file($ymlPath . 'plugin.yml', $array);
-    return $array;
+	yaml_emit_file($ymlPath . 'plugin.yml', $array);
+	return $array;
 }
 
 foreach (main() as $line) {
-    echo $line . PHP_EOL;
+	echo $line . PHP_EOL;
 }

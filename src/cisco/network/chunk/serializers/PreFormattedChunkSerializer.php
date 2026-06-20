@@ -29,19 +29,14 @@ use cisco\network\chunk\io\SubChunkDatum;
 use cisco\network\mcpe\MVBlockTranslator;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferWriter;
-use pmmp\encoding\VarInt;
 use pocketmine\block\tile\Spawnable;
-use pocketmine\nbt\TreeRoot;
-use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\serializer\ChunkSerializer;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\format\PalettedBlockArray;
 use pocketmine\world\format\SubChunk;
-use function chr;
 use function count;
 use function min;
-use function strlen;
 
 class PreFormattedChunkSerializer implements MVChunkSerializer {
 
@@ -121,19 +116,19 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 		$i = 0;
 
 		$dictionary = $blockTranslator->getBlockStateDictionary();
-        for ($x = 0; $x < 16; $x++) {
+		for ($x = 0; $x < 16; $x++) {
 			for ($z = 0; $z < 16; $z++) {
-                for ($y = 0; $y < 16; $y++) {
-                    $stateId = $paletted->get($x, $y, $z);
+				for ($y = 0; $y < 16; $y++) {
+					$stateId = $paletted->get($x, $y, $z);
 					$networkStateId = $blockTranslator->internalIdToNetworkId($stateId);
 					$meta = $dictionary->getMetaFromStateId($stateId) & 0x0F;
 
-                    Byte::writeUnsigned($blocks, $networkStateId & 0xFF);
+					Byte::writeUnsigned($blocks, $networkStateId & 0xFF);
 
 					if (($i & 1) === 0) {
 						$nibbleBuffer = $meta;
 					} else {
-                        Byte::writeUnsigned($data, $nibbleBuffer | ($meta << 4));
+						Byte::writeUnsigned($data, $nibbleBuffer | ($meta << 4));
 					}
 					$i++;
 				}

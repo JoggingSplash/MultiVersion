@@ -28,7 +28,6 @@ use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\NetworkSession;
 use cisco\network\raknet\MVRakLibInterface;
 use cisco\network\utils\ProtocolCommand;
-use cisco\sdb\Loader as SDBLoader;
 use pocketmine\event\EventPriority;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\NetworkInterfaceRegisterEvent;
@@ -39,7 +38,6 @@ use pocketmine\network\query\DedicatedQueryNetworkInterface;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\AsyncTask;
-use function class_exists;
 use function count;
 use function dirname;
 use function implode;
@@ -96,10 +94,6 @@ final class Loader extends PluginBase {
 
 		$protocols = MCProtocols::getProtocolInstances();
 		$server->getLogger()->notice("[!] This server runs a total of " . count($protocols) . " protocols: " . implode(" ", $protocols));
-
-		if (!class_exists(SDBLoader::class)) {
-			$this->getLogger()->warning("SDB Plugin not found, MultiVersion may have crashes in the client because of the world!");
-		}
 	}
 
 	private function registerDataPacketEvent() : void {

@@ -39,6 +39,7 @@ use JsonMapper_Exception;
 use pocketmine\entity\InvalidSkinException;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\lang\KnownTranslationFactory;
+use pocketmine\network\mcpe\auth\ProcessLegacyLoginTask;
 use pocketmine\network\mcpe\handler\LoginPacketHandler;
 use pocketmine\network\mcpe\JwtException;
 use pocketmine\network\mcpe\JwtUtils;
@@ -48,18 +49,30 @@ use pocketmine\network\mcpe\protocol\NetworkSettingsPacket;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\RequestNetworkSettingsPacket;
+use pocketmine\network\mcpe\protocol\types\login\AuthenticationType;
 use pocketmine\network\mcpe\protocol\types\login\clientdata\ClientData;
 use pocketmine\network\mcpe\protocol\types\login\clientdata\ClientDataToSkinDataHelper;
+use pocketmine\network\mcpe\protocol\types\login\legacy\LegacyAuthChain;
+use pocketmine\network\mcpe\protocol\types\login\legacy\LegacyAuthIdentityData;
 use pocketmine\network\PacketHandlingException;
 use pocketmine\player\Player;
 use pocketmine\player\PlayerInfo;
 use pocketmine\player\XboxLivePlayerInfo;
 use pocketmine\Server;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 use ReflectionException;
 use function assert;
+use function chr;
+use function count;
+use function gettype;
 use function in_array;
 use function is_array;
+use function is_object;
+use function json_decode;
+use function md5;
+use function ord;
+use const JSON_THROW_ON_ERROR;
 
 class MVLoginPacketHandler extends LoginPacketHandler {
 
@@ -111,6 +124,8 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 				return $this->handle419Login($packet);
 			} elseif ($protocol === v486ProtocolInfo::CURRENT_PROTOCOL) {
 				return $this->handle486Login($packet);
+			}elseif ($protocol === 844){ // TODO: add v844ProtocolInfo
+			   return $this->handle844Login($packet);
 			}
 		}
 
@@ -202,6 +217,91 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 		return true;
 	}
 
+	private function handle844Login(GlobalLoginPacket $packet) : bool {
+		$authInfo = $this->parseAuthInfo($packet->authInfoJson);
+
+		if($authInfo->AuthenticationType === AuthenticationType::FULL->value){
+			try{
+				[$headerArray, $claimsArray,] = JwtUtils::parse($authInfo->Token);
+			}catch(JwtException $e){
+				throw PacketHandlingException::wrap($e, "Error parsing authentication token");
+			}
+			$header = $this->mapXboxTokenHeader($headerArray);
+			$claims = $this->mapXboxTokenBody($claimsArray);
+
+			$legacyUuid = self::calculateUuidFromXuid($claims->xid);
+			$username = $claims->xname;
+			$xuid = $claims->xid;
+
+			$authRequired = ReflectionUtils::invoke(LoginPacketHandler::class, $this, "processLoginCommon", $packet, $username, $legacyUuid, $xuid);
+			if($authRequired === null){
+				//plugin cancelled
+				return true;
+			}
+			$this->processOpenIdLogin($authInfo->Token, $header->kid, $packet->clientDataJwt, $authRequired);
+
+		}elseif($authInfo->AuthenticationType === AuthenticationType::SELF_SIGNED->value){
+			try{
+				$chainData = json_decode($authInfo->Certificate, flags: JSON_THROW_ON_ERROR);
+			}catch(\JsonException $e){
+				throw PacketHandlingException::wrap($e, "Error parsing self-signed certificate chain");
+			}
+			if(!is_object($chainData)){
+				throw new PacketHandlingException("Unexpected type for self-signed certificate chain: " . gettype($chainData) . ", expected object");
+			}
+			try{
+				$chain = $this->defaultJsonMapper("Self-signed auth chain JSON")->map($chainData, new LegacyAuthChain());
+			}catch(JsonMapper_Exception $e){
+				throw PacketHandlingException::wrap($e, "Error mapping self-signed certificate chain");
+			}
+			if(count($chain->chain) > 1 || !isset($chain->chain[0])){
+				throw new PacketHandlingException("Expected exactly one certificate in self-signed certificate chain, got " . count($chain->chain));
+			}
+
+			try{
+				[, $claimsArray, ] = JwtUtils::parse($chain->chain[0]);
+			}catch(JwtException $e){
+				throw PacketHandlingException::wrap($e, "Error parsing self-signed certificate");
+			}
+			if(!isset($claimsArray["extraData"]) || !is_array($claimsArray["extraData"])){
+				throw new PacketHandlingException("Expected \"extraData\" to be present in self-signed certificate");
+			}
+
+			try{
+				$claims = $this->defaultJsonMapper("Self-signed auth JWT 'extraData'")->map($claimsArray["extraData"], new LegacyAuthIdentityData());
+			}catch(JsonMapper_Exception $e){
+				throw PacketHandlingException::wrap($e, "Error mapping self-signed certificate extraData");
+			}
+
+			if(!Uuid::isValid($claims->identity)){
+				throw new PacketHandlingException("Invalid UUID string in self-signed certificate: " . $claims->identity);
+			}
+			$legacyUuid = Uuid::fromString($claims->identity);
+			$username = $claims->displayName;
+			$xuid = "";
+
+			$authRequired = ReflectionUtils::invoke(LoginPacketHandler::class, $this, "processLoginCommon", $packet, $username, $legacyUuid, $xuid);
+			if($authRequired === null){
+				//plugin cancelled
+				return true;
+			}
+			$this->processLegacySelfSignedLogin($chain->chain, $packet->clientDataJwt, $authRequired);
+		}else{
+			throw new PacketHandlingException("Unsupported authentication type: $authInfo->AuthenticationType");
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param string[] $legacyCertificate
+	 */
+	protected function processLegacySelfSignedLogin(array $legacyCertificate, string $clientDataJwt, bool $authRequired) : void{
+		$this->session->setHandler(null); //drop packets received during login verification
+
+		$this->server->getAsyncPool()->submitTask(new ProcessLegacyLoginTask($legacyCertificate, $clientDataJwt, rootAuthKeyDer: null, authRequired: $authRequired, onCompletion: $this->authCallback));
+	}
+
 	/**
 	 * @throws PacketHandlingException
 	 */
@@ -224,11 +324,7 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 				if (!is_array($claims["extraData"])) {
 					throw new PacketHandlingException("'extraData' key should be an array");
 				}
-				$mapper = new JsonMapper();
-				$mapper->bEnforceMapType = false; //TODO: we don't really need this as an array, but right now we don't have enough models
-				$mapper->bExceptionOnMissingData = true;
-				$mapper->bExceptionOnUndefinedProperty = true;
-				$mapper->bStrictObjectTypeChecking = true;
+				$mapper = $this->defaultJsonMapper("Extra Data");
 				try {
 					/** @var AuthenticationData $extraData */
 					$extraData = $mapper->map($claims["extraData"], new AuthenticationData());
@@ -256,10 +352,7 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 
 		$this->session->safeProtocol()?->injectExtraData($clientDataClaims);
 
-		$mapper = new JsonMapper();
-		$mapper->bEnforceMapType = false; //TODO: we don't really need this as an array, but right now we don't have enough models
-		$mapper->bExceptionOnMissingData = false;
-		$mapper->bExceptionOnUndefinedProperty = false;
+		$mapper = $this->defaultJsonMapper("Legacy Client Data");
 		try {
 			$clientData = $mapper->map($clientDataClaims, new ClientData());
 		} catch (JsonMapper_Exception $e) {
@@ -376,16 +469,45 @@ class MVLoginPacketHandler extends LoginPacketHandler {
 
 		$this->session->safeProtocol()?->injectExtraData($clientDataClaims);
 
-		$mapper = new JsonMapper();
-		$mapper->bEnforceMapType = false; //TODO: we don't really need this as an array, but right now we don't have enough models
-		$mapper->bExceptionOnMissingData = true;
-		$mapper->bExceptionOnUndefinedProperty = true;
-		$mapper->bStrictObjectTypeChecking = true;
+		$mapper = $this->defaultJsonMapper("Client Data");
 		try {
 			$clientData = $mapper->map($clientDataClaims, new ClientData());
 		} catch (JsonMapper_Exception $e) {
 			throw PacketHandlingException::wrap($e);
 		}
 		return $clientData;
+	}
+
+	private static function calculateUuidFromXuid(string $xuid) : UuidInterface{
+		$hash = md5("pocket-auth-1-xuid:" . $xuid, binary: true);
+		$hash[6] = chr((ord($hash[6]) & 0x0f) | 0x30); // set version to 3
+		$hash[8] = chr((ord($hash[8]) & 0x3f) | 0x80); // set variant to RFC 4122
+
+		return Uuid::fromBytes($hash);
+	}
+
+	private function defaultJsonMapper(string $logContext) : JsonMapper{
+		$mapper = new JsonMapper();
+		$mapper->bExceptionOnMissingData = false; // noop
+		$mapper->undefinedPropertyHandler = $this->warnUndefinedJsonPropertyHandler($logContext);
+		$mapper->bStrictObjectTypeChecking = true;
+		$mapper->bEnforceMapType = false;
+		return $mapper;
+	}
+
+	/**
+	 * @phpstan-return Closure(object, string, mixed) : void
+	 */
+	private function warnUndefinedJsonPropertyHandler(string $context) : Closure{
+		return function(object $object, string $name, mixed $value) use ($context) : void{
+			static $count = 0;
+			if($count++ < 10){
+				$this->session->getLogger()->warning(
+					"$context: Unexpected JSON property for " . (new \ReflectionClass($object))->getShortName()
+				);
+			}else{
+				throw new PacketHandlingException("$context: Too many unexpected JSON properties");
+			}
+		};
 	}
 }

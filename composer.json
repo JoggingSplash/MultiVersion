@@ -11,7 +11,8 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "pocketmine/pocketmine-mp": "^5.0.0"
+        "pocketmine/pocketmine-mp": "^5.0.0",
+        "friendsofphp/php-cs-fixer": "^3.95"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
