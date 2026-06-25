@@ -92,6 +92,7 @@ use cisco\network\proto\v419\structure\v419InGamePacketHandler;
 use cisco\network\proto\v419\structure\v419PacketPool;
 use cisco\network\proto\v419\structure\v419ProtocolInfo;
 use cisco\network\proto\v419\structure\v419StaticPacketCache;
+use cisco\network\utils\LevelSoundIntToStringIdMap;
 use cisco\network\utils\RawPacketHelper;
 use JsonException;
 use pmmp\encoding\ByteBufferReader;
@@ -149,6 +150,7 @@ use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\PlayerArmorDamagePacket;
 use pocketmine\network\mcpe\protocol\PlayerListPacket;
 use pocketmine\network\mcpe\protocol\PlayerSkinPacket;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\RemoveVolumeEntityPacket;
 use pocketmine\network\mcpe\protocol\RequestChunkRadiusPacket;
 use pocketmine\network\mcpe\protocol\ResourcePacksInfoPacket;
@@ -242,12 +244,14 @@ final class v419Protocol extends TProtocol
 			$packet instanceof v419InventoryTransactionPacket => InventoryTransactionPacket::create($packet->requestId, $packet->requestChangedSlots, $packet->trData),
 			$packet instanceof v419AnimatePacket => AnimatePacket::create($packet->actorRuntimeId, $packet->action, $packet->data, null), // TODO: fill swingSource
 			$packet instanceof v419InteractPacket => RawPacketHelper::translateInteractPacketToLatest($packet),
+			$packet instanceof v419LevelSoundEventPacket => LevelSoundEventPacket::create(LevelSoundIntToStringIdMap::getInstance()->lookupString($packet->realSound), $packet->position, $packet->extraData, $packet->entityType, $packet->isBabyMob, $packet->disableRelativeVolume, -1, null),
 			default => $packet
 		};
 	}
 
-	public function outcoming(ClientboundPacket $packet) : ?ClientboundPacket
-	{
+	public function outcoming(ClientboundPacket $packet) : ?ClientboundPacket {
+		if(!v419ProtocolInfo::inBounds($packet->pid(), [ProtocolInfo::UPDATE_ABILITIES_PACKET])) return null;
+
 		if ($packet instanceof PlayerSkinPacket) {
 			$this->adaptSkinData($packet->skin);
 			return $packet;
@@ -301,7 +305,9 @@ final class v419Protocol extends TProtocol
 			if (($packet->sound === LevelSoundEvent::BREAK && $packet->extraData !== -1) || $packet->sound === LevelSoundEvent::PLACE || $packet->sound === LevelSoundEvent::HIT || $packet->sound === LevelSoundEvent::LAND || $packet->sound === LevelSoundEvent::ITEM_USE_ON) {
 				$packet->extraData = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->extraData));
 			}
-			return v419LevelSoundEventPacket::fromLatest($packet);
+			$packet = v419LevelSoundEventPacket::fromLatest($packet);
+			$packet->realSound = LevelSoundIntToStringIdMap::getInstance()->lookupInt($packet->sound);
+			return $packet;
 		} elseif ($packet instanceof UpdateBlockPacket){
 			$packet->blockRuntimeId = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->blockRuntimeId));
 			return v419UpdateBlockPacket::fromLatest($packet);

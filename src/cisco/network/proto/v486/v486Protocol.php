@@ -83,6 +83,7 @@ use cisco\network\proto\v486\structure\v486InGamePacketHandler;
 use cisco\network\proto\v486\structure\v486PacketPool;
 use cisco\network\proto\v486\structure\v486ProtocolInfo;
 use cisco\network\proto\v486\structure\v486StaticPacketCache;
+use cisco\network\utils\LevelSoundIntToStringIdMap;
 use cisco\network\utils\RawPacketHelper;
 use JsonMapper;
 use JsonMapper_Exception;
@@ -135,6 +136,7 @@ use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\PlayerListPacket;
 use pocketmine\network\mcpe\protocol\PlayerSkinPacket;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\RemoveVolumeEntityPacket;
 use pocketmine\network\mcpe\protocol\RequestChunkRadiusPacket;
 use pocketmine\network\mcpe\protocol\ResourcePacksInfoPacket;
@@ -227,7 +229,7 @@ class v486Protocol extends TProtocol
 			$packet instanceof v486ContainerClosePacket => ContainerClosePacket::create($packet->windowId, 0, $packet->server),
 			$packet instanceof v486AnimatePacket => AnimatePacket::create($packet->action, $packet->action, 0.0, null),
 			$packet instanceof v486InteractPacket => RawPacketHelper::translateInteractPacketToLatest($packet),
-			$packet instanceof v486LevelSoundEventPacket => LevelSoundEventPacket::create($packet->sound, $packet->position, $packet->extraData, $packet->entityType, $packet->isBabyMob, $packet->disableRelativeVolume, -1),
+			$packet instanceof v486LevelSoundEventPacket => LevelSoundEventPacket::create(LevelSoundIntToStringIdMap::getInstance()->lookupString($packet->realSound), $packet->position, $packet->extraData, $packet->entityType, $packet->isBabyMob, $packet->disableRelativeVolume, -1, null),
 			$packet instanceof v486InventoryTransactionPacket => InventoryTransactionPacket::create($packet->requestId, $packet->requestChangedSlots, $packet->trData),
 			default => $packet
 		};
@@ -235,6 +237,8 @@ class v486Protocol extends TProtocol
 
 	public function outcoming(ClientboundPacket $packet) : ?ClientboundPacket
 	{
+		if(!v486ProtocolInfo::inBounds($packet->pid(), [ProtocolInfo::UPDATE_ABILITIES_PACKET])) return null;
+
 		if ($packet instanceof ActorEventPacket) {
 			if ($packet->eventId === ActorEvent::EATING_ITEM) {
 				$value = $packet->eventData;
@@ -256,7 +260,10 @@ class v486Protocol extends TProtocol
 			if (($packet->sound === LevelSoundEvent::BREAK && $packet->extraData !== -1) || $packet->sound === LevelSoundEvent::PLACE || $packet->sound === LevelSoundEvent::HIT || $packet->sound === LevelSoundEvent::LAND || $packet->sound === LevelSoundEvent::ITEM_USE_ON) {
 				$packet->extraData = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->extraData));
 			}
-			return v486LevelSoundEventPacket::fromLatest($packet);
+
+			$packet = v486LevelSoundEventPacket::fromLatest($packet);
+			$packet->realSound = LevelSoundIntToStringIdMap::getInstance()->lookupInt($packet->sound);
+			return $packet;
 		} elseif ($packet instanceof UpdateAbilitiesPacket) {
 			foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
 				$player = $world->getPlayers()[$packet->getData()->getTargetActorUniqueId()] ?? null;

@@ -24,7 +24,11 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v844\packets;
 
+use cisco\network\legacy\types\transactions\LegacyReleaseItemTransactionData;
+use cisco\network\legacy\types\transactions\LegacyUseItemOnEntityTransactionData;
 use cisco\network\proto\v844\packets\types\inventory\v844UseItemTransactionData;
+use cisco\network\proto\v844\packets\types\v844NetworkInventoryAction;
+use cisco\network\utils\ReflectionUtils;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -38,13 +42,14 @@ use pocketmine\network\mcpe\protocol\types\inventory\ReleaseItemTransactionData;
 use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
 use pocketmine\network\mcpe\protocol\types\inventory\UseItemTransactionData;
 use function count;
+use function get_class;
 
 class v844InventoryTransactionPacket extends InventoryTransactionPacket {
 
 	public static function fromLatest(InventoryTransactionPacket $packet) : self{
 		$result = new self();
 		$result->requestId = $packet->requestId;
-		$result->requestChangedSlots = $packet->requestChangedSlots;
+		$result->requestChangedSlots = $packet->requestChangedSlots ?? [];
 		$result->trData = $packet->trData;
 		return $result;
 	}
@@ -64,12 +69,19 @@ class v844InventoryTransactionPacket extends InventoryTransactionPacket {
 			NormalTransactionData::ID => new NormalTransactionData(),
 			MismatchTransactionData::ID => new MismatchTransactionData(),
 			UseItemTransactionData::ID => new v844UseItemTransactionData(),
-			UseItemOnEntityTransactionData::ID => new UseItemOnEntityTransactionData(),
-			ReleaseItemTransactionData::ID => new ReleaseItemTransactionData(),
+			UseItemOnEntityTransactionData::ID => new LegacyUseItemOnEntityTransactionData(),
+			ReleaseItemTransactionData::ID => new LegacyReleaseItemTransactionData(),
 			default => throw new PacketDecodeException("Unknown transaction type $transactionType"),
 		};
 
-		$this->trData->decode($in);
+		$actionCount = VarInt::readUnsignedInt($in);
+		$actions = [];
+		for($i = 0; $i < $actionCount; ++$i){
+			$actions[] = (new v844NetworkInventoryAction())->read($in);
+		}
+
+		ReflectionUtils::setProperty(get_class($this->trData), $this->trData, "actions", $actions);
+		ReflectionUtils::invoke(get_class($this->trData), $this->trData, "decodeData", $in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
@@ -83,6 +95,6 @@ class v844InventoryTransactionPacket extends InventoryTransactionPacket {
 
 		VarInt::writeUnsignedInt($out, $this->trData->getTypeId());
 
-		$this->trData->encode($out);
+		$this->trData->encodeTransaction($out);
 	}
 }

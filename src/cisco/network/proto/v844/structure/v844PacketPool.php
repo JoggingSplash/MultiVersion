@@ -34,7 +34,7 @@ class v844PacketPool extends PacketPool
 	{
 		parent::__construct();
 
-		ProtocolUtils::registerPackets($this, 844);
+		ProtocolUtils::registerPackets($this, v844ProtocolInfo::CURRENT_PROTOCOL);
 
 	}
 }

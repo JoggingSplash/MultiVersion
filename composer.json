@@ -11,13 +11,14 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "pocketmine/pocketmine-mp": "^5.0.0",
-        "friendsofphp/php-cs-fixer": "^3.95"
+        "pocketmine/pocketmine-mp": "5.44.2",
+        "friendsofphp/php-cs-fixer": "3.95.10"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "make-phar":  [
+            "@php vendor/bin/php-cs-fixer fix .",
             "@composer install --no-dev --classmap-authoritative --ignore-platform-reqs",
             "@php -dphar.readonly=0 ./scripts/make-phar.php"
         ]

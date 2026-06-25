@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v419\structure;
 
+use function in_array;
+
 final class v419ProtocolInfo
 {
 	public const CURRENT_PROTOCOL = 419;
@@ -187,7 +189,11 @@ final class v419ProtocolInfo
 	public const CORRECT_PLAYER_MOVE_PREDICTION_PACKET = 0xa1;
 	public const ITEM_COMPONENT_PACKET = 0xa2;
 
-	private function __construct()
-	{
+	private function __construct(){
+
+	}
+
+	public static function inBounds(int $pid, array $exceptions) : bool {
+		return $pid >= self::LOGIN_PACKET && $pid <= self::ITEM_COMPONENT_PACKET && !in_array($pid, $exceptions, true);
 	}
 }

@@ -32,7 +32,7 @@ use Symfony\Component\Filesystem\Path;
 use function is_array;
 use function json_decode;
 
-final class LevelSoundMap {
+final class LevelSoundIntToStringIdMap {
 	use SingletonTrait;
 
 	private static function make() : self{

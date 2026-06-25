@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace cisco\network\proto\v486\packets;
 
+use cisco\network\legacy\types\transactions\LegacyReleaseItemTransactionData;
+use cisco\network\legacy\types\transactions\LegacyUseItemOnEntityTransactionData;
 use cisco\network\proto\v486\packets\types\inventory\v486InventoryTransactionChangedSlotsHack;
 use cisco\network\proto\v486\packets\types\inventory\v486NetworkInventoryAction;
 use cisco\network\proto\v486\packets\types\v486UseItemTransactionData;
@@ -49,7 +51,7 @@ class v486InventoryTransactionPacket extends InventoryTransactionPacket
 	{
 		$npk = new self();
 		$npk->requestId = $pk->requestId;
-		$npk->requestChangedSlots = $pk->requestChangedSlots;
+		$npk->requestChangedSlots = $pk->requestChangedSlots ?? [];
 		$npk->trData = $pk->trData;
 		return $npk;
 	}
@@ -70,8 +72,8 @@ class v486InventoryTransactionPacket extends InventoryTransactionPacket
 			NormalTransactionData::ID => new NormalTransactionData(),
 			MismatchTransactionData::ID => new MismatchTransactionData(),
 			UseItemTransactionData::ID => new v486UseItemTransactionData(),
-			UseItemOnEntityTransactionData::ID => new UseItemOnEntityTransactionData(),
-			ReleaseItemTransactionData::ID => new ReleaseItemTransactionData(),
+			UseItemOnEntityTransactionData::ID => new LegacyUseItemOnEntityTransactionData(),
+			ReleaseItemTransactionData::ID => new LegacyReleaseItemTransactionData(),
 			default => throw new PacketDecodeException("Unknown transaction type $transactionType"),
 		};
 
@@ -97,6 +99,6 @@ class v486InventoryTransactionPacket extends InventoryTransactionPacket
 
 		VarInt::writeUnsignedInt($out, $this->trData->getTypeId());
 
-		$this->trData->encode($out);
+		$this->trData->encodeAuthInput($out); //TODO: this should be modified
 	}
 }

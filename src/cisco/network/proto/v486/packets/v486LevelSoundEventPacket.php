@@ -36,6 +36,8 @@ class v486LevelSoundEventPacket extends LevelSoundEventPacket
 
 	public const NETWORK_ID = v486ProtocolInfo::LEVEL_SOUND_EVENT_PACKET;
 
+	public int $realSound = 0;
+
 	static public function fromLatest(LevelSoundEventPacket $packet) : self
 	{
 		$npk = new self();
@@ -50,7 +52,7 @@ class v486LevelSoundEventPacket extends LevelSoundEventPacket
 
 	protected function decodePayload(ByteBufferReader $in) : void
 	{
-		$this->sound = VarInt::readUnsignedInt($in);
+		$this->realSound = VarInt::readUnsignedInt($in);
 		$this->position = CommonTypes::getVector3($in);
 		$this->extraData = VarInt::readSignedInt($in);
 		$this->entityType = CommonTypes::getString($in);
@@ -60,7 +62,7 @@ class v486LevelSoundEventPacket extends LevelSoundEventPacket
 
 	protected function encodePayload(ByteBufferWriter $out) : void
 	{
-		VarInt::writeUnsignedInt($out, $this->sound);
+		VarInt::writeUnsignedInt($out, $this->realSound);
 		CommonTypes::putVector3($out, $this->position);
 		VarInt::writeSignedInt($out, $this->extraData);
 		CommonTypes::putString($out, $this->entityType);

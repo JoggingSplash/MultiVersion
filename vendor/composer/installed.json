@@ -798,20 +798,20 @@
         },
         {
             "name": "pocketmine/bedrock-data",
-            "version": "6.6.0+bedrock-1.26.20",
-            "version_normalized": "6.6.0.0",
+            "version": "6.7.0+bedrock-1.26.30",
+            "version_normalized": "6.7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockData.git",
-                "reference": "e5a25957497a4520f4672a379e2a3f6b87602e37"
+                "reference": "bdb44a48fb6beffb6e9f6864f06d2232eb62b6a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/e5a25957497a4520f4672a379e2a3f6b87602e37",
-                "reference": "e5a25957497a4520f4672a379e2a3f6b87602e37",
+                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/bdb44a48fb6beffb6e9f6864f06d2232eb62b6a3",
+                "reference": "bdb44a48fb6beffb6e9f6864f06d2232eb62b6a3",
                 "shasum": ""
             },
-            "time": "2026-05-09T15:06:58+00:00",
+            "time": "2026-06-22T19:41:55+00:00",
             "type": "library",
             "installation-source": "dist",
             "notification-url": "https://packagist.org/downloads/",
@@ -821,7 +821,7 @@
             "description": "Blobs of data generated from Minecraft: Bedrock Edition, used by PocketMine-MP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockData/issues",
-                "source": "https://github.com/pmmp/BedrockData/tree/bedrock-1.26.20"
+                "source": "https://github.com/pmmp/BedrockData/tree/bedrock-1.26.30"
             },
             "install-path": "../pocketmine/bedrock-data"
         },
@@ -856,17 +856,17 @@
         },
         {
             "name": "pocketmine/bedrock-protocol",
-            "version": "57.1.0+bedrock-1.26.20",
-            "version_normalized": "57.1.0.0",
+            "version": "58.0.0+bedrock-1.26.30",
+            "version_normalized": "58.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockProtocol.git",
-                "reference": "b38ef7d8a87651d8b253645196fac97b6825cb98"
+                "reference": "b7863bd60042723b91c3cb87ac37309a4fec1309"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/b38ef7d8a87651d8b253645196fac97b6825cb98",
-                "reference": "b38ef7d8a87651d8b253645196fac97b6825cb98",
+                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/b7863bd60042723b91c3cb87ac37309a4fec1309",
+                "reference": "b7863bd60042723b91c3cb87ac37309a4fec1309",
                 "shasum": ""
             },
             "require": {
@@ -885,7 +885,7 @@
                 "phpstan/phpstan-strict-rules": "^2.0.0",
                 "phpunit/phpunit": "^9.5 || ^10.0 || ^11.0"
             },
-            "time": "2026-05-09T17:13:12+00:00",
+            "time": "2026-06-22T19:49:35+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -900,7 +900,7 @@
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockProtocol/issues",
-                "source": "https://github.com/pmmp/BedrockProtocol/tree/57.1.0+bedrock-1.26.20"
+                "source": "https://github.com/pmmp/BedrockProtocol/tree/58.0.0+bedrock-1.26.30"
             },
             "install-path": "../pocketmine/bedrock-protocol"
         },
@@ -1221,17 +1221,17 @@
         },
         {
             "name": "pocketmine/pocketmine-mp",
-            "version": "5.43.2",
-            "version_normalized": "5.43.2.0",
+            "version": "5.44.2",
+            "version_normalized": "5.44.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/PocketMine-MP.git",
-                "reference": "5f8c89d0c587c29e8e651cb5bb8b6c6e8867f5b5"
+                "reference": "439c8f2ef527fe2732afaa87872c46194b91b02d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/5f8c89d0c587c29e8e651cb5bb8b6c6e8867f5b5",
-                "reference": "5f8c89d0c587c29e8e651cb5bb8b6c6e8867f5b5",
+                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/439c8f2ef527fe2732afaa87872c46194b91b02d",
+                "reference": "439c8f2ef527fe2732afaa87872c46194b91b02d",
                 "shasum": ""
             },
             "require": {
@@ -1265,9 +1265,9 @@
                 "php": "^8.1",
                 "php-64bit": "*",
                 "pocketmine/bedrock-block-upgrade-schema": "~5.2.0+bedrock-1.21.110",
-                "pocketmine/bedrock-data": "~6.6.0+bedrock-1.26.20",
+                "pocketmine/bedrock-data": "~6.7.0+bedrock-1.26.30",
                 "pocketmine/bedrock-item-upgrade-schema": "~1.17.0+bedrock-1.26.20",
-                "pocketmine/bedrock-protocol": "~57.1.0+bedrock-1.26.20",
+                "pocketmine/bedrock-protocol": "~58.0.0+bedrock-1.26.30",
                 "pocketmine/binaryutils": "^0.2.1",
                 "pocketmine/callback-validator": "~1.0.4",
                 "pocketmine/color": "^0.3.0",
@@ -1291,7 +1291,7 @@
                 "phpstan/phpstan-strict-rules": "^2.0.0",
                 "phpunit/phpunit": "^10.5.24"
             },
-            "time": "2026-05-31T23:17:08+00:00",
+            "time": "2026-06-24T21:35:53+00:00",
             "type": "project",
             "installation-source": "dist",
             "autoload": {
@@ -1313,7 +1313,7 @@
             "homepage": "https://pmmp.io",
             "support": {
                 "issues": "https://github.com/pmmp/PocketMine-MP/issues",
-                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.43.2"
+                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.44.2"
             },
             "funding": [
                 {

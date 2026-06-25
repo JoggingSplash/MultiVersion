@@ -22,64 +22,54 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v419\packets;
+namespace cisco\network\proto\v844\packets;
 
-use cisco\network\proto\v419\structure\v419ProtocolInfo;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
+use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-class v419BossEventPacket extends BossEventPacket
-{
+final class v844BossEventPacket extends BossEventPacket {
 
-	public const NETWORK_ID = v419ProtocolInfo::BOSS_EVENT_PACKET;
+	public bool $darkenScreen = false;
 
-	public int $unknownShort;
-
-	public static function fromLatest(BossEventPacket $packet) : v419BossEventPacket
-	{
-		$npk = new self();
-		$npk->bossActorUniqueId = $packet->bossActorUniqueId;
-		$npk->eventType = $packet->eventType;
-
-		if (isset($packet->playerActorUniqueId)) {
-			$npk->playerActorUniqueId = $packet->playerActorUniqueId;
-		}
-		if (isset($packet->title)) {
-			$npk->title = $packet->title;
-		}
-		if (isset($packet->healthPercent)) {
-			$npk->healthPercent = $packet->healthPercent;
-		}
-		if (isset($packet->color)) {
-			$npk->color = $packet->color;
-		}
-		if (isset($packet->overlay)) {
-			$npk->overlay = $packet->overlay;
-		}
-		$npk->unknownShort = 0; // 26.30 stuff
-		return $npk;
+	static public function fromLatest(BossEventPacket $packet) : v844BossEventPacket{
+		$result = new self();
+		$result->bossActorUniqueId = $packet->bossActorUniqueId;
+		$result->eventType = $packet->eventType;
+		$result->playerActorUniqueId = $packet->playerActorUniqueId;
+		$result->title = $packet->title;
+		$result->filteredTitle = $packet->filteredTitle;
+		$result->healthPercent = $packet->healthPercent;
+		$result->color = $packet->color;
+		$result->overlay = $packet->overlay;
+		return $result;
 	}
 
-	protected function decodePayload(ByteBufferReader $in) : void
-	{
+	protected function decodePayload(ByteBufferReader $in) : void {
 		$this->bossActorUniqueId = CommonTypes::getActorUniqueId($in);
 		$this->eventType = VarInt::readUnsignedInt($in);
-		switch ($this->eventType) {
+		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
+			case self::TYPE_QUERY:
 				$this->playerActorUniqueId = CommonTypes::getActorUniqueId($in);
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
 				$this->title = CommonTypes::getString($in);
+				$this->filteredTitle = CommonTypes::getString($in);
 				$this->healthPercent = LE::readFloat($in);
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_PROPERTIES:
-				$this->unknownShort = LE::readUnsignedShort($in);
+				$this->darkenScreen = match($raw = LE::readUnsignedShort($in)){
+					0 => false,
+					1 => true,
+					default => throw new PacketDecodeException("Invalid darkenScreen value $raw"),
+				};
 			case self::TYPE_TEXTURE:
 				$this->color = VarInt::readUnsignedInt($in);
 				$this->overlay = VarInt::readUnsignedInt($in);
@@ -89,28 +79,30 @@ class v419BossEventPacket extends BossEventPacket
 				break;
 			case self::TYPE_TITLE:
 				$this->title = CommonTypes::getString($in);
+				$this->filteredTitle = CommonTypes::getString($in);
 				break;
 			default:
-				//NOOP
+				break;
 		}
 	}
 
-	protected function encodePayload(ByteBufferWriter $out) : void
-	{
+	protected function encodePayload(ByteBufferWriter $out) : void {
 		CommonTypes::putActorUniqueId($out, $this->bossActorUniqueId);
 		VarInt::writeUnsignedInt($out, $this->eventType);
-		switch ($this->eventType) {
+		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
+			case self::TYPE_QUERY:
 				CommonTypes::putActorUniqueId($out, $this->playerActorUniqueId);
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
 				CommonTypes::putString($out, $this->title);
+				CommonTypes::putString($out, $this->filteredTitle);
 				LE::writeFloat($out, $this->healthPercent);
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_PROPERTIES:
-				LE::writeUnsignedShort($out, $this->unknownShort);
+				LE::writeUnsignedShort($out, $this->darkenScreen ? 1 : 0);
 			case self::TYPE_TEXTURE:
 				VarInt::writeUnsignedInt($out, $this->color);
 				VarInt::writeUnsignedInt($out, $this->overlay);
@@ -120,10 +112,10 @@ class v419BossEventPacket extends BossEventPacket
 				break;
 			case self::TYPE_TITLE:
 				CommonTypes::putString($out, $this->title);
+				CommonTypes::putString($out, $this->filteredTitle);
 				break;
 			default:
 				break;
 		}
 	}
-
 }

@@ -33,12 +33,15 @@ use cisco\network\proto\v844\packets\v844AnimatePacket;
 use cisco\network\proto\v844\packets\v844AnvilDamagePacket;
 use cisco\network\proto\v844\packets\v844BlockActorDataPacket;
 use cisco\network\proto\v844\packets\v844BlockEventPacket;
+use cisco\network\proto\v844\packets\v844BossEventPacket;
 use cisco\network\proto\v844\packets\v844ContainerOpenPacket;
 use cisco\network\proto\v844\packets\v844DisconnectPacket;
 use cisco\network\proto\v844\packets\v844InteractPacket;
+use cisco\network\proto\v844\packets\v844InventoryContentPacket;
 use cisco\network\proto\v844\packets\v844InventorySlotPacket;
 use cisco\network\proto\v844\packets\v844InventoryTransactionPacket;
 use cisco\network\proto\v844\packets\v844LevelSoundEventPacket;
+use cisco\network\proto\v844\packets\v844MobArmorEquipmentPacket;
 use cisco\network\proto\v844\packets\v844MobEffectPacket;
 use cisco\network\proto\v844\packets\v844NetworkChunkPublisherUpdatePacket;
 use cisco\network\proto\v844\packets\v844OpenSignPacket;
@@ -49,11 +52,14 @@ use cisco\network\proto\v844\packets\v844SetSpawnPositionPacket;
 use cisco\network\proto\v844\packets\v844StartGamePacket;
 use cisco\network\proto\v844\packets\v844TextPacket;
 use cisco\network\proto\v844\packets\v844UpdateBlockPacket;
+use cisco\network\proto\v844\structure\v844AvailableCommandsPacketAssembler;
 use cisco\network\proto\v844\structure\v844PacketPool;
 use cisco\network\proto\v844\structure\v844StaticPacketCache;
 use cisco\network\utils\RawPacketHelper;
 use pocketmine\crafting\CraftingManager;
 use pocketmine\crafting\CraftingManagerFromDataHelper;
+use pocketmine\lang\Language;
+use pocketmine\lang\Translatable;
 use pocketmine\network\mcpe\cache\CraftingDataCache;
 use pocketmine\network\mcpe\protocol\ActorEventPacket;
 use pocketmine\network\mcpe\protocol\AddVolumeEntityPacket;
@@ -63,13 +69,16 @@ use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
 use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
+use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\ContainerOpenPacket;
 use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 use pocketmine\network\mcpe\protocol\DisconnectPacket;
+use pocketmine\network\mcpe\protocol\InventoryContentPacket;
 use pocketmine\network\mcpe\protocol\InventorySlotPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\mcpe\protocol\MobArmorEquipmentPacket;
 use pocketmine\network\mcpe\protocol\MobEffectPacket;
 use pocketmine\network\mcpe\protocol\NetworkChunkPublisherUpdatePacket;
 use pocketmine\network\mcpe\protocol\OpenSignPacket;
@@ -80,8 +89,20 @@ use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\SetSpawnPositionPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\network\mcpe\protocol\TextPacket;
+use pocketmine\network\mcpe\protocol\types\command\CommandData;
+use pocketmine\network\mcpe\protocol\types\command\CommandHardEnum;
+use pocketmine\network\mcpe\protocol\types\command\CommandOverload;
+use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
+use pocketmine\network\mcpe\protocol\types\command\CommandPermissions;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
+use pocketmine\player\Player;
+use pocketmine\Server;
 use Symfony\Component\Filesystem\Path;
+use function array_values;
+use function count;
+use function in_array;
+use function strtolower;
+use function ucfirst;
 
 class v844Protocol extends LatestProtocol
 {
@@ -167,8 +188,46 @@ class v844Protocol extends LatestProtocol
 			$packet instanceof DisconnectPacket => v844DisconnectPacket::fromLatest($packet),
 			$packet instanceof ActorEventPacket => v844ActorEventPacket::fromLatest($packet),
 			$packet instanceof InventorySlotPacket => v844InventorySlotPacket::fromLatest($packet),
+			$packet instanceof InventoryContentPacket => v844InventoryContentPacket::fromLatest($packet),
+			$packet instanceof BossEventPacket => v844BossEventPacket::fromLatest($packet),
+			$packet instanceof MobArmorEquipmentPacket => v844MobArmorEquipmentPacket::fromLatest($packet),
 			default => parent::outcoming($packet)
 		};
+	}
 
+	public function assembleCommands(Server $server, Player $player, Language $lang) : ?ClientboundPacket {
+		$commandData = [];
+		foreach($server->getCommandMap()->getCommands() as $command){
+			if(isset($commandData[$command->getLabel()]) || $command->getLabel() === "help" || !$command->testPermissionSilent($player)){
+				continue;
+			}
+
+			$lname = strtolower($command->getLabel());
+			$aliases = $command->getAliases();
+			$aliasObj = null;
+			if(count($aliases) > 0){
+				if(!in_array($lname, $aliases, true)){
+					//work around a client bug which makes the original name not show when aliases are used
+					$aliases[] = $lname;
+				}
+				$aliasObj = new CommandHardEnum(ucfirst($command->getLabel()) . "Aliases", $aliases);
+			}
+
+			$description = $command->getDescription();
+			$data = new CommandData(
+				$lname, //TODO: commands containing uppercase letters in the name crash 1.9.0 client
+				$description instanceof Translatable ? $lang->translate($description) : $description,
+				0,
+				CommandPermissions::NORMAL,
+				$aliasObj,
+				[
+					new CommandOverload(chaining: false, parameters: [CommandParameter::standard("args", AvailableCommandsPacket::ARG_TYPE_RAWTEXT, 0, true)])
+				],
+				chainedSubCommandData: []
+			);
+
+			$commandData[$command->getLabel()] = $data;
+		}
+		return v844AvailableCommandsPacketAssembler::assemble(array_values($commandData), [], []);
 	}
 }

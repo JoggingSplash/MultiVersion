@@ -22,15 +22,15 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v486\structure;
+namespace cisco\network\proto\v844\structure;
 
 use function in_array;
 
-final class v486ProtocolInfo
-{
+final class v844ProtocolInfo {
 
-	/** Actual Minecraft: PE protocol version */
-	public const CURRENT_PROTOCOL = 486;
+	private function __construct(){
+		//NOOP
+	}
 
 	/**
 	 * NOTE TO DEVELOPERS
@@ -39,10 +39,14 @@ final class v486ProtocolInfo
 	 *
 	 * This file is generated automatically, do not edit it manually.
 	 */
+
+	/** Actual Minecraft: PE protocol version */
+	public const CURRENT_PROTOCOL = 844;
 	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
-	public const MINECRAFT_VERSION = 'v1.18.12';
+	public const MINECRAFT_VERSION = 'v1.21.111';
 	/** Version number sent to clients in ping responses. */
-	public const MINECRAFT_VERSION_NETWORK = '1.18.12';
+	public const MINECRAFT_VERSION_NETWORK = '1.21.111';
+
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
 	public const SERVER_TO_CLIENT_HANDSHAKE_PACKET = 0x03;
@@ -58,14 +62,14 @@ final class v486ProtocolInfo
 	public const ADD_ACTOR_PACKET = 0x0d;
 	public const REMOVE_ACTOR_PACKET = 0x0e;
 	public const ADD_ITEM_ACTOR_PACKET = 0x0f;
+	public const SERVER_PLAYER_POST_MOVE_POSITION_PACKET = 0x10;
 	public const TAKE_ITEM_ACTOR_PACKET = 0x11;
 	public const MOVE_ACTOR_ABSOLUTE_PACKET = 0x12;
 	public const MOVE_PLAYER_PACKET = 0x13;
-	public const PASSENGER_JUMP_PACKET = 0x14;
+
 	public const UPDATE_BLOCK_PACKET = 0x15;
 	public const ADD_PAINTING_PACKET = 0x16;
-	public const TICK_SYNC_PACKET = 0x17;
-	public const LEVEL_SOUND_EVENT_PACKET_V1 = 0x18;
+
 	public const LEVEL_EVENT_PACKET = 0x19;
 	public const BLOCK_EVENT_PACKET = 0x1a;
 	public const ACTOR_EVENT_PACKET = 0x1b;
@@ -78,6 +82,7 @@ final class v486ProtocolInfo
 	public const BLOCK_PICK_REQUEST_PACKET = 0x22;
 	public const ACTOR_PICK_REQUEST_PACKET = 0x23;
 	public const PLAYER_ACTION_PACKET = 0x24;
+
 	public const HURT_ARMOR_PACKET = 0x26;
 	public const SET_ACTOR_DATA_PACKET = 0x27;
 	public const SET_ACTOR_MOTION_PACKET = 0x28;
@@ -93,11 +98,11 @@ final class v486ProtocolInfo
 	public const INVENTORY_SLOT_PACKET = 0x32;
 	public const CONTAINER_SET_DATA_PACKET = 0x33;
 	public const CRAFTING_DATA_PACKET = 0x34;
-	public const CRAFTING_EVENT_PACKET = 0x35;
+
 	public const GUI_DATA_PICK_ITEM_PACKET = 0x36;
-	public const ADVENTURE_SETTINGS_PACKET = 0x37;
+
 	public const BLOCK_ACTOR_DATA_PACKET = 0x38;
-	public const PLAYER_INPUT_PACKET = 0x39;
+
 	public const LEVEL_CHUNK_PACKET = 0x3a;
 	public const SET_COMMANDS_ENABLED_PACKET = 0x3b;
 	public const SET_DIFFICULTY_PACKET = 0x3c;
@@ -105,13 +110,13 @@ final class v486ProtocolInfo
 	public const SET_PLAYER_GAME_TYPE_PACKET = 0x3e;
 	public const PLAYER_LIST_PACKET = 0x3f;
 	public const SIMPLE_EVENT_PACKET = 0x40;
-	public const EVENT_PACKET = 0x41;
+	public const LEGACY_TELEMETRY_EVENT_PACKET = 0x41;
 	public const SPAWN_EXPERIENCE_ORB_PACKET = 0x42;
 	public const CLIENTBOUND_MAP_ITEM_DATA_PACKET = 0x43;
 	public const MAP_INFO_REQUEST_PACKET = 0x44;
 	public const REQUEST_CHUNK_RADIUS_PACKET = 0x45;
 	public const CHUNK_RADIUS_UPDATED_PACKET = 0x46;
-	public const ITEM_FRAME_DROP_ITEM_PACKET = 0x47;
+
 	public const GAME_RULES_CHANGED_PACKET = 0x48;
 	public const CAMERA_PACKET = 0x49;
 	public const BOSS_EVENT_PACKET = 0x4a;
@@ -156,22 +161,22 @@ final class v486ProtocolInfo
 	public const SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET = 0x71;
 	public const UPDATE_SOFT_ENUM_PACKET = 0x72;
 	public const NETWORK_STACK_LATENCY_PACKET = 0x73;
-	public const SCRIPT_CUSTOM_EVENT_PACKET = 0x75;
+
 	public const SPAWN_PARTICLE_EFFECT_PACKET = 0x76;
 	public const AVAILABLE_ACTOR_IDENTIFIERS_PACKET = 0x77;
-	public const LEVEL_SOUND_EVENT_PACKET_V2 = 0x78;
+
 	public const NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET = 0x79;
 	public const BIOME_DEFINITION_LIST_PACKET = 0x7a;
 	public const LEVEL_SOUND_EVENT_PACKET = 0x7b;
 	public const LEVEL_EVENT_GENERIC_PACKET = 0x7c;
 	public const LECTERN_UPDATE_PACKET = 0x7d;
-	public const ADD_ENTITY_PACKET = 0x7f;
-	public const REMOVE_ENTITY_PACKET = 0x80;
+
 	public const CLIENT_CACHE_STATUS_PACKET = 0x81;
 	public const ON_SCREEN_TEXTURE_ANIMATION_PACKET = 0x82;
 	public const MAP_CREATE_LOCKED_COPY_PACKET = 0x83;
 	public const STRUCTURE_TEMPLATE_DATA_REQUEST_PACKET = 0x84;
 	public const STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET = 0x85;
+
 	public const CLIENT_CACHE_BLOB_STATUS_PACKET = 0x87;
 	public const CLIENT_CACHE_MISS_RESPONSE_PACKET = 0x88;
 	public const EDUCATION_SETTINGS_PACKET = 0x89;
@@ -199,8 +204,8 @@ final class v486ProtocolInfo
 	public const CAMERA_SHAKE_PACKET = 0x9f;
 	public const PLAYER_FOG_PACKET = 0xa0;
 	public const CORRECT_PLAYER_MOVE_PREDICTION_PACKET = 0xa1;
-	public const ITEM_COMPONENT_PACKET = 0xa2;
-	public const FILTER_TEXT_PACKET = 0xa3;
+	public const ITEM_REGISTRY_PACKET = 0xa2;
+
 	public const CLIENTBOUND_DEBUG_RENDERER_PACKET = 0xa4;
 	public const SYNC_ACTOR_PROPERTY_PACKET = 0xa5;
 	public const ADD_VOLUME_ENTITY_PACKET = 0xa6;
@@ -210,20 +215,67 @@ final class v486ProtocolInfo
 	public const EDU_URI_RESOURCE_PACKET = 0xaa;
 	public const CREATE_PHOTO_PACKET = 0xab;
 	public const UPDATE_SUB_CHUNK_BLOCKS_PACKET = 0xac;
-	public const PHOTO_INFO_REQUEST_PACKET = 0xad;
+
 	public const SUB_CHUNK_PACKET = 0xae;
 	public const SUB_CHUNK_REQUEST_PACKET = 0xaf;
 	public const PLAYER_START_ITEM_COOLDOWN_PACKET = 0xb0;
 	public const SCRIPT_MESSAGE_PACKET = 0xb1;
 	public const CODE_BUILDER_SOURCE_PACKET = 0xb2;
+	public const TICKING_AREAS_LOAD_STATUS_PACKET = 0xb3;
+	public const DIMENSION_DATA_PACKET = 0xb4;
+	public const AGENT_ACTION_EVENT_PACKET = 0xb5;
+	public const CHANGE_MOB_PROPERTY_PACKET = 0xb6;
+	public const LESSON_PROGRESS_PACKET = 0xb7;
+	public const REQUEST_ABILITY_PACKET = 0xb8;
+	public const REQUEST_PERMISSIONS_PACKET = 0xb9;
+	public const TOAST_REQUEST_PACKET = 0xba;
+	public const UPDATE_ABILITIES_PACKET = 0xbb;
+	public const UPDATE_ADVENTURE_SETTINGS_PACKET = 0xbc;
+	public const DEATH_INFO_PACKET = 0xbd;
+	public const EDITOR_NETWORK_PACKET = 0xbe;
+	public const FEATURE_REGISTRY_PACKET = 0xbf;
+	public const SERVER_STATS_PACKET = 0xc0;
+	public const REQUEST_NETWORK_SETTINGS_PACKET = 0xc1;
+	public const GAME_TEST_REQUEST_PACKET = 0xc2;
+	public const GAME_TEST_RESULTS_PACKET = 0xc3;
+	public const UPDATE_CLIENT_INPUT_LOCKS_PACKET = 0xc4;
 
-	private function __construct()
-	{
-		//NOOP
-	}
+	public const CAMERA_PRESETS_PACKET = 0xc6;
+	public const UNLOCKED_RECIPES_PACKET = 0xc7;
+
+	public const CAMERA_INSTRUCTION_PACKET = 0x12c;
+
+	public const TRIM_DATA_PACKET = 0x12e;
+	public const OPEN_SIGN_PACKET = 0x12f;
+	public const AGENT_ANIMATION_PACKET = 0x130;
+	public const REFRESH_ENTITLEMENTS_PACKET = 0x131;
+	public const PLAYER_TOGGLE_CRAFTER_SLOT_REQUEST_PACKET = 0x132;
+	public const SET_PLAYER_INVENTORY_OPTIONS_PACKET = 0x133;
+	public const SET_HUD_PACKET = 0x134;
+	public const AWARD_ACHIEVEMENT_PACKET = 0x135;
+	public const CLIENTBOUND_CLOSE_FORM_PACKET = 0x136;
+
+	public const SERVERBOUND_LOADING_SCREEN_PACKET = 0x138;
+	public const JIGSAW_STRUCTURE_DATA_PACKET = 0x139;
+	public const CURRENT_STRUCTURE_FEATURE_PACKET = 0x13a;
+	public const SERVERBOUND_DIAGNOSTICS_PACKET = 0x13b;
+	public const CAMERA_AIM_ASSIST_PACKET = 0x13c;
+	public const CONTAINER_REGISTRY_CLEANUP_PACKET = 0x13d;
+	public const MOVEMENT_EFFECT_PACKET = 0x13e;
+
+	public const CAMERA_AIM_ASSIST_PRESETS_PACKET = 0x140;
+	public const CLIENT_CAMERA_AIM_ASSIST_PACKET = 0x141;
+	public const CLIENT_MOVEMENT_PREDICTION_SYNC_PACKET = 0x142;
+	public const UPDATE_CLIENT_OPTIONS_PACKET = 0x143;
+	public const PLAYER_VIDEO_CAPTURE_PACKET = 0x144;
+	public const PLAYER_UPDATE_ENTITY_OVERRIDES_PACKET = 0x145;
+	public const PLAYER_LOCATION_PACKET = 0x146;
+	public const CLIENTBOUND_CONTROL_SCHEME_SET_PACKET = 0x147;
+	public const SERVER_SCRIPT_DEBUG_DRAWER_PACKET = 0x148;
+	public const SERVERBOUND_PACK_SETTING_CHANGE_PACKET = 0x149;
 
 	public static function inBounds(int $pid, array $exceptions) : bool {
-		return $pid >= self::LOGIN_PACKET && $pid <= self::CODE_BUILDER_SOURCE_PACKET && !in_array($pid, $exceptions, true);
+		return $pid >= self::LOGIN_PACKET && $pid <= self::SERVERBOUND_PACK_SETTING_CHANGE_PACKET && !in_array($pid, $exceptions, true);
 	}
 
 }

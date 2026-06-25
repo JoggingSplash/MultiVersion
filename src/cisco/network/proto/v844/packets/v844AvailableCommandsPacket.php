@@ -199,8 +199,18 @@ class v844AvailableCommandsPacket extends DataPacket implements ClientboundPacke
 		$this->enums = [];
 		$valueListSize = count($this->enumValues);
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; $i++){
-			$this->enums[] = CommandEnumRawData::read($in, $valueListSize);
-			$this->enums[] = CommandEnumRawData::read($in);
+			$name = CommonTypes::getString($in);
+			$valueIndexes = [];
+			$size = VarInt::readUnsignedInt($in);
+
+			for($i = 0; $i < $size; $i++){
+				$valueIndexes[] = match(true){
+					$valueListSize < 256 => Byte::readUnsigned($in),
+					$valueListSize < 65536 => LE::readUnsignedShort($in),
+					default => LE::readUnsignedInt($in)
+				};
+			}
+			$this->enums[] = new CommandEnumRawData($name, $valueIndexes);
 		}
 
 		$this->chainedSubCommandData = [];
@@ -240,12 +250,21 @@ class v844AvailableCommandsPacket extends DataPacket implements ClientboundPacke
 			CommonTypes::putString($out, $postfix);
 		}
 
-		VarInt::writeUnsignedInt($out, 0);
-		// $valueListSize = count($this->enumValues);
-		// foreach($this->enums as $enum){
-		//     $enum->write($out, $valueListSize);
-		//     $enum->write($out);
-		// }
+		$valueListSize = count($this->enumValues);
+		VarInt::writeUnsignedInt($out, count($this->enums));
+
+		foreach($this->enums as $enum){
+			CommonTypes::putString($out, $enum->getName());
+			VarInt::writeUnsignedInt($out, count($enum->getValueIndexes()));
+
+			foreach($enum->getValueIndexes() as $index){
+				match(true){
+					$valueListSize < 256 => Byte::writeUnsigned($out, $index),
+					$valueListSize < 65536 => LE::writeUnsignedShort($out, $index),
+					default => LE::writeUnsignedInt($out, $index)
+				};
+			}
+		}
 
 		VarInt::writeUnsignedInt($out, count($this->chainedSubCommandData));
 		foreach($this->chainedSubCommandData as $data){
