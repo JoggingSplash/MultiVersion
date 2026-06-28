@@ -26,7 +26,7 @@ namespace cisco\network\proto\v419;
 
 use cisco\Loader;
 use cisco\network\global\MVTypeConverter;
-use cisco\network\mcpe\MVBlockStateDictionary;
+use cisco\network\mcpe\dictionaries\states\MVBlockStateDictionary;
 use cisco\network\mcpe\MVBlockTranslator;
 use cisco\network\mcpe\MVItemIdMetaDowngrader;
 use cisco\network\mcpe\MVItemTranslator;
@@ -50,7 +50,12 @@ class v419TypeConverter
 		$this->converter = new MVTypeConverter(
 			$blockItemIdMap = BlockItemIdMap::getInstance(),
 			$blockTranslator = new MVBlockTranslator(
-				MVBlockStateDictionary::loadFromString(Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "canonical_block_states.nbt")), Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "block_state_meta_map.json")), Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "block_id_map.json"))),
+				MVBlockStateDictionary::loadFromString(
+					Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "canonical_block_states.nbt")),
+					Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "block_state_meta_map.json")),
+					Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "block_id_map.json")),
+					Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "r12_to_current_block_map.bin")),
+				),
 				GlobalBlockStateHandlers::getSerializer(),
 			),
 			$itemTypeDictionary = ItemTypeDictionaryFromDataHelper::loadFromString(Filesystem::fileGetContents(Path::join(Loader::getPluginResourcePath(), "v419", "required_item_list.json"))),

@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\mcpe;
+namespace cisco\network\mcpe\dictionaries\states;
 
 use pocketmine\data\bedrock\block\BlockStateData;
 use pocketmine\nbt\LittleEndianNbtSerializer;
@@ -86,7 +86,7 @@ class MVBlockStateDictionaryEntry
 
 	public function generateStateData() : BlockStateData
 	{
-		return $this->oldBlockStateData ?? $this->generateCurrentStateData();
+		return $this->oldBlockStateData ??= $this->generateCurrentStateData();
 	}
 
 	public function generateCurrentStateData() : BlockStateData

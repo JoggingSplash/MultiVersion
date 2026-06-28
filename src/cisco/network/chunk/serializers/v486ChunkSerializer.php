@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace cisco\network\chunk\serializers;
 
-use cisco\network\chunk\io\SubChunkDatum;
 use cisco\network\mcpe\MVBlockTranslator;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferWriter;
@@ -45,35 +44,20 @@ use function str_repeat;
 
 final class v486ChunkSerializer extends PreFormattedChunkSerializer{
 
-	private static SubChunkDatum $emptyDatum;
 	public const LOWER_PADDING_SIZE = 4;
 
 	public function serializeFullChunk(Chunk $chunk, int $dimensionId, MVBlockTranslator $blockTranslator, ?string $tiles = null) : string
 	{
 		$stream = new ByteBufferWriter();
 
-		$emptyDatum = self::$emptyDatum ??= SubChunkDatum::empty();
-
-		// HACK: fill in fake subchunks to make up for the new negative space client-side (-64 height)
-		for($y = 0; $y < self::LOWER_PADDING_SIZE; $y++){
-			Byte::writeUnsigned($stream, 0); //subchunk version
-			$stream->writeByteArray($emptyDatum->blocksId);
-			$stream->writeByteArray($emptyDatum->blocksData);
-		}
-
 		$subChunkCount = self::getSubChunkCount($chunk, $dimensionId);
-		$datum = self::prepareChunk($blockTranslator, $chunk);
-		$subChunks = $datum->subChunkDatum;
 
-		for ($y = 0; $y < $subChunkCount - 4; ++$y) {
-			$subChunk = $subChunks[$y];
-			Byte::writeUnsigned($stream, 0); // sub chunk version 0 (Classic)
-			$stream->writeByteArray($subChunk->blocksId);
-			$stream->writeByteArray($subChunk->blocksData);
+		for ($y = 0; $y < $subChunkCount; ++$y) {
+			self::serializeSubChunk($chunk->getSubChunk($y), $blockTranslator, $stream, false);
 		}
 
-		// v486 (Bedrock 1.18.10) requires 3D biomes array copied 25 times
-		$encodedBiomePalette = self::serializeBiomesAsPalette($datum->biomes);
+		$biomes = self::reduce3DBiomes($chunk->getSubChunk(Chunk::MIN_SUBCHUNK_INDEX)->getBiomeArray());
+		$encodedBiomePalette = self::serializeBiomesAsPalette($biomes);
 		$stream->writeByteArray(str_repeat($encodedBiomePalette, 25));
 
 		Byte::writeUnsigned($stream, 0); // border block array count

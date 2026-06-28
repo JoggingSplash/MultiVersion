@@ -22,10 +22,10 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v844\packets;
+namespace cisco\network\proto\v419\packets;
 
 use cisco\network\legacy\LegacyActorEventPacket;
 
-class v844ActorEventPacket extends LegacyActorEventPacket {
+class v419ActorEventPacket extends LegacyActorEventPacket {
 
 }

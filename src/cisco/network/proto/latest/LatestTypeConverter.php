@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace cisco\network\proto\latest;
 
 use cisco\network\global\MVTypeConverter;
-use cisco\network\mcpe\MVBlockStateDictionary;
+use cisco\network\mcpe\dictionaries\states\MVBlockStateDictionary;
 use cisco\network\mcpe\MVBlockTranslator;
 use cisco\network\mcpe\MVItemIdMetaDowngrader;
 use cisco\network\mcpe\MVItemTranslator;

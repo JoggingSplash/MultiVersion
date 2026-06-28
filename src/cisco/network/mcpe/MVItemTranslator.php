@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace cisco\network\mcpe;
 
+use cisco\network\mcpe\dictionaries\states\MVBlockStateDictionary;
 use InvalidArgumentException;
 use pocketmine\data\bedrock\item\BlockItemIdMap;
 use pocketmine\data\bedrock\item\ItemDeserializer;

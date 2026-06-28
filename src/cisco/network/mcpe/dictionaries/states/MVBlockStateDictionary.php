@@ -22,8 +22,9 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\mcpe;
+namespace cisco\network\mcpe\dictionaries\states;
 
+use cisco\network\mcpe\dictionaries\r12\R12BlockStateDictionary;
 use InvalidArgumentException;
 use JsonException;
 use pocketmine\data\bedrock\block\BlockStateData;
@@ -64,6 +65,14 @@ class MVBlockStateDictionary
 	private array $stateIdToLegacyBlockId = [];
 
 	/**
+	 * Direct mapping from block name to legacy numeric block ID (0-255).
+	 * @var array<string, int>
+	 */
+	private array $blockIdMap = [];
+
+	private ?R12BlockStateDictionary $rDictionary = null;
+
+	/**
 	 * @param MVBlockStateDictionaryEntry[] $states
 	 */
 	public function __construct(
@@ -88,24 +97,16 @@ class MVBlockStateDictionary
 	/**
 	 * @throws JsonException
 	 */
-	public static function loadFromString(string $blockPaletteContents, string $metaMapContents, ?string $blockIdMapContents = null) : self {
+	public static function loadFromString(string $blockPaletteContents, string $metaMapContents, ?string $blockIdMapContents = null, ?string $r12Contest = null, ?string $requiredBlockStatesNBT = null) : self {
 		$upgrader = GlobalBlockStateHandlers::getUpgrader()->getBlockStateUpgrader();
 		$metaMap = json_decode($metaMapContents, flags: JSON_THROW_ON_ERROR);
 		if (!is_array($metaMap)) {
 			throw new InvalidArgumentException("Invalid metaMap, expected array for root type, got " . get_debug_type($metaMap));
 		}
 
-		$blockIdMap = null;
-		if($blockIdMapContents !== null){
-			$blockIdMap = json_decode($blockIdMapContents, true, flags: JSON_THROW_ON_ERROR);
-
-			if(!is_array($blockIdMap)){
-				throw new InvalidArgumentException("Invalid blockIdMap, expected array for root type, got " . get_debug_type($blockIdMap));
-			}
-		}
+		$r12Dict = null;
 
 		$entries = [];
-		$stateIdToLegacyBlockId = [];
 		$uniqueNames = [];
 
 		//this hack allows the internal parts index to use interned strings which are already available in the
@@ -116,10 +117,9 @@ class MVBlockStateDictionary
 			}
 		}
 
-		$logger = \GlobalLogger::get();
-		$misses = 0;
+		$oldStates = self::loadPaletteFromString($blockPaletteContents);
 
-		foreach (self::loadPaletteFromString($blockPaletteContents) as $i => $state) {
+		foreach ($oldStates as $i => $state) {
 			$meta = $metaMap[$i] ?? null;
 			if ($meta === null) {
 				throw new InvalidArgumentException("Missing associated meta value for state $i (" . $state->toNbt() . ")");
@@ -130,26 +130,24 @@ class MVBlockStateDictionary
 			$newState = $upgrader->upgrade($state);
 			$uniqueName = $uniqueNames[$newState->getName()] ??= $newState->getName();
 			$entries[$i] = new MVBlockStateDictionaryEntry($uniqueName, $newState->getStates(), $meta, $newState->equals($state) ? null : $state);
+		}
 
-			// Use the ORIGINAL (pre-upgrade) name to look up in block_id_map.json
-			// because the map uses old names (e.g. "minecraft:grass") not upgraded ones (e.g. "minecraft:short_grass")
-			if ($blockIdMap !== null) {
-				if(isset($blockIdMap[$state->getName()])){
-					$stateIdToLegacyBlockId[$i] = $blockIdMap[$state->getName()];
-				}elseif(isset($blockIdMap[$uniqueName])){
-					$stateIdToLegacyBlockId[$i] = $blockIdMap[$uniqueName];
-				}else{
-					++$misses;
-					$stateIdToLegacyBlockId[$i] = 0;
-				}
+		$blockIdMap = [];
+		if($blockIdMapContents !== null){
+			$blockIdMap = json_decode($blockIdMapContents, true, flags: JSON_THROW_ON_ERROR);
+
+			if(!is_array($blockIdMap)){
+				throw new InvalidArgumentException("Invalid blockIdMap, expected array for root type, got " . get_debug_type($blockIdMap));
+			}
+
+			if($r12Contest !== null && $requiredBlockStatesNBT !== null){
+				$r12Dict = R12BlockStateDictionary::loadFromString($r12Contest, $blockIdMap, $oldStates);
 			}
 		}
 
-		if($misses > 0){
-			$logger->debug("Almost $misses blocks had no blockmap id found");
-		}
 		$dictionary = new self($entries);
-		$dictionary->stateIdToLegacyBlockId = $stateIdToLegacyBlockId;
+		$dictionary->rDictionary = $r12Dict;
+		$dictionary->blockIdMap = $blockIdMap;
 		return $dictionary;
 	}
 
@@ -217,7 +215,36 @@ class MVBlockStateDictionary
 	 * @return int Legacy block ID (0-255), or 0 (air) if not found.
 	 */
 	public function getLegacyBlockIdFromStateId(int $networkRuntimeId) : int {
-		return $this->stateIdToLegacyBlockId[$networkRuntimeId] ??= 0;
+		return $this->stateIdToLegacyBlockId[$networkRuntimeId] ?? 0;
+	}
+
+	/**
+	 * Returns [legacyBlockId, meta] for a given network runtime ID.
+	 * Uses the pre-built stateIdToLegacyBlockId table first, then falls back
+	 * to looking up by the original (pre-upgrade) block name in the blockIdMap.
+	 *
+	 * @return array{int, int} [legacyBlockId (0-255), meta (0-15)]
+	 */
+	public function getLegacyBlockIdAndMeta(int $networkRuntimeId) : array {
+		$entry = $this->states[$networkRuntimeId] ?? null;
+		if ($entry === null) {
+			return [0, 0]; // air
+		}
+
+		$meta = $entry->getMeta();
+
+		if (isset($this->stateIdToLegacyBlockId[$networkRuntimeId])) {
+			return [$this->stateIdToLegacyBlockId[$networkRuntimeId], $meta];
+		}
+
+		if(empty($this->blockIdMap)) return [0, 0];
+
+		$originalName = $entry->generateStateData()->getName();
+		if (isset($this->blockIdMap[$originalName])) {
+			return [$this->blockIdMap[$originalName], $meta];
+		}
+
+		return [0, 0];
 	}
 
 	/**
@@ -231,6 +258,18 @@ class MVBlockStateDictionary
 		}
 
 		return $this->states[$networkRuntimeId]->getMeta();
+	}
+
+	public function getRDictionary() : ?R12BlockStateDictionary {
+		return $this->rDictionary;
+	}
+
+	public function internalStateToRuntimeId(int $internalState) : int {
+		if ($this->rDictionary === null) {
+			return 0;
+		}
+
+		return $this->rDictionary->toRuntimeId($internalState);
 	}
 
 	/**

@@ -34,6 +34,7 @@ use cisco\network\etc\GlobalLoginPacket;
 use cisco\network\mcpe\MVRuntimeIdToStateId;
 use cisco\network\NetworkSession;
 use cisco\network\proto\TProtocol;
+use cisco\network\proto\v486\packets\v486ActorEventPacket;
 use cisco\network\proto\v486\packets\v486AddActorPacket;
 use cisco\network\proto\v486\packets\v486AddPlayerPacket;
 use cisco\network\proto\v486\packets\v486AddVolumeEntityPacket;
@@ -231,6 +232,7 @@ class v486Protocol extends TProtocol
 			$packet instanceof v486InteractPacket => RawPacketHelper::translateInteractPacketToLatest($packet),
 			$packet instanceof v486LevelSoundEventPacket => LevelSoundEventPacket::create(LevelSoundIntToStringIdMap::getInstance()->lookupString($packet->realSound), $packet->position, $packet->extraData, $packet->entityType, $packet->isBabyMob, $packet->disableRelativeVolume, -1, null),
 			$packet instanceof v486InventoryTransactionPacket => InventoryTransactionPacket::create($packet->requestId, $packet->requestChangedSlots, $packet->trData),
+			$packet instanceof v486ActorEventPacket => RawPacketHelper::translateActorEventToLatest($packet),
 			default => $packet
 		};
 	}
@@ -246,8 +248,8 @@ class v486Protocol extends TProtocol
 				$netData = $value & 0xffff;
 				[$netId, $netData] = $this->getTypeConverter()->getMVItemTranslator()->toNetworkId(TypeConverter::getInstance()->getItemTranslator()->fromNetworkId($netId, $netData, ItemTranslator::NO_BLOCK_RUNTIME_ID));
 				$packet->eventData = ($netId << 16) | $netData;
-				return $packet;
 			}
+			return v486ActorEventPacket::fromLatest($packet);
 		} elseif ($packet instanceof LevelEventPacket) {
 			if ($packet->eventId === LevelEvent::PARTICLE_DESTROY || $packet->eventId === (LevelEvent::ADD_PARTICLE_MASK | ParticleIds::TERRAIN)) {
 				$packet->eventData = $this->getTypeConverter()->getMVBlockTranslator()->internalIdToNetworkId(MVRuntimeIdToStateId::getInstance()->getStateIdFromRuntimeId($packet->eventData));

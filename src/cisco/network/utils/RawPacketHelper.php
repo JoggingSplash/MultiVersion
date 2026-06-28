@@ -24,11 +24,13 @@ declare(strict_types=1);
 
 namespace cisco\network\utils;
 
+use cisco\network\legacy\LegacyActorEventPacket;
 use cisco\network\legacy\LegacyInteractPacket;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\protocol\ActorEventPacket;
 use pocketmine\network\mcpe\protocol\InteractPacket;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\utils\Binary;
@@ -51,6 +53,10 @@ final class RawPacketHelper
 			$result->position = new Vector3($packet->x, $packet->y, $packet->z);
 		}
 		return $result;
+	}
+
+	static public function translateActorEventToLatest(LegacyActorEventPacket $packet) : ActorEventPacket    {
+		return ActorEventPacket::create($packet->actorRuntimeId, $packet->eventId, $packet->eventData, null);
 	}
 
 	public static function getUnsignedYBlockPosition(ByteBufferReader $in) : BlockPosition {

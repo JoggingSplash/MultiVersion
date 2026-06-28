@@ -22,10 +22,31 @@
 
 declare(strict_types=1);
 
-namespace cisco\network\proto\v844\packets;
+namespace cisco\network\mcpe\dictionaries\r12;
 
-use cisco\network\legacy\LegacyActorEventPacket;
+use pocketmine\nbt\tag\CompoundTag;
 
-class v844ActorEventPacket extends LegacyActorEventPacket {
+final class R12BlockStateDictionaryEntry {
 
+	public function __construct(
+		private string $id,
+		private int $meta,
+		private CompoundTag $blockState){
+	}
+
+	public function getId() : string{
+		return $this->id;
+	}
+
+	public function getMeta() : int{
+		return $this->meta;
+	}
+
+	public function getBlockState() : CompoundTag{
+		return $this->blockState;
+	}
+
+	public function __toString(){
+		return "id=$this->id, meta=$this->meta, nbt=$this->blockState";
+	}
 }

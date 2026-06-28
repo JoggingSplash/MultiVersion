@@ -35,6 +35,7 @@ use cisco\network\mcpe\MVRuntimeIdToStateId;
 use cisco\network\NetworkSession;
 use cisco\network\proto\TProtocol;
 use cisco\network\proto\v419\craft\v419CraftingManagerFromDataHelper;
+use cisco\network\proto\v419\packets\v419ActorEventPacket;
 use cisco\network\proto\v419\packets\v419AddActorPacket;
 use cisco\network\proto\v419\packets\v419AddItemActorPacket;
 use cisco\network\proto\v419\packets\v419AddPlayerPacket;
@@ -245,6 +246,7 @@ final class v419Protocol extends TProtocol
 			$packet instanceof v419AnimatePacket => AnimatePacket::create($packet->actorRuntimeId, $packet->action, $packet->data, null), // TODO: fill swingSource
 			$packet instanceof v419InteractPacket => RawPacketHelper::translateInteractPacketToLatest($packet),
 			$packet instanceof v419LevelSoundEventPacket => LevelSoundEventPacket::create(LevelSoundIntToStringIdMap::getInstance()->lookupString($packet->realSound), $packet->position, $packet->extraData, $packet->entityType, $packet->isBabyMob, $packet->disableRelativeVolume, -1, null),
+			$packet instanceof v419ActorEventPacket => RawPacketHelper::translateActorEventToLatest($packet),
 			default => $packet
 		};
 	}
@@ -289,8 +291,8 @@ final class v419Protocol extends TProtocol
 				$netData = $value & 0xffff;
 				[$netId, $netData] = $this->getTypeConverter()->getMVItemTranslator()->toNetworkId(TypeConverter::getInstance()->getItemTranslator()->fromNetworkId($netId, $netData, ItemTranslator::NO_BLOCK_RUNTIME_ID));
 				$packet->eventData = ($netId << 16) | $netData;
-				return $packet;
 			}
+			return v419ActorEventPacket::fromLatest($packet);
 		} elseif ($packet instanceof PlayerListPacket) {
 			foreach ($packet->entries as $entry) {
 				if (!isset($entry->skinData)) {

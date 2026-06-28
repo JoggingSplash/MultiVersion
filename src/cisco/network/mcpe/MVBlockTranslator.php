@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace cisco\network\mcpe;
 
+use cisco\network\mcpe\dictionaries\states\MVBlockStateDictionary;
 use pocketmine\data\bedrock\block\BlockStateData;
 use pocketmine\data\bedrock\block\BlockStateSerializeException;
 use pocketmine\data\bedrock\block\BlockStateSerializer;

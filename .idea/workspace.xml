@@ -5,7 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fab520b7-626a-4ca2-810f-80ae08388f36" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.php-cs-fixer.dist.php" beforeDir="false" afterPath="$PROJECT_DIR$/.php-cs-fixer.dist.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/io/ChunkDatum.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/io/SubChunkDatum.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/PreFormattedChunkSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/PreFormattedChunkSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/v486ChunkSerializer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/chunk/serializers/v486ChunkSerializer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/mcpe/MVBlockStateDictionary.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/mcpe/dictionaries/states/MVBlockStateDictionary.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/mcpe/MVBlockStateDictionaryEntry.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/mcpe/dictionaries/states/MVBlockStateDictionaryEntry.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/mcpe/MVBlockTranslator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/mcpe/MVBlockTranslator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/mcpe/MVItemTranslator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/mcpe/MVItemTranslator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/latest/LatestTypeConverter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/latest/LatestTypeConverter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v361/v361TypeConverter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v361/v361TypeConverter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419Protocol.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419Protocol.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419TypeConverter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v419/v419TypeConverter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v486/v486Protocol.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v486/v486Protocol.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v486/v486TypeConverter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v486/v486TypeConverter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v844/packets/v844ActorEventPacket.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v844/packets/v844ActorEventPacket.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/proto/v844/v844TypeConverter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/proto/v844/v844TypeConverter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/raknet/MVRakLibInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/raknet/MVRakLibInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cisco/network/utils/RawPacketHelper.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/cisco/network/utils/RawPacketHelper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,60 +74,60 @@
       <path value="$PROJECT_DIR$/../libs/ext-encoding-master" />
       <path value="$PROJECT_DIR$/../libs/phpstorm-stubs" />
       <path value="$PROJECT_DIR$/../libs/PocketMine-MP" />
-      <path value="$PROJECT_DIR$/vendor/adhocore/json-comment" />
-      <path value="$PROJECT_DIR$/vendor/brick/math" />
       <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/netresearch/jsonmapper" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-block-upgrade-schema" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-data" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-item-upgrade-schema" />
+      <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
       <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-protocol" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/binaryutils" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/callback-validator" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/color" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/errorhandler" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/log" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/math" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/nbt" />
       <path value="$PROJECT_DIR$/vendor/pocketmine/pocketmine-mp" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/raklib" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/raklib-ipc" />
-      <path value="$PROJECT_DIR$/vendor/pocketmine/snooze" />
       <path value="$PROJECT_DIR$/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/vendor/ramsey/uuid" />
-      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/vendor/clue/ndjson-react" />
-      <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
-      <path value="$PROJECT_DIR$/vendor/evenement/evenement" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/vendor/ergebnis/agent-detector" />
+      <path value="$PROJECT_DIR$/vendor/netresearch/jsonmapper" />
+      <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
       <path value="$PROJECT_DIR$/vendor/react/cache" />
       <path value="$PROJECT_DIR$/vendor/react/child-process" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/react/socket" />
       <path value="$PROJECT_DIR$/vendor/react/dns" />
       <path value="$PROJECT_DIR$/vendor/react/event-loop" />
-      <path value="$PROJECT_DIR$/vendor/react/promise" />
-      <path value="$PROJECT_DIR$/vendor/react/socket" />
-      <path value="$PROJECT_DIR$/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/vendor/react/stream" />
-      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
       <path value="$PROJECT_DIR$/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/react/stream" />
       <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
-      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
       <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
       <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php85" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
-      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
-      <path value="$PROJECT_DIR$/vendor/symfony/string" />
-      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php85" />
+      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/evenement/evenement" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/snooze" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-data" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/nbt" />
+      <path value="$PROJECT_DIR$/vendor/ergebnis/agent-detector" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/log" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-item-upgrade-schema" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/color" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/bedrock-block-upgrade-schema" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/raklib-ipc" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/errorhandler" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/callback-validator" />
+      <path value="$PROJECT_DIR$/vendor/adhocore/json-comment" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/raklib" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/binaryutils" />
+      <path value="$PROJECT_DIR$/vendor/pocketmine/math" />
+      <path value="$PROJECT_DIR$/vendor/clue/ndjson-react" />
+      <path value="$PROJECT_DIR$/vendor/brick/math" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -129,7 +152,7 @@
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;bedrock-26.30&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/php-8.2-pocketmine/php.exe&quot;,
@@ -195,6 +218,10 @@
       <workItem from="1776021425733" duration="24000" />
       <workItem from="1781972782574" duration="3795000" />
       <workItem from="1782181972936" duration="903000" />
+      <workItem from="1782413875842" duration="5313000" />
+      <workItem from="1782440028767" duration="6205000" />
+      <workItem from="1782513468736" duration="12751000" />
+      <workItem from="1782590970747" duration="1000" />
     </task>
     <servers />
   </component>

@@ -26,7 +26,7 @@ namespace cisco\network\proto\v844;
 
 use cisco\Loader;
 use cisco\network\global\MVTypeConverter;
-use cisco\network\mcpe\MVBlockStateDictionary;
+use cisco\network\mcpe\dictionaries\states\MVBlockStateDictionary;
 use cisco\network\mcpe\MVBlockTranslator;
 use cisco\network\mcpe\MVItemIdMetaDowngrader;
 use cisco\network\mcpe\MVItemTranslator;

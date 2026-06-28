@@ -24,11 +24,10 @@ declare(strict_types=1);
 
 namespace cisco\network\chunk\serializers;
 
-use cisco\network\chunk\io\ChunkDatum;
-use cisco\network\chunk\io\SubChunkDatum;
 use cisco\network\mcpe\MVBlockTranslator;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\block\tile\Spawnable;
 use pocketmine\network\mcpe\serializer\ChunkSerializer;
 use pocketmine\utils\AssumptionFailedError;
@@ -36,6 +35,7 @@ use pocketmine\world\format\Chunk;
 use pocketmine\world\format\PalettedBlockArray;
 use pocketmine\world\format\SubChunk;
 use function count;
+use function get_class;
 use function min;
 
 class PreFormattedChunkSerializer implements MVChunkSerializer {
@@ -44,17 +44,12 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 	{
 		$stream = new ByteBufferWriter();
 		$subChunkCount = self::getSubChunkCount($chunk, $dimensionId);
-		$datum = self::prepareChunk($blockTranslator, $chunk);
-		$subChunks = $datum->subChunkDatum;
 
-		for ($y = 0; $y < $subChunkCount; ++$y) {
-			$subChunk = $subChunks[$y];
-			Byte::writeUnsigned($stream, 0); // sub chunk version
-			$stream->writeByteArray($subChunk->blocksId);
-			$stream->writeByteArray($subChunk->blocksData);
+		for($i = 0; $i < $subChunkCount; $i++){
+			self::serializeSubChunk($chunk->getSubChunk($i), $blockTranslator, $stream, false);
 		}
 
-		$stream->writeByteArray($datum->biomes);
+		$stream->writeByteArray(self::reduce3DBiomes($chunk->getSubChunk(Chunk::MIN_SUBCHUNK_INDEX)->getBiomeArray()));
 		Byte::writeUnsigned($stream, 0); //border block array count
 		//Border block entry format: 1 byte (4 bits X, 4 bits Z). These are however useless since they crash the regular client.
 
@@ -66,83 +61,41 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 		return $stream->getData();
 	}
 
-	public function getSubChunkCount(Chunk $chunk, int $dimensionId) : int
-	{
+	public function getSubChunkCount(Chunk $chunk, int $dimensionId) : int {
 		return min(ChunkSerializer::getSubChunkCount($chunk, $dimensionId), 16);
 	}
 
-	public function serializeSubChunk(SubChunk $subChunk, MVBlockTranslator $blockTranslator, ByteBufferWriter $writer, bool $persistentBlockStates) : void{}
+	public function serializeSubChunk(SubChunk $subChunk, MVBlockTranslator $blockTranslator, ByteBufferWriter $writer, bool $persistentBlockStates) : void{
+		$layers = $subChunk->getBlockLayers();
+		$sDictionary = $blockTranslator->getBlockStateDictionary();
+		$rDictionary = $sDictionary->getRDictionary() ?? throw new AssumptionFailedError("Given MVBlockTranslator (" . get_class($blockTranslator) . ") has no R12Dictionary");
+		Byte::writeUnsigned($writer, 8);
+		Byte::writeUnsigned($writer, count($layers));
 
-	public function serializeTiles(Chunk $chunk) : string
-	{
-		$stream = new ByteBufferWriter();
-		foreach ($chunk->getTiles() as $tile) {
-			if ($tile instanceof Spawnable) {
-				$stream->writeByteArray(
-					$tile->getSerializedSpawnCompound()->getEncodedNbt()
-				);
+		foreach($layers as $layer){
+			$bPs = $layer->getBitsPerBlock();
+			$words = $layer->getWordArray();
+			Byte::writeUnsigned($writer, ($bPs << 1) | ($persistentBlockStates ? 0 : 1));
+			$writer->writeByteArray($words);
+
+			$pallete = $layer->getPalette();
+
+			if($bPs !== 0){
+				VarInt::writeSignedInt($writer, count($pallete));
 			}
-		}
 
-		return $stream->getData();
-	}
-
-	static protected function prepareChunk(MVBlockTranslator $blockTranslator, Chunk $chunk) : ChunkDatum {
-		$biomes = self::reduce3DBiomes($chunk->getSubChunk(Chunk::MIN_SUBCHUNK_INDEX)->getBiomeArray());
-		$subChunks = [];
-		for($y = 0; $y < 16; $y++) {
-			$subChunk = $chunk->getSubChunk($y);
-			$layers = $subChunk->getBlockLayers();
-			if(empty($layers)) {
-				$subChunks[$y] = SubChunkDatum::empty();
-				continue;
+			foreach($pallete as $p){
+				VarInt::writeSignedInt($writer, $rDictionary->toRuntimeId($p));
 			}
-			[$blocks, $data] = self::palettedToClassic($layers[0], $blockTranslator);
-			$subChunks[$y] = new SubChunkDatum($blocks, $data);
+
 		}
-
-		return new ChunkDatum($biomes, $subChunks);
-	}
-
-	/**
-	 * Converts a PalettedBlockArray into classic IDs (4096 bytes) + DATA (2048 bytes nibbles).
-	 *
-	 * @return array{$blocks, $data}
-	 */
-	static private function palettedToClassic(PalettedBlockArray $paletted, MVBlockTranslator $blockTranslator) : array {
-		$blocks = new ByteBufferWriter();
-		$data = new ByteBufferWriter();
-		$nibbleBuffer = 0;
-		$i = 0;
-
-		$dictionary = $blockTranslator->getBlockStateDictionary();
-		for ($x = 0; $x < 16; $x++) {
-			for ($z = 0; $z < 16; $z++) {
-				for ($y = 0; $y < 16; $y++) {
-					$stateId = $paletted->get($x, $y, $z);
-					$networkStateId = $blockTranslator->internalIdToNetworkId($stateId);
-					$meta = $dictionary->getMetaFromStateId($stateId) & 0x0F;
-
-					Byte::writeUnsigned($blocks, $networkStateId & 0xFF);
-
-					if (($i & 1) === 0) {
-						$nibbleBuffer = $meta;
-					} else {
-						Byte::writeUnsigned($data, $nibbleBuffer | ($meta << 4));
-					}
-					$i++;
-				}
-			}
-		}
-
-		return [$blocks->getData(), $data->getData()];
 	}
 
 	/**
 	 * Converts a 3D biome palette into a 2D biome array (256 bytes).
 	 * Assumes that all Y layers contain the same biome for each X/Z.
 	 */
-	private static function reduce3DBiomes(PalettedBlockArray $biomes3d) : string{
+	protected static function reduce3DBiomes(PalettedBlockArray $biomes3d) : string{
 		$biomes2d = new ByteBufferWriter();
 
 		for($z = 0; $z < 16; ++$z){
@@ -162,4 +115,19 @@ class PreFormattedChunkSerializer implements MVChunkSerializer {
 
 		return $biomes2d->getData();
 	}
+
+	public function serializeTiles(Chunk $chunk) : string
+	{
+		$stream = new ByteBufferWriter();
+		foreach ($chunk->getTiles() as $tile) {
+			if ($tile instanceof Spawnable) {
+				$stream->writeByteArray(
+					$tile->getSerializedSpawnCompound()->getEncodedNbt()
+				);
+			}
+		}
+
+		return $stream->getData();
+	}
+
 }
